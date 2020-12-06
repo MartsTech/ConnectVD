@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const http = require("http");
 const socket = require("socket.io");
@@ -10,32 +11,55 @@ const port = process.env.PORT || 8000;
 const server = http.createServer(app);
 const io = socket(server);
 
-// Socket Endpoints
-const users = {};
+// Socket Config
+const rooms = {};
 
-const socketToRoom = {};
+const users = {};
 
 io.on("connection", (socket) => {
   socket.on("join room", (roomID) => {
-    if (users[roomID]) {
-      users[roomID].push(socket.id);
+    if (rooms[roomID]) {
+      const length = rooms[roomID].length;
+      if (length === 4) {
+        socket.emit("room full");
+        return;
+      }
+      rooms[roomID].push(socket.id);
     } else {
-      users[roomID] = [socket.id];
+      rooms[roomID] = [socket.id];
     }
-    socketToRoom[socket.id] = roomID;
+    users[socket.id] = roomID;
+    const usersInRoom = rooms[roomID].filter((id) => id !== socket.id);
+
+    socket.emit("all users", usersInRoom);
+  });
+
+  socket.on("sending signal", (payload) => {
+    io.to(payload.userToSignal).emit("user joined", {
+      signal: payload.signal,
+      caller: payload.caller,
+    });
+  });
+
+  socket.on("returning signal", (payload) => {
+    io.to(payload.caller).emit("receiving returned signal", {
+      signal: payload.signal,
+      id: socket.id,
+    });
   });
 
   socket.on("disconnect", () => {
-    const roomID = socketToRoom[socket.id];
-    let room = users[roomID];
+    const roomID = users[socket.id];
+    let room = rooms[roomID];
     if (room) {
       room = room.filter((id) => id !== socket.id);
-      users[roomID] = room;
-      delete socketToRoom[socket.id];
+      rooms[roomID] = room;
+      delete users[socket.id];
+      io.emit("user left", socket.id);
     }
 
-    if (Object.keys(users[roomID]).length === 0) {
-      delete users[roomID];
+    if (Object.keys(rooms[roomID]).length === 0) {
+      delete rooms[roomID];
     }
   });
 });

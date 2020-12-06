@@ -1,0 +1,38 @@
+.meeting__controls {
+  flex: 0.05;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.meeting__controlsLeft {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.meeting__controlsButton {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 10px;
+  min-width: 80px;
+  cursor: pointer;
+}
+
+.meeting__controlsButton:hover {
+  background-color: #343434;
+  border-radius: 5px;
+}
+
+.micOff > .MuiSvgIcon-root,
+.videoOff > .MuiSvgIcon-root {
+  color: red;
+}
+
+.meeting__leave {
+  color: red;
+  text-decoration: none;
+}
