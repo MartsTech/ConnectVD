@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import io from "socket.io-client";
 import Peer from "simple-peer";
 import Video from "./Video";
+import { selectSound, selectVideo } from "./features/controlsSlice";
+import { useSelector } from "react-redux";
 
 const videoConstraints = {
   height: window.innerHeight / 2.5,
@@ -15,12 +17,15 @@ const Room = (props) => {
   const socketRef = useRef();
   const userVideo = useRef();
 
+  const sound = useSelector(selectSound);
+  const video = useSelector(selectVideo);
+
   const roomID = props.match.params.roomID;
 
   useEffect(() => {
     socketRef.current = io.connect("/");
     navigator.mediaDevices
-      .getUserMedia({ video: videoConstraints, audio: true })
+      .getUserMedia({ video: video, audio: sound })
       .then((stream) => {
         if (userVideo.current) {
           userVideo.current.srcObject = stream;

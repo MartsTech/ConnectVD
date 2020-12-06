@@ -13,7 +13,6 @@ const io = socket(server);
 
 // Socket Config
 const rooms = {};
-
 const users = {};
 
 io.on("connection", (socket) => {

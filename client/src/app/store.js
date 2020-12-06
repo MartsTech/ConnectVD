@@ -1,8 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
-import meetingChatReducer from "../features/meetingChatSlice";
+import controlsReducer from "../features/controlsSlice";
 
 export default configureStore({
   reducer: {
-    meetingChat: meetingChatReducer,
+    controls: controlsReducer,
   },
 });
