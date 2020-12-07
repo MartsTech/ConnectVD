@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 export const controlsSlice = createSlice({
   name: "controls",
   initialState: {
-    video: false,
+    video: true,
     sound: true,
     chat: false,
   },

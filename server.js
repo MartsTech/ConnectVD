@@ -1,4 +1,3 @@
-require("dotenv").config();
 const express = require("express");
 const http = require("http");
 const socket = require("socket.io");
@@ -54,10 +53,10 @@ io.on("connection", (socket) => {
       room = room.filter((id) => id !== socket.id);
       rooms[roomID] = room;
       delete users[socket.id];
-      io.emit("user left", socket.id);
+      socket.broadcast.emit("user left", socket.id);
     }
 
-    if (Object.keys(rooms[roomID]).length === 0) {
+    if (rooms[roomID] && Object.keys(rooms[roomID]).length === 0) {
       delete rooms[roomID];
     }
   });

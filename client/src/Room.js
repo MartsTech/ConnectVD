@@ -25,11 +25,9 @@ const Room = (props) => {
   useEffect(() => {
     socketRef.current = io.connect("/");
     navigator.mediaDevices
-      .getUserMedia({ video: video, audio: sound })
+      .getUserMedia({ video: videoConstraints, audio: sound })
       .then((stream) => {
-        if (userVideo.current) {
-          userVideo.current.srcObject = stream;
-        }
+        userVideo.current.srcObject = stream;
         socketRef.current.emit("join room", roomID);
         socketRef.current.on("all users", (users) => {
           const peers = [];
@@ -39,7 +37,10 @@ const Room = (props) => {
               peerID: id,
               peer,
             });
-            peers.push(peer);
+            peers.push({
+              peerID: id,
+              peer,
+            });
           });
           setPeers(peers);
         });
@@ -51,12 +52,22 @@ const Room = (props) => {
             peer,
           });
 
-          setPeers((users) => [...users, peer]);
+          const peerObj = {
+            peerID: payload.caller,
+            peer,
+          };
+
+          setPeers((users) => [...users, peerObj]);
         });
 
         socketRef.current.on("user left", (id) => {
-          peersRef.current.pop(id);
-          peers.pop(id);
+          const peerObj = peersRef.current.find((peer) => peer.peerID === id);
+          if (peerObj) {
+            peerObj.peer.destroy();
+          }
+          const peers = peersRef.current.filter((peer) => peer.peerID !== id);
+          peersRef.current = peers;
+          setPeers(peers);
         });
 
         socketRef.current.on("receiving returned signal", (payload) => {
@@ -105,8 +116,8 @@ const Room = (props) => {
   return (
     <div className="meeting__videos">
       <video muted ref={userVideo} autoPlay />
-      {peers.map((peer, index) => {
-        return <Video key={index} peer={peer} />;
+      {peers.map((peer) => {
+        return <Video key={peer.peerID} peer={peer.peer} />;
       })}
     </div>
   );
