@@ -1,15 +1,15 @@
 import React, { useEffect, useRef } from "react";
 
-const Video = (props) => {
-  const ref = useRef();
+const Video = ({ peer }) => {
+  const streamRef = useRef();
 
   useEffect(() => {
-    props.peer.on("stream", (stream) => {
-      ref.current.srcObject = stream;
+    peer.on("stream", (stream) => {
+      streamRef.current.srcObject = stream;
     });
   }, []);
 
-  return <video autoPlay ref={ref} />;
+  return <video autoPlay ref={streamRef} />;
 };
 
 export default Video;
