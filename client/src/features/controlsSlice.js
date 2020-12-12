@@ -3,16 +3,16 @@ import { createSlice } from "@reduxjs/toolkit";
 export const controlsSlice = createSlice({
   name: "controls",
   initialState: {
+    audio: true,
     video: true,
-    sound: true,
     chat: false,
   },
   reducers: {
+    setAudio: (state, action) => {
+      state.audio = action.payload.audio;
+    },
     setVideo: (state, action) => {
       state.video = action.payload.video;
-    },
-    setSound: (state, action) => {
-      state.sound = action.payload.sound;
     },
     setChat: (state, action) => {
       state.chat = action.payload.chat;
@@ -20,10 +20,10 @@ export const controlsSlice = createSlice({
   },
 });
 
-export const { setVideo, setSound, setChat } = controlsSlice.actions;
+export const { setAudio, setVideo, setChat } = controlsSlice.actions;
 
+export const selectAudio = (state) => state.controls.audio;
 export const selectVideo = (state) => state.controls.video;
-export const selectSound = (state) => state.controls.sound;
 export const selectChat = (state) => state.controls.chat;
 
 export default controlsSlice.reducer;

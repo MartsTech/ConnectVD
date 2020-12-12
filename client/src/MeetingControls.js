@@ -9,15 +9,15 @@ import VideocamOffIcon from "@material-ui/icons/VideocamOff";
 import ChatBubbleIcon from "@material-ui/icons/ChatBubble";
 import {
   selectChat,
-  selectSound,
+  selectAudio,
   selectVideo,
   setChat,
-  setSound,
+  setAudio,
   setVideo,
 } from "./features/controlsSlice";
 
 const MeetingControls = () => {
-  const sound = useSelector(selectSound);
+  const audio = useSelector(selectAudio);
   const video = useSelector(selectVideo);
   const chat = useSelector(selectChat);
 
@@ -28,11 +28,11 @@ const MeetingControls = () => {
       <div className="meeting__controlsLeft">
         <div
           onClick={(e) => {
-            dispatch(setSound({ sound: !sound }));
+            dispatch(setAudio({ audio: !audio }));
           }}
           className="meeting__controlsButton"
         >
-          {sound ? (
+          {audio ? (
             <div className="micOn">
               <MicIcon fontSize="large" />
             </div>
@@ -41,7 +41,7 @@ const MeetingControls = () => {
               <MicOffIcon fontSize="large" />
             </div>
           )}
-          {sound ? <h3>Mute</h3> : <h3>Unmute</h3>}
+          {audio ? <h3>Mute</h3> : <h3>Unmute</h3>}
         </div>
         <div
           onClick={(e) => dispatch(setVideo({ video: !video }))}

@@ -30,17 +30,18 @@ io.on("connection", (socket) => {
     const usersInRoom = rooms[roomID].filter((id) => id !== socket.id);
 
     socket.emit("all users", usersInRoom);
+    console.log("Connect: ", rooms, users);
   });
 
   socket.on("sending signal", (payload) => {
     io.to(payload.userToSignal).emit("user joined", {
       signal: payload.signal,
-      caller: payload.caller,
+      callerID: payload.callerID,
     });
   });
 
   socket.on("returning signal", (payload) => {
-    io.to(payload.caller).emit("receiving returned signal", {
+    io.to(payload.callerID).emit("receiving returned signal", {
       signal: payload.signal,
       id: socket.id,
     });
@@ -59,6 +60,7 @@ io.on("connection", (socket) => {
     if (rooms[roomID] && Object.keys(rooms[roomID]).length === 0) {
       delete rooms[roomID];
     }
+    console.log("Disconnect: ", rooms, users);
   });
 });
 
