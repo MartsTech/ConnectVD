@@ -47,6 +47,10 @@ io.on("connection", (socket) => {
     });
   });
 
+  socket.on("send message", (message) => {
+    io.emit("get message", message);
+  });
+
   socket.on("disconnect", () => {
     const roomID = users[socket.id];
     let room = rooms[roomID];
