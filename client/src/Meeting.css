@@ -7,10 +7,9 @@
 }
 
 .meeting__main {
-  flex: auto;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  width: 100%;
 }
 
 .meeting__videos {

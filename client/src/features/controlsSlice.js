@@ -3,9 +3,9 @@ import { createSlice } from "@reduxjs/toolkit";
 export const controlsSlice = createSlice({
   name: "controls",
   initialState: {
-    audio: true,
-    video: true,
-    chat: false,
+    audio: null,
+    video: null,
+    chat: null,
   },
   reducers: {
     setAudio: (state, action) => {
