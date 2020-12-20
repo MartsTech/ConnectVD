@@ -1,15 +1,17 @@
 import React, { useEffect, useRef } from "react";
 
 const Video = ({ peer }) => {
-  const streamRef = useRef();
+  const videoRef = useRef();
 
   useEffect(() => {
-    peer.on("stream", (stream) => {
-      streamRef.current.srcObject = stream;
-    });
+    peer.ontrack = handleTrackEvent;
   }, []);
 
-  return <video autoPlay ref={streamRef} />;
+  const handleTrackEvent = (e) => {
+    videoRef.current.srcObject = e.streams[0];
+  };
+
+  return <video autoPlay ref={videoRef} />;
 };
 
 export default Video;

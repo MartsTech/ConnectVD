@@ -1,9 +1,9 @@
-import { Button } from "@material-ui/core";
 import React from "react";
-import { Canvas } from "react-three-fiber";
 import { auth, provider } from "./firebase";
-import "./Login.css";
+import { Button } from "@material-ui/core";
+import { Canvas } from "react-three-fiber";
 import Stars from "./Stars";
+import "./Login.css";
 
 const Login = () => {
   const signIn = () => {
