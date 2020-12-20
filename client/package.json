@@ -15,7 +15,6 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.1",
     "react-three-fiber": "^5.3.10",
-    "simple-peer": "^9.9.3",
     "socket.io-client": "^3.0.3",
     "three": "^0.123.0",
     "timeago.js": "^4.0.2",

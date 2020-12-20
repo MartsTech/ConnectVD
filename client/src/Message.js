@@ -1,5 +1,5 @@
-import { Avatar } from "@material-ui/core";
 import React, { forwardRef } from "react";
+import { Avatar } from "@material-ui/core";
 import * as timeago from "timeago.js";
 import "./Message.css";
 

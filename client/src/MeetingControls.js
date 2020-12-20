@@ -1,12 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import "./MeetingControls.css";
-import MicIcon from "@material-ui/icons/Mic";
-import MicOffIcon from "@material-ui/icons/MicOff";
-import VideocamIcon from "@material-ui/icons/Videocam";
-import VideocamOffIcon from "@material-ui/icons/VideocamOff";
-import ChatBubbleIcon from "@material-ui/icons/ChatBubble";
 import {
   selectChat,
   selectAudio,
@@ -15,6 +9,12 @@ import {
   setAudio,
   setVideo,
 } from "./features/controlsSlice";
+import MicIcon from "@material-ui/icons/Mic";
+import MicOffIcon from "@material-ui/icons/MicOff";
+import VideocamIcon from "@material-ui/icons/Videocam";
+import VideocamOffIcon from "@material-ui/icons/VideocamOff";
+import ChatBubbleIcon from "@material-ui/icons/ChatBubble";
+import "./MeetingControls.css";
 
 const MeetingControls = () => {
   const audio = useSelector(selectAudio);

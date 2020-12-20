@@ -1,10 +1,10 @@
 import React from "react";
-import Room from "./Room";
-import "./Meeting.css";
-import MeetingControls from "./MeetingControls";
-import { selectChat } from "./features/controlsSlice";
 import { useSelector } from "react-redux";
+import { selectChat } from "./features/controlsSlice";
+import Room from "./Room";
 import MeetingChat from "./MeetingChat";
+import MeetingControls from "./MeetingControls";
+import "./Meeting.css";
 
 const Meeting = (props) => {
   const chat = useSelector(selectChat);

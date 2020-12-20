@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-import CreateRoom from "./CreateRoom";
+import { useDispatch, useSelector } from "react-redux";
 import { login, logout, selectUser } from "./features/userSlice";
 import { auth } from "./firebase";
-import Login from "./Login";
+import CreateRoom from "./CreateRoom";
 import Meeting from "./Meeting";
+import Login from "./Login";
 
 const App = () => {
   const user = useSelector(selectUser);

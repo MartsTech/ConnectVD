@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "./features/userSlice";
-import FlipMove from "react-flip-move";
 import firebase from "firebase";
 import db from "./firebase";
-import "./MeetingChat.css";
+import FlipMove from "react-flip-move";
 import Message from "./Message";
+import "./MeetingChat.css";
 
 const MeetingChat = (props) => {
   const [input, setInput] = useState("");
@@ -48,11 +48,11 @@ const MeetingChat = (props) => {
         <h2>Chat</h2>
       </div>
       <div className="chat__messages">
-          <FlipMove>
-            {messages.map(({ id, data }) => (
-              <Message key={id} contents={data} />
-            ))}
-          </FlipMove>
+        <FlipMove>
+          {messages.map(({ id, data }) => (
+            <Message key={id} contents={data} />
+          ))}
+        </FlipMove>
       </div>
       <div className="chat__footer">
         <form>

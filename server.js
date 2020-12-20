@@ -10,7 +10,7 @@ const port = process.env.PORT || 8000;
 const server = http.createServer(app);
 const io = socket(server);
 
-// Socket Config
+// Socket Endpoints
 const rooms = {};
 const users = {};
 
@@ -28,27 +28,22 @@ io.on("connection", (socket) => {
     }
     users[socket.id] = roomID;
     const usersInRoom = rooms[roomID].filter((id) => id !== socket.id);
-
-    socket.emit("all users", usersInRoom);
+    if (usersInRoom) {
+      socket.emit("other users", usersInRoom);
+    }
     console.log("Connect: ", rooms, users);
   });
 
-  socket.on("sending signal", (payload) => {
-    io.to(payload.userToSignal).emit("user joined", {
-      signal: payload.signal,
-      callerID: payload.callerID,
-    });
+  socket.on("offer", (payload) => {
+    io.to(payload.target).emit("offer", payload);
   });
 
-  socket.on("returning signal", (payload) => {
-    io.to(payload.callerID).emit("receiving returned signal", {
-      signal: payload.signal,
-      id: socket.id,
-    });
+  socket.on("answer", (payload) => {
+    io.to(payload.target).emit("answer", payload);
   });
 
-  socket.on("send message", (message) => {
-    io.emit("get message", message);
+  socket.on("ice-candidate", (payload) => {
+    socket.to(payload.target).emit("ice-candidate", payload);
   });
 
   socket.on("disconnect", () => {
