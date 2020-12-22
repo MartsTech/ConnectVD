@@ -6,10 +6,9 @@
   align-items: center;
 }
 
-.meeting__controlsLeft {
+.meeting__controlsLeft,
+.meeting__controlsCenter {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
 }
 
 .meeting__controlsButton {
