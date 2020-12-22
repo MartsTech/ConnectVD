@@ -1,11 +1,12 @@
 import { Button } from "@material-ui/core";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
 import { login } from "./features/userSlice";
 import { auth, provider } from "./firebase";
 import "./Register.css";
 
-const Register = () => {
+const Register = (props) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -25,67 +26,74 @@ const Register = () => {
     auth
       .createUserWithEmailAndPassword(email, password)
       .then((userAuth) => {
-        userAuth.user.updateProfile({ displayName: name }).then(() => {
-          dispatch(
-            login({
-              displayName: name,
-              uid: userAuth.user.uid,
-            })
-          );
-        });
+        userAuth.user
+          .updateProfile({ displayName: name })
+          .then(() => {
+            dispatch(
+              login({
+                displayName: userAuth.user.displayName,
+                uid: userAuth.user.uid,
+              })
+            );
+          })
+          .then(() => {
+            props.history.push("/");
+          });
       })
       .catch((err) => alert(err));
   };
 
-  const signIn = () => {
+  const signInGoogle = () => {
     auth.signInWithPopup(provider).catch((err) => alert(err));
   };
 
   return (
     <div className="register">
-      <h1>Sign Up</h1>
-      <div className="google" onClick={(e) => signIn()}>
-        <img src="https://kgo.googleusercontent.com/profile_vrt_raw_bytes_1587515358_10512.png" />
-        <button>Sign in with Google</button>
+      <div className="registerContainer">
+        <h1>Create your account</h1>
+        <div className="google" onClick={(e) => signInGoogle()}>
+          <img src="https://kgo.googleusercontent.com/profile_vrt_raw_bytes_1587515358_10512.png" />
+          <button>Sign in with Google</button>
+        </div>
+
+        <p>or</p>
+        <form>
+          <input
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+            type="text"
+            placeholder="First name"
+          />
+          <input
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+            type="text"
+            placeholder="Last name"
+          />
+          <input
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            type="email"
+            placeholder="Email"
+          />
+          <input
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            type="password"
+            placeholder="Password"
+          />
+          <Button type="submit" onClick={register}>
+            Register
+          </Button>
+        </form>
+
+        <p>
+          Already have an account?{" "}
+          <Link className="register__link" to="/">
+            <span>Log in now</span>
+          </Link>
+        </p>
       </div>
-
-      <p>or</p>
-      <form>
-        <input
-          value={firstName}
-          onChange={(e) => setFirstName(e.target.value)}
-          type="text"
-          placeholder="First name"
-        />
-        <input
-          value={lastName}
-          onChange={(e) => setLastName(e.target.value)}
-          type="text"
-          placeholder="Last name"
-        />
-        <input
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          type="email"
-          placeholder="Email"
-        />
-        <input
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          type="password"
-          placeholder="Password"
-        />
-        <Button type="submit" onClick={register}>
-          Register
-        </Button>
-      </form>
-
-      <p>
-        Already have an account?{" "}
-        <span className="register__link" onClick={register}>
-          Log in now
-        </span>
-      </p>
     </div>
   );
 };

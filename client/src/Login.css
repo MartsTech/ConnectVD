@@ -1,17 +1,11 @@
-.register {
-  background-color: whitesmoke;
-  height: 100%;
-}
-
-.registerContainer {
-  width: fit-content;
-  height: 100%;
+.login {
   display: flex;
+  height: 100%;
   flex-direction: column;
   align-items: center;
+  background-color: whitesmoke;
 }
-
-.registerContainer > h1 {
+.login > h1 {
   padding: 50px;
 }
 
@@ -38,18 +32,18 @@
   height: 38px;
 }
 
-.registerContainer > p {
+.login > p {
   padding-top: 30px;
 }
 
-.registerContainer > form {
+.login > form {
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 30px;
 }
 
-.registerContainer > form > input {
+.login > form > input {
   width: 350px;
   height: 50px;
   font-size: 20px;
@@ -58,7 +52,7 @@
   border-radius: 5px;
 }
 
-.registerContainer > form > button {
+.login > form > button {
   width: 365px;
   height: 50px;
   font-size: large;
@@ -67,12 +61,11 @@
   border-radius: 5px;
 }
 
-.registerContainer > form > button:hover {
+.login > form > button:hover {
   background-color: #0053b1;
 }
 
-.register__link {
+.login__link {
   color: #0177b7;
   cursor: pointer;
-  text-decoration: none;
 }

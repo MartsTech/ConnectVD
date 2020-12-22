@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import io from "socket.io-client";
+import { selectLeave, setLeave } from "./features/controlsSlice";
 import Video from "./Video";
 
 const Room = (props) => {
@@ -10,11 +12,15 @@ const Room = (props) => {
   const userStream = useRef();
   const userVideo = useRef();
 
+  const dispatch = useDispatch();
+
+  const leave = useSelector(selectLeave);
+
   const roomID = props.match.params.roomID;
 
   const mediaConstraints = {
     audio: true,
-    video: { height: window.innerHeight / 3, width: window.innerWidth / 3 },
+    video: { height: window.innerHeight / 2.5, width: window.innerWidth / 2.5 },
   };
 
   const iceConfiguration = {
@@ -31,7 +37,7 @@ const Room = (props) => {
   };
 
   useEffect(() => {
-    getUserStream();
+    getUserStream(mediaConstraints);
     socketRef.current = io.connect("/");
     socketRef.current.emit("join room", roomID);
 
@@ -57,9 +63,19 @@ const Room = (props) => {
     socketRef.current.on("ice-candidate", handleNewICECandidateMsg);
   }, []);
 
-  const getUserStream = () => {
+  useEffect(() => {
+    if (leave) {
+      socketRef.current.disconnect();
+      userStream.current.getTracks().forEach((track) => {
+        track.stop();
+      });
+      dispatch(setLeave({ leave: false }));
+    }
+  }, [leave]);
+
+  const getUserStream = (constraints) => {
     navigator.mediaDevices
-      .getUserMedia(mediaConstraints)
+      .getUserMedia(constraints)
       .then((stream) => {
         userStream.current = stream;
         userVideo.current.srcObject = stream;

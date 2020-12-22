@@ -11,10 +11,6 @@ const CreateRoom = (props) => {
     props.history.push(`/room/${id}`);
   };
 
-  const signOut = () => {
-    auth.signOut();
-  };
-
   return (
     <div className="main">
       <div className="main__cards">
@@ -26,7 +22,7 @@ const CreateRoom = (props) => {
           </IconButton>
         </div>
         <div className="main__card">
-          <button onClick={signOut}>Logout</button>
+          <button onClick={() => auth.signOut()}>Logout</button>
         </div>
       </div>
     </div>

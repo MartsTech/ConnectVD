@@ -5,6 +5,7 @@ import { login, logout, selectUser } from "./features/userSlice";
 import { auth } from "./firebase";
 
 const Access = lazy(() => import("./Access"));
+const Header = lazy(() => import("./Header"));
 const Main = lazy(() => import("./Main"));
 const Meeting = lazy(() => import("./Meeting"));
 
@@ -31,14 +32,16 @@ const App = () => {
   return (
     <BrowserRouter>
       <Switch>
-        {user ? (
+        {!user ? (
           <Suspense fallback={<div>Loading...</div>}>
-            <Route path="/" exact component={Main} />
-            <Route path="/room/:roomID" component={Meeting} />
+            <Route path="/register" component={Access} />
+            <Route path="/" exact component={Access} />
           </Suspense>
         ) : (
           <Suspense fallback={<div>Loading...</div>}>
-            <Route path="/" component={Access} />
+            <Route path="/" component={Header} />
+            <Route path="/" exact component={Main} />
+            <Route path="/room/:roomID" component={Meeting} />
           </Suspense>
         )}
       </Switch>
