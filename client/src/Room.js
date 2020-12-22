@@ -2,8 +2,10 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import io from "socket.io-client";
 import {
+  selectAudio,
   selectLeave,
   selectScreen,
+  selectVideo,
   setLeave,
   setScreen,
 } from "./features/controlsSlice";
@@ -19,6 +21,8 @@ const Room = (props) => {
   const senders = useRef([]);
 
   const dispatch = useDispatch();
+  const audio = useSelector(selectAudio);
+  const video = useSelector(selectVideo);
   const screen = useSelector(selectScreen);
   const leave = useSelector(selectLeave);
 
@@ -70,6 +74,55 @@ const Room = (props) => {
   }, []);
 
   useEffect(() => {
+    const toggleAudio = (audio) => {
+      if (userStream.current) {
+        const audioTrack = (userStream.current.getAudioTracks()[0].enabled = audio);
+        senders.current.forEach((sender) => {
+          if (sender.track.kind === "audio") {
+            sender.replaceTrack(audioTrack).catch((err) => {});
+          }
+        });
+      }
+    };
+    toggleAudio(audio);
+  }, [audio]);
+
+  useEffect(() => {
+    const toggleVideo = (video) => {
+      if (userStream.current) {
+        const videoTrack = (userStream.current.getVideoTracks()[0].enabled = video);
+        senders.current.forEach((sender) => {
+          if (sender.track.kind === "video") {
+            sender.replaceTrack(videoTrack).catch((err) => {});
+          }
+        });
+      }
+    };
+    toggleVideo(video);
+  }, [video]);
+
+  useEffect(() => {
+    const shareScreen = () => {
+      navigator.mediaDevices
+        .getDisplayMedia({ cursor: true })
+        .then((stream) => {
+          const screenTrack = stream.getTracks()[0];
+          senders.current.forEach((sender) => {
+            if (sender.track.kind === "video") {
+              sender.replaceTrack(screenTrack);
+            }
+          });
+
+          screenTrack.onended = () => {
+            senders.current.forEach((sender) => {
+              if (sender.track.kind === "video") {
+                sender.replaceTrack(userStream.current.getTracks()[1]);
+              }
+            });
+          };
+        });
+    };
+
     if (screen) {
       shareScreen();
       dispatch(setScreen({ screen: false }));
@@ -114,25 +167,6 @@ const Room = (props) => {
         senders.current.push(peerObj.peer.addTrack(track, userStream.current));
       });
     }
-  };
-
-  const shareScreen = () => {
-    navigator.mediaDevices.getDisplayMedia({ cursor: true }).then((stream) => {
-      const screenTrack = stream.getTracks()[0];
-      senders.current.forEach((sender) => {
-        if (sender.track.kind === "video") {
-          sender.replaceTrack(screenTrack);
-        }
-      });
-
-      screenTrack.onended = () => {
-        senders.current.forEach((sender) => {
-          if (sender.track.kind === "video") {
-            sender.replaceTrack(userStream.current.getTracks()[1]);
-          }
-        });
-      };
-    });
   };
 
   const handleNegotiationNeededEvent = (userID) => {
