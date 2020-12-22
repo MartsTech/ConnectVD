@@ -8,6 +8,7 @@ import {
   setAudio,
   setVideo,
   setLeave,
+  setScreen,
 } from "./features/controlsSlice";
 import { Button } from "@material-ui/core";
 import MicIcon from "@material-ui/icons/Mic";
@@ -15,6 +16,7 @@ import MicOffIcon from "@material-ui/icons/MicOff";
 import VideocamIcon from "@material-ui/icons/Videocam";
 import VideocamOffIcon from "@material-ui/icons/VideocamOff";
 import ChatBubbleIcon from "@material-ui/icons/ChatBubble";
+import ScreenShareIcon from "@material-ui/icons/ScreenShare";
 import "./MeetingControls.css";
 
 const MeetingControls = (props) => {
@@ -66,6 +68,17 @@ const MeetingControls = (props) => {
         </div>
       </div>
       <div className="meeting__controlsCenter">
+        <div className="meeting__shareScreen">
+          <div
+            onClick={() => {
+              dispatch(setScreen({ screen: true }));
+            }}
+            className="meeting__controlsButton"
+          >
+            <ScreenShareIcon fontSize="large" />
+            <h3>Share Screen</h3>
+          </div>
+        </div>
         <div className="meeting__chat">
           <div
             onClick={() => {
@@ -79,7 +92,7 @@ const MeetingControls = (props) => {
         </div>
       </div>
       <div className="meeting__controlsRight">
-        <Button onClick={leaveRoom}>
+        <Button className="meeting__controlsButton" onClick={leaveRoom}>
           <h3 id="meeting__leave">Leave Meeting</h3>
         </Button>
       </div>

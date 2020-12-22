@@ -1,7 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import io from "socket.io-client";
-import { selectLeave, setLeave } from "./features/controlsSlice";
+import {
+  selectLeave,
+  selectScreen,
+  setLeave,
+  setScreen,
+} from "./features/controlsSlice";
 import Video from "./Video";
 
 const Room = (props) => {
@@ -11,9 +16,10 @@ const Room = (props) => {
   const socketRef = useRef();
   const userStream = useRef();
   const userVideo = useRef();
+  const senders = useRef([]);
 
   const dispatch = useDispatch();
-
+  const screen = useSelector(selectScreen);
   const leave = useSelector(selectLeave);
 
   const roomID = props.match.params.roomID;
@@ -37,7 +43,7 @@ const Room = (props) => {
   };
 
   useEffect(() => {
-    getUserStream(mediaConstraints);
+    getUserStream();
     socketRef.current = io.connect("/");
     socketRef.current.emit("join room", roomID);
 
@@ -64,6 +70,13 @@ const Room = (props) => {
   }, []);
 
   useEffect(() => {
+    if (screen) {
+      shareScreen();
+      dispatch(setScreen({ screen: false }));
+    }
+  }, [screen]);
+
+  useEffect(() => {
     if (leave) {
       socketRef.current.disconnect();
       userStream.current.getTracks().forEach((track) => {
@@ -73,15 +86,15 @@ const Room = (props) => {
     }
   }, [leave]);
 
-  const getUserStream = (constraints) => {
+  const getUserStream = () => {
     navigator.mediaDevices
-      .getUserMedia(constraints)
+      .getUserMedia(mediaConstraints)
       .then((stream) => {
         userStream.current = stream;
         userVideo.current.srcObject = stream;
       })
       .catch((err) => {
-        console.error(err);
+        console.log(err);
       });
   };
 
@@ -97,10 +110,29 @@ const Room = (props) => {
   const setTracks = (userID) => {
     const peerObj = peersRef.current.find((peer) => peer.peerID === userID);
     if (peerObj) {
-      userStream.current
-        .getTracks()
-        .forEach((track) => peerObj.peer.addTrack(track, userStream.current));
+      userStream.current.getTracks().forEach((track) => {
+        senders.current.push(peerObj.peer.addTrack(track, userStream.current));
+      });
     }
+  };
+
+  const shareScreen = () => {
+    navigator.mediaDevices.getDisplayMedia({ cursor: true }).then((stream) => {
+      const screenTrack = stream.getTracks()[0];
+      senders.current.forEach((sender) => {
+        if (sender.track.kind === "video") {
+          sender.replaceTrack(screenTrack);
+        }
+      });
+
+      screenTrack.onended = () => {
+        senders.current.forEach((sender) => {
+          if (sender.track.kind === "video") {
+            sender.replaceTrack(userStream.current.getTracks()[1]);
+          }
+        });
+      };
+    });
   };
 
   const handleNegotiationNeededEvent = (userID) => {

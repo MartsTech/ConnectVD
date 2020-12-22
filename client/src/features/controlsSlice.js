@@ -6,6 +6,7 @@ export const controlsSlice = createSlice({
     audio: true,
     video: true,
     chat: false,
+    screen: false,
     leave: false,
   },
   reducers: {
@@ -18,17 +19,27 @@ export const controlsSlice = createSlice({
     setChat: (state, action) => {
       state.chat = action.payload.chat;
     },
+    setScreen: (state, action) => {
+      state.screen = action.payload.screen;
+    },
     setLeave: (state, action) => {
       state.leave = action.payload.leave;
     },
   },
 });
 
-export const { setAudio, setVideo, setChat, setLeave } = controlsSlice.actions;
+export const {
+  setAudio,
+  setVideo,
+  setChat,
+  setScreen,
+  setLeave,
+} = controlsSlice.actions;
 
 export const selectAudio = (state) => state.controls.audio;
 export const selectVideo = (state) => state.controls.video;
 export const selectChat = (state) => state.controls.chat;
+export const selectScreen = (state) => state.controls.screen;
 export const selectLeave = (state) => state.controls.leave;
 
 export default controlsSlice.reducer;
