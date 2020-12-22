@@ -13,7 +13,7 @@ const Meeting = (props) => {
     <div className="meeting">
       <div className="meeting__main">
         <Room {...props} />
-        <MeetingControls />
+        <MeetingControls {...props} />
       </div>
       {chat && <MeetingChat {...props} />}
     </div>

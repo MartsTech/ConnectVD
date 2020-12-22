@@ -32,7 +32,7 @@
   color: red;
 }
 
-.meeting__leave {
+#meeting__leave {
   color: red;
-  text-decoration: none;
+  text-transform: none;
 }

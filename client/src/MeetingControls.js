@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   selectChat,
@@ -8,7 +7,9 @@ import {
   setChat,
   setAudio,
   setVideo,
+  setLeave,
 } from "./features/controlsSlice";
+import { Button } from "@material-ui/core";
 import MicIcon from "@material-ui/icons/Mic";
 import MicOffIcon from "@material-ui/icons/MicOff";
 import VideocamIcon from "@material-ui/icons/Videocam";
@@ -16,18 +17,23 @@ import VideocamOffIcon from "@material-ui/icons/VideocamOff";
 import ChatBubbleIcon from "@material-ui/icons/ChatBubble";
 import "./MeetingControls.css";
 
-const MeetingControls = () => {
+const MeetingControls = (props) => {
   const audio = useSelector(selectAudio);
   const video = useSelector(selectVideo);
   const chat = useSelector(selectChat);
 
   const dispatch = useDispatch();
 
+  const leaveRoom = async () => {
+    await dispatch(setLeave({ leave: true }));
+    props.history.push("/");
+  };
+
   return (
     <div className="meeting__controls">
       <div className="meeting__controlsLeft">
         <div
-          onClick={(e) => {
+          onClick={() => {
             dispatch(setAudio({ audio: !audio }));
           }}
           className="meeting__controlsButton"
@@ -44,7 +50,7 @@ const MeetingControls = () => {
           {audio ? <h3>Mute</h3> : <h3>Unmute</h3>}
         </div>
         <div
-          onClick={(e) => dispatch(setVideo({ video: !video }))}
+          onClick={() => dispatch(setVideo({ video: !video }))}
           className="meeting__controlsButton"
         >
           {video ? (
@@ -62,7 +68,7 @@ const MeetingControls = () => {
       <div className="meeting__controlsCenter">
         <div className="meeting__chat">
           <div
-            onClick={(e) => {
+            onClick={() => {
               dispatch(setChat({ chat: !chat }));
             }}
             className="meeting__controlsButton"
@@ -73,11 +79,9 @@ const MeetingControls = () => {
         </div>
       </div>
       <div className="meeting__controlsRight">
-        <Link to="/" className="meeting__leave">
-          <div className="meeting__controlsButton">
-            <h3>Leave Meeting</h3>
-          </div>
-        </Link>
+        <Button onClick={leaveRoom}>
+          <h3 id="meeting__leave">Leave Meeting</h3>
+        </Button>
       </div>
     </div>
   );
