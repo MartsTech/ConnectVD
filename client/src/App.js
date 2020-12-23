@@ -39,7 +39,7 @@ const App = () => {
           </Suspense>
         ) : (
           <Suspense fallback={<div>Loading...</div>}>
-            <Route path="/" component={Header} />
+            <Route path="/" exact component={Header} />
             <Route path="/" exact component={Main} />
             <Route path="/room/:roomID" component={Meeting} />
           </Suspense>

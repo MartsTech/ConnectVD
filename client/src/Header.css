@@ -3,14 +3,22 @@
   top: 0;
   z-index: 999;
   width: 100%;
-  height: 5.9vh;
-  border-bottom: 0.1px solid lightgray;
-  background-color: white;
+  height: 7vh;
+  background-color: #242526;
+  color: white;
 }
 
 .headerContainer {
   display: flex;
+  place-items: center;
   justify-content: space-between;
-  align-items: center;
   padding: 10px;
+}
+
+.header__avatar {
+  transition: filter 300ms;
+}
+
+.header__avatar:hover {
+  filter: brightness(1.1);
 }

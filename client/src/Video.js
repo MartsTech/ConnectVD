@@ -11,7 +11,7 @@ const Video = ({ peer }) => {
     videoRef.current.srcObject = e.streams[0];
   };
 
-  return <video autoPlay ref={videoRef} />;
+  return <video autoPlay playsInline ref={videoRef} />;
 };
 
 export default Video;

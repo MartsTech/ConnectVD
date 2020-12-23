@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import io from "socket.io-client";
+import { useDispatch, useSelector } from "react-redux";
 import {
   selectAudio,
   selectLeave,
@@ -74,9 +74,9 @@ const Room = (props) => {
   }, []);
 
   useEffect(() => {
-    const toggleAudio = (audio) => {
+    const toggleAudio = (state) => {
       if (userStream.current) {
-        const audioTrack = (userStream.current.getAudioTracks()[0].enabled = audio);
+        const audioTrack = (userStream.current.getAudioTracks()[0].enabled = state);
         senders.current.forEach((sender) => {
           if (sender.track.kind === "audio") {
             sender.replaceTrack(audioTrack).catch((err) => {});
@@ -88,9 +88,9 @@ const Room = (props) => {
   }, [audio]);
 
   useEffect(() => {
-    const toggleVideo = (video) => {
+    const toggleVideo = (state) => {
       if (userStream.current) {
-        const videoTrack = (userStream.current.getVideoTracks()[0].enabled = video);
+        const videoTrack = (userStream.current.getVideoTracks()[0].enabled = state);
         senders.current.forEach((sender) => {
           if (sender.track.kind === "video") {
             sender.replaceTrack(videoTrack).catch((err) => {});
@@ -119,13 +119,13 @@ const Room = (props) => {
                 sender.replaceTrack(userStream.current.getTracks()[1]);
               }
             });
+            dispatch(setScreen({ screen: false }));
           };
         });
     };
 
     if (screen) {
       shareScreen();
-      dispatch(setScreen({ screen: false }));
     }
   }, [screen]);
 
@@ -147,7 +147,7 @@ const Room = (props) => {
         userVideo.current.srcObject = stream;
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
       });
   };
 
@@ -211,7 +211,6 @@ const Room = (props) => {
           caller: socketRef.current.id,
           sdp: peerObj.peer.localDescription,
         };
-
         socketRef.current.emit("answer", payload);
       })
       .catch((err) => console.error(err));

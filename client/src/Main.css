@@ -2,30 +2,47 @@
   display: grid;
   place-items: center;
   width: 100%;
-  height: 94vh;
+  height: 93vh;
   background-color: whitesmoke;
 }
 
 .main__cards {
   display: flex;
-  flex-wrap: wrap;
-  width: 300px;
-  height: 300px;
+  justify-content: space-between;
+  width: 350px;
+  height: 350px;
+}
+
+.main__cardsLeft,
+.main__cardsRight {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .main__card {
-  width: 50%;
-  height: 50%;
   display: grid;
   place-items: center;
+  height: 150px;
+  width: 150px;
+  border-radius: 20px;
 }
 
-.main__newMeeting {
-  background-color: coral;
-  border-top-left-radius: 20px;
+.main__card > h3 {
+  margin-top: 20px;
+  font-weight: 500;
 }
 
 .main__icon > .MuiSvgIcon-root {
+  margin-top: 10px;
   color: black;
   font-size: 100px;
+}
+
+#main__newMeeting {
+  background-color: coral;
+}
+
+#main__joinRoom {
+  background-color: dodgerblue;
 }
