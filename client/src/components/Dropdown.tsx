@@ -1,12 +1,12 @@
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import React from "react";
 import { useSelector } from "react-redux";
-import DropdownItem from "./DropdownItem";
-import { selectUser } from "./features/userSlice";
-import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import "./Dropdown.css";
-import { auth } from "./firebase";
+import { DropdownItem } from "./DropdownItem";
+import { selectUser } from "../features/userSlice";
+import { auth } from "../firebase";
+import "../styles/Dropdown.css";
 
-const Dropdown = () => {
+export const Dropdown: React.FC<{}> = ({}) => {
   const user = useSelector(selectUser);
 
   return (
@@ -20,5 +20,3 @@ const Dropdown = () => {
     </div>
   );
 };
-
-export default Dropdown;

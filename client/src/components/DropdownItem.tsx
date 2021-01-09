@@ -1,8 +1,20 @@
-import { Avatar } from "@material-ui/core";
+import Avatar from "@material-ui/core/Avatar";
 import React from "react";
-import "./DropdownItem.css";
+import "../styles/DropdownItem.css";
 
-const DropdownItem = ({ avatar, text, icon, onClick }) => {
+type dropdownItemProps = {
+  text: string;
+  avatar?: boolean;
+  icon?: any;
+  onClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+};
+
+export const DropdownItem: React.FC<dropdownItemProps> = ({
+  avatar,
+  text,
+  icon,
+  onClick,
+}) => {
   return (
     <div onClick={onClick} className="dropdownItem">
       {avatar && <Avatar className="dropdownItem__icon">{text[0]}</Avatar>}
@@ -15,5 +27,3 @@ const DropdownItem = ({ avatar, text, icon, onClick }) => {
     </div>
   );
 };
-
-export default DropdownItem;

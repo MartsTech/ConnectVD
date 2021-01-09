@@ -1,9 +1,9 @@
 import { Avatar } from "@material-ui/core";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { selectUser } from "./features/userSlice";
-import Dropdown from "./Dropdown";
-import "./Header.css";
+import { Dropdown } from "./Dropdown";
+import { selectUser } from "../features/userSlice";
+import "../styles/Header.css";
 
 const Header = () => {
   const [opened, setOpen] = useState(false);

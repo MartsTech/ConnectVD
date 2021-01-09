@@ -1,15 +1,14 @@
 import React, { lazy, Suspense, useEffect } from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { login, logout, selectUser } from "./features/userSlice";
-import { auth } from "./firebase";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { login, logout, selectUser } from "../features/userSlice";
+import { auth } from "../firebase";
 
 const Access = lazy(() => import("./Access"));
-const Header = lazy(() => import("./Header"));
 const Main = lazy(() => import("./Main"));
 const Meeting = lazy(() => import("./Meeting"));
 
-const App = () => {
+const App: React.FC<{}> = ({}) => {
   const user = useSelector(selectUser);
 
   const dispatch = useDispatch();
@@ -35,13 +34,12 @@ const App = () => {
         {!user ? (
           <Suspense fallback={<div>Loading...</div>}>
             <Route path="/register" component={Access} />
-            <Route path="/" exact component={Access} />
+            <Route path="/login" exact component={Access} />
           </Suspense>
         ) : (
           <Suspense fallback={<div>Loading...</div>}>
-            <Route path="/" exact component={Header} />
             <Route path="/" exact component={Main} />
-            <Route path="/room/:roomID" component={Meeting} />
+            <Route path="/room/:roomId" component={Meeting} />
           </Suspense>
         )}
       </Switch>

@@ -1,23 +1,25 @@
-import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { selectUser } from "./features/userSlice";
 import firebase from "firebase";
-import db from "./firebase";
+import React, { useEffect, useState } from "react";
 import FlipMove from "react-flip-move";
-import Message from "./Message";
-import "./MeetingChat.css";
+import { useSelector } from "react-redux";
+import { Message } from "./Message";
+import { selectUser } from "../features/userSlice";
+import db from "../firebase";
+import "../styles/MeetingChat.css";
 
-const MeetingChat = (props) => {
-  const [input, setInput] = useState("");
-  const [messages, setMessages] = useState([]);
+export const MeetingChat: React.FC<any> = (props) => {
+  const [input, setInput] = useState<string>("");
+  const [messages, setMessages] = useState<
+    Array<{ id: string; data: firebase.firestore.DocumentData }>
+  >([]);
 
   const user = useSelector(selectUser);
 
-  const roomID = props.match.params.roomID;
+  const roomId = props.match.params.roomId;
 
   useEffect(() => {
     db.collection("rooms")
-      .doc(roomID)
+      .doc(roomId)
       .collection("messages")
       .orderBy("timestamp", "desc")
       .onSnapshot((snapshot) => {
@@ -30,10 +32,10 @@ const MeetingChat = (props) => {
       });
   }, []);
 
-  const sendMessage = (e) => {
+  const sendMessage = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
 
-    db.collection("rooms").doc(roomID).collection("messages").add({
+    db.collection("rooms").doc(roomId).collection("messages").add({
       displayName: user.displayName,
       message: input,
       timestamp: firebase.firestore.FieldValue.serverTimestamp(),
@@ -68,5 +70,3 @@ const MeetingChat = (props) => {
     </div>
   );
 };
-
-export default MeetingChat;

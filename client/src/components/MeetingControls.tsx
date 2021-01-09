@@ -1,28 +1,28 @@
-import React from "react";
-import { useSelector, useDispatch } from "react-redux";
-import {
-  selectChat,
-  selectAudio,
-  selectVideo,
-  setChat,
-  setAudio,
-  setVideo,
-  setLeave,
-  setScreen,
-} from "./features/controlsSlice";
 import { Button } from "@material-ui/core";
+import ChatBubbleIcon from "@material-ui/icons/ChatBubble";
 import MicIcon from "@material-ui/icons/Mic";
 import MicOffIcon from "@material-ui/icons/MicOff";
+import ScreenShareIcon from "@material-ui/icons/ScreenShare";
 import VideocamIcon from "@material-ui/icons/Videocam";
 import VideocamOffIcon from "@material-ui/icons/VideocamOff";
-import ChatBubbleIcon from "@material-ui/icons/ChatBubble";
-import ScreenShareIcon from "@material-ui/icons/ScreenShare";
-import "./MeetingControls.css";
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  selectAudio,
+  selectChat,
+  selectVideo,
+  setAudio,
+  setChat,
+  setLeave,
+  setScreen,
+  setVideo,
+} from "../features/controlsSlice";
+import "../styles/MeetingControls.css";
 
-const MeetingControls = (props) => {
-  const audio = useSelector(selectAudio);
-  const video = useSelector(selectVideo);
-  const chat = useSelector(selectChat);
+export const MeetingControls: React.FC<any> = (props) => {
+  const audio: boolean = useSelector(selectAudio);
+  const video: boolean = useSelector(selectVideo);
+  const chat: boolean = useSelector(selectChat);
 
   const dispatch = useDispatch();
 
@@ -99,5 +99,3 @@ const MeetingControls = (props) => {
     </div>
   );
 };
-
-export default MeetingControls;

@@ -36,10 +36,10 @@ export const {
   setLeave,
 } = controlsSlice.actions;
 
-export const selectAudio = (state) => state.controls.audio;
-export const selectVideo = (state) => state.controls.video;
-export const selectChat = (state) => state.controls.chat;
-export const selectScreen = (state) => state.controls.screen;
-export const selectLeave = (state) => state.controls.leave;
+export const selectAudio = (state: any) => state.controls.audio;
+export const selectVideo = (state: any) => state.controls.video;
+export const selectChat = (state: any) => state.controls.chat;
+export const selectScreen = (state: any) => state.controls.screen;
+export const selectLeave = (state: any) => state.controls.leave;
 
 export default controlsSlice.reducer;

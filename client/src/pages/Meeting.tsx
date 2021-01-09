@@ -1,12 +1,12 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { selectChat } from "./features/controlsSlice";
-import Room from "./Room";
-import MeetingChat from "./MeetingChat";
-import MeetingControls from "./MeetingControls";
-import "./Meeting.css";
+import { MeetingChat } from "../components/MeetingChat";
+import { MeetingControls } from "../components/MeetingControls";
+import { Room } from "../components/Room";
+import { selectChat } from "../features/controlsSlice";
+import "../styles/Meeting.css";
 
-const Meeting = (props) => {
+const Meeting: React.FC<any> = (props) => {
   const chat = useSelector(selectChat);
 
   return (

@@ -1,10 +1,15 @@
-import React, { forwardRef } from "react";
 import { Avatar } from "@material-ui/core";
+import firebase from "firebase";
+import React, { forwardRef } from "react";
 import * as timeago from "timeago.js";
-import "./Message.css";
+import "../styles/Message.css";
 
-const Message = forwardRef(
-  ({ id, contents: { displayName, message, timestamp } }, ref) => {
+type messageProps = {
+  contents: firebase.firestore.DocumentData;
+};
+
+export const Message: React.FC<messageProps> = forwardRef(
+  ({ contents: { displayName, message, timestamp } }, ref: any) => {
     return (
       <div ref={ref} className="message">
         <Avatar className="message__avatar">{displayName[0]}</Avatar>
@@ -16,5 +21,3 @@ const Message = forwardRef(
     );
   }
 );
-
-export default Message;
