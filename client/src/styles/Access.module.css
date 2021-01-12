@@ -5,10 +5,10 @@
   background-color: #272727;
 }
 
-.access__left {
+.left {
   flex: 0.25;
 }
 
-.access__right {
+.right {
   flex: 0.75;
 }

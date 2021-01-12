@@ -1,0 +1,6 @@
+mutation CreateRoom {
+  createRoom {
+    id
+    createdAt
+  }
+}

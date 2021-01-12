@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { login } from "../features/userSlice";
 import { auth, provider } from "../firebase";
-import "../styles/Register.css";
+import styles from "../styles/Register.module.css";
 
 const Register: React.FC<any> = (props) => {
   const [firstName, setFirstName] = useState("");
@@ -53,10 +53,10 @@ const Register: React.FC<any> = (props) => {
   };
 
   return (
-    <div className="register">
-      <div className="registerContainer">
+    <div className={styles.register}>
+      <div className={styles.container}>
         <h1>Create your account</h1>
-        <div className="google" onClick={(e) => signInGoogle()}>
+        <div className={styles.google} onClick={() => signInGoogle()}>
           <img src="https://kgo.googleusercontent.com/profile_vrt_raw_bytes_1587515358_10512.png" />
           <button>Sign in with Google</button>
         </div>
@@ -94,7 +94,7 @@ const Register: React.FC<any> = (props) => {
 
         <p>
           Already have an account?{" "}
-          <Link className="register__link" to="/login">
+          <Link className={styles.link} to="/login">
             <span>Log in now</span>
           </Link>
         </p>

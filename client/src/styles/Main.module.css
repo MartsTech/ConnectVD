@@ -6,21 +6,21 @@
   background-color: whitesmoke;
 }
 
-.main__cards {
+.cards {
   display: flex;
   justify-content: space-between;
   width: 350px;
   height: 350px;
 }
 
-.main__cardsLeft,
-.main__cardsRight {
+.cardsLeft,
+.cardsRight {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
 
-.main__card {
+.card {
   display: grid;
   place-items: center;
   height: 150px;
@@ -28,21 +28,21 @@
   border-radius: 20px;
 }
 
-.main__card > h3 {
+.card > h3 {
   margin-top: 20px;
   font-weight: 500;
 }
 
-.main__icon > .MuiSvgIcon-root {
+.icon > svg {
   margin-top: 10px;
   color: black;
   font-size: 100px;
 }
 
-#main__newMeeting {
+#newMeeting {
   background-color: coral;
 }
 
-#main__joinRoom {
+#joinRoom {
   background-color: dodgerblue;
 }

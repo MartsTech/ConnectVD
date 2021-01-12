@@ -4,14 +4,14 @@ import { MeetingChat } from "../components/MeetingChat";
 import { MeetingControls } from "../components/MeetingControls";
 import { Room } from "../components/Room";
 import { selectChat } from "../features/controlsSlice";
-import "../styles/Meeting.css";
+import styles from "../styles/Meeting.module.css";
 
 const Meeting: React.FC<any> = (props) => {
   const chat = useSelector(selectChat);
 
   return (
-    <div className="meeting">
-      <div className="meeting__main">
+    <div className={styles.meeting}>
+      <div className={styles.main}>
         <Room {...props} />
         <MeetingControls {...props} />
       </div>

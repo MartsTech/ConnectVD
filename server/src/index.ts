@@ -32,6 +32,7 @@ const main = async () => {
 
   // Socket Endpoints
   const server = http.createServer(app);
+  // @ts-ignore
   const io: Server = socket(server, {
     cors: {
       origin: "http://localhost:3000",
@@ -52,7 +53,7 @@ const main = async () => {
   const users: any = {};
 
   io.on("connection", (socket: Socket) => {
-    socket.on("join room", (roomId) => {
+    socket.on("join room", async (roomId) => {
       if (rooms[roomId]) {
         const length = rooms[roomId].length;
         if (length === 4) {
@@ -63,6 +64,7 @@ const main = async () => {
       } else {
         rooms[roomId] = [socket.id];
       }
+      await User.create({ socketId: socket.id, roomId }).save();
       users[socket.id] = roomId;
       const usersInRoom = rooms[roomId].filter(
         (id: string) => id !== socket.id

@@ -21,7 +21,7 @@
   left: 0;
 }
 
-.message__avatar {
+.avatar {
   object-fit: contain;
   height: 35px !important;
   width: 35px !important;

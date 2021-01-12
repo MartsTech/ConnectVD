@@ -14,10 +14,10 @@
   padding: 10px;
 }
 
-.header__avatar {
+.avatar {
   transition: filter 300ms;
 }
 
-.header__avatar:hover {
+.avatar:hover {
   filter: brightness(1.1);
 }

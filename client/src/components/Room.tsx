@@ -11,6 +11,7 @@ import {
 } from "../features/controlsSlice";
 import { socketPayload } from "../types/socketPayload";
 import { Video } from "./Video";
+import styles from "../styles/Room.module.css";
 
 export const Room: React.FC<any> = (props) => {
   const [peers, setPeers] = useState<any[]>([]);
@@ -240,7 +241,7 @@ export const Room: React.FC<any> = (props) => {
   };
 
   return (
-    <div className="meeting__videos">
+    <div className={styles.videos}>
       <video ref={userVideo} autoPlay playsInline muted />
       {peers.map((peerObj) => {
         return <Video key={peerObj.id} peer={peerObj.peer} />;

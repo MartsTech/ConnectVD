@@ -4,9 +4,11 @@ import VideoCallIcon from "@material-ui/icons/VideoCall";
 import React from "react";
 import { v1 as uuid } from "uuid";
 import Header from "../components/Header";
-import "../styles/Main.css";
+import { useCreateRoomMutation } from "../generated/graphql";
+import styles from "../styles/Main.module.css";
 
-const CreateRoom: React.FC<any> = (props) => {
+const Main: React.FC<any> = (props) => {
+  const [createRoom] = useCreateRoomMutation();
   const create = () => {
     const id = uuid();
     props.history.push(`/room/${id}`);
@@ -15,22 +17,22 @@ const CreateRoom: React.FC<any> = (props) => {
   return (
     <>
       <Header />
-      <div className="main">
-        <div className="main__cards">
-          <div className="main__cardsLeft">
-            <div className="main__card" id="main__newMeeting">
+      <div className={styles.main}>
+        <div className={styles.cards}>
+          <div className={styles.cardsLeft}>
+            <div className={styles.card} id={styles.newMeeting}>
               <IconButton onClick={create}>
-                <div className="main__icon">
+                <div className={styles.icon}>
                   <VideoCallIcon />
                 </div>
               </IconButton>
               <h3>New Meeting</h3>
             </div>
           </div>
-          <div className="main__cardsRight">
-            <div className="main__card" id="main__joinRoom">
+          <div className={styles.cardsRight}>
+            <div className={styles.card} id={styles.joinRoom}>
               <IconButton>
-                <div className="main__icon">
+                <div className={styles.icon}>
                   <AddBoxIcon />
                 </div>
               </IconButton>
@@ -43,4 +45,4 @@ const CreateRoom: React.FC<any> = (props) => {
   );
 };
 
-export default CreateRoom;
+export default Main;
