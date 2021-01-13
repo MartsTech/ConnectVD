@@ -41,21 +41,11 @@ export class RoomResolver {
     const id = uuid();
     return Room.create({ id }).save();
   }
-  @Mutation(() => Boolean)
-  async deleteRoom(@Arg("roomId") roomId: string): Promise<Boolean> {
-    await Room.delete({ id: roomId });
-    return true;
-  }
   @Mutation(() => User)
   joinRoom(
     @Arg("roomId") roomId: string,
     @Arg("socketId") socketId: string
   ): Promise<User> {
     return User.create({ socketId, roomId }).save();
-  }
-  @Mutation(() => Boolean)
-  async leaveRoom(@Arg("socketId") socketId: string): Promise<boolean> {
-    await User.delete({ socketId });
-    return true;
   }
 }

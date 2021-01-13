@@ -7,7 +7,8 @@
 }
 
 .left,
-.center {
+.center,
+.right {
   display: flex;
 }
 
@@ -16,6 +17,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  text-align: center;
   padding: 8px 10px;
   min-width: 80px;
   cursor: pointer;
