@@ -17,7 +17,7 @@ import {
   setScreen,
   setVideo,
 } from "../features/controlsSlice";
-import "../styles/MeetingControls.css";
+import styles from "../styles/MeetingControls.module.css";
 
 export const MeetingControls: React.FC<any> = (props) => {
   const audio: boolean = useSelector(selectAudio);
@@ -32,20 +32,20 @@ export const MeetingControls: React.FC<any> = (props) => {
   };
 
   return (
-    <div className="meeting__controls">
-      <div className="meeting__controlsLeft">
+    <div className={styles.meetingControls}>
+      <div className={styles.left}>
         <div
           onClick={() => {
             dispatch(setAudio({ audio: !audio }));
           }}
-          className="meeting__controlsButton"
+          className={styles.button}
         >
           {audio ? (
-            <div className="micOn">
+            <div className={styles.micOn}>
               <MicIcon fontSize="large" />
             </div>
           ) : (
-            <div className="micOff">
+            <div className={styles.micOff}>
               <MicOffIcon fontSize="large" />
             </div>
           )}
@@ -53,47 +53,47 @@ export const MeetingControls: React.FC<any> = (props) => {
         </div>
         <div
           onClick={() => dispatch(setVideo({ video: !video }))}
-          className="meeting__controlsButton"
+          className={styles.button}
         >
           {video ? (
-            <div className="videoOn">
+            <div className={styles.videoOn}>
               <VideocamIcon fontSize="large" />
             </div>
           ) : (
-            <div className="videoOff">
+            <div className={styles.videoOff}>
               <VideocamOffIcon fontSize="large" />
             </div>
           )}
           {video ? <h3>Stop Video</h3> : <h3>Play Video</h3>}
         </div>
       </div>
-      <div className="meeting__controlsCenter">
-        <div className="meeting__shareScreen">
+      <div className={styles.center}>
+        <div className={styles.shareScreen}>
           <div
             onClick={() => {
               dispatch(setScreen({ screen: true }));
             }}
-            className="meeting__controlsButton"
+            className={styles.button}
           >
             <ScreenShareIcon fontSize="large" />
             <h3>Share Screen</h3>
           </div>
         </div>
-        <div className="meeting__chat">
+        <div className={styles.chat}>
           <div
             onClick={() => {
               dispatch(setChat({ chat: !chat }));
             }}
-            className="meeting__controlsButton"
+            className={styles.button}
           >
             <ChatBubbleIcon fontSize="large" />
             <h3>Chat</h3>
           </div>
         </div>
       </div>
-      <div className="meeting__controlsRight">
-        <Button className="meeting__controlsButton" onClick={leaveRoom}>
-          <h3 id="meeting__leave">Leave Meeting</h3>
+      <div className={styles.right}>
+        <Button className={styles.button} onClick={leaveRoom}>
+          <h3 id={styles.leave}>Leave Meeting</h3>
         </Button>
       </div>
     </div>

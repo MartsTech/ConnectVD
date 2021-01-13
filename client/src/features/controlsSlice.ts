@@ -1,14 +1,25 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { RootState } from "../app/store";
+
+interface ControlsState {
+  audio: boolean;
+  video: boolean;
+  chat: boolean;
+  screen: boolean;
+  leave: boolean;
+}
+
+const initialState: ControlsState = {
+  audio: true,
+  video: true,
+  chat: false,
+  screen: false,
+  leave: false,
+};
 
 export const controlsSlice = createSlice({
   name: "controls",
-  initialState: {
-    audio: true,
-    video: true,
-    chat: false,
-    screen: false,
-    leave: false,
-  },
+  initialState,
   reducers: {
     setAudio: (state, action) => {
       state.audio = action.payload.audio;
@@ -36,10 +47,10 @@ export const {
   setLeave,
 } = controlsSlice.actions;
 
-export const selectAudio = (state: any) => state.controls.audio;
-export const selectVideo = (state: any) => state.controls.video;
-export const selectChat = (state: any) => state.controls.chat;
-export const selectScreen = (state: any) => state.controls.screen;
-export const selectLeave = (state: any) => state.controls.leave;
+export const selectAudio = (state: RootState) => state.controls.audio;
+export const selectVideo = (state: RootState) => state.controls.video;
+export const selectChat = (state: RootState) => state.controls.chat;
+export const selectScreen = (state: RootState) => state.controls.screen;
+export const selectLeave = (state: RootState) => state.controls.leave;
 
 export default controlsSlice.reducer;

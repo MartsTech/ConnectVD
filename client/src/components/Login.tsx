@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { login } from "../features/userSlice";
 import { auth, provider } from "../firebase";
-import "../styles/Login.css";
+import styles from "../styles/Login.module.css";
 
 const Login: React.FC<any> = (props) => {
   const [email, setEmail] = useState("");
@@ -41,10 +41,13 @@ const Login: React.FC<any> = (props) => {
   };
 
   return (
-    <div className="login">
+    <div className={styles.login}>
       <h1>Log in to your account</h1>
-      <div className="google" onClick={signInGoogle}>
-        <img src="https://kgo.googleusercontent.com/profile_vrt_raw_bytes_1587515358_10512.png" />
+      <div className={styles.google} onClick={signInGoogle}>
+        <img
+          alt="google"
+          src="https://kgo.googleusercontent.com/profile_vrt_raw_bytes_1587515358_10512.png"
+        />
         <button>Log in with Google</button>
       </div>
 
@@ -70,7 +73,7 @@ const Login: React.FC<any> = (props) => {
 
       <p>
         Don't have an account?{" "}
-        <Link className="login__link" to="/register">
+        <Link className={styles.link} to="/register">
           <span>Sign Up</span>
         </Link>
       </p>

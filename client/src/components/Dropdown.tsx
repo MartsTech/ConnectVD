@@ -4,13 +4,13 @@ import { useSelector } from "react-redux";
 import { DropdownItem } from "./DropdownItem";
 import { selectUser } from "../features/userSlice";
 import { auth } from "../firebase";
-import "../styles/Dropdown.css";
+import styles from "../styles/Dropdown.module.css";
 
-export const Dropdown: React.FC<{}> = ({}) => {
+export const Dropdown: React.FC = () => {
   const user = useSelector(selectUser);
 
   return (
-    <div className="dropdown">
+    <div className={styles.dropdown}>
       <DropdownItem avatar={true} text={user.displayName} />
       <DropdownItem
         icon={<ExitToAppIcon />}

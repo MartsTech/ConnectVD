@@ -10,12 +10,12 @@ import { User } from "./entities/User";
 import { RoomResolver } from "./resolvers/room";
 import http from "http";
 import socket, { Server, Socket } from "socket.io";
-import { socketPayload } from "./types/socketPayload";
+import { socketPayload } from "./types";
 
 const main = async () => {
   // App Config
   const app = express();
-  const port = process.env.PORT || 8000;
+  const port = process.env.PORT;
 
   // DB Config
   const connection = await createConnection({
@@ -27,14 +27,13 @@ const main = async () => {
     migrations: [path.join(__dirname, "./migrations/*")],
   });
   connection.runMigrations();
-  // await User.delete({});
-  // await Room.delete({});
 
   // Socket Endpoints
   const server = http.createServer(app);
+  // @ts-ignore
   const io: Server = socket(server, {
     cors: {
-      origin: "http://localhost:3000",
+      origin: process.env.CLIENT_URL,
       methods: ["GET", "POST"],
     },
   });
@@ -48,29 +47,9 @@ const main = async () => {
   });
   apolloServer.applyMiddleware({ app, path: "/graphql" });
 
-  const rooms: any = {};
-  const users: any = {};
-
   io.on("connection", (socket: Socket) => {
-    socket.on("join room", (roomId) => {
-      if (rooms[roomId]) {
-        const length = rooms[roomId].length;
-        if (length === 4) {
-          socket.emit("room full");
-          return;
-        }
-        rooms[roomId].push(socket.id);
-      } else {
-        rooms[roomId] = [socket.id];
-      }
-      users[socket.id] = roomId;
-      const usersInRoom = rooms[roomId].filter(
-        (id: string) => id !== socket.id
-      );
-      if (usersInRoom) {
-        socket.emit("other users", usersInRoom);
-      }
-      console.log("Connect: ", rooms, users);
+    socket.on("get socketId", () => {
+      socket.emit("send socketId", socket.id);
     });
 
     socket.on("offer", (payload: socketPayload) => {
@@ -85,20 +64,17 @@ const main = async () => {
       socket.to(payload.target).emit("ice-candidate", payload);
     });
 
-    socket.on("disconnect", () => {
-      const roomID = users[socket.id];
-      let room = rooms[roomID];
-      if (room) {
-        room = room.filter((id: string) => id !== socket.id);
-        rooms[roomID] = room;
-        delete users[socket.id];
-        socket.broadcast.emit("user left", socket.id);
-      }
+    socket.on("disconnect", async () => {
+      const user = await User.findOne({ where: { socketId: socket.id } });
+      const roomId = user?.roomId;
 
-      if (rooms[roomID] && Object.keys(rooms[roomID]).length === 0) {
-        delete rooms[roomID];
+      await User.delete({ socketId: socket.id });
+      socket.broadcast.emit("user left", socket.id);
+
+      const users = await User.find({ where: { roomId } });
+      if (users.length === 0) {
+        await Room.delete({ id: roomId });
       }
-      console.log("Disconnect: ", rooms, users);
     });
   });
 

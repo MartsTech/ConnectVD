@@ -1,9 +1,9 @@
 import { Avatar } from "@material-ui/core";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { Dropdown } from "./Dropdown";
 import { selectUser } from "../features/userSlice";
-import "../styles/Header.css";
+import styles from "../styles/Header.module.css";
+import { Dropdown } from "./Dropdown";
 
 const Header = () => {
   const [opened, setOpen] = useState(false);
@@ -11,14 +11,14 @@ const Header = () => {
   const user = useSelector(selectUser);
 
   return (
-    <nav className="header">
-      <div className="headerContainer">
-        <div className="header__left">
+    <nav className={styles.header}>
+      <div className={styles.headerContainer}>
+        <div className={styles.left}>
           <h3>ConnectVD</h3>
         </div>
-        <div className="header__right">
+        <div className={styles.right}>
           {user && (
-            <Avatar className="header__avatar" onClick={() => setOpen(!opened)}>
+            <Avatar className={styles.avatar} onClick={() => setOpen(!opened)}>
               {user?.displayName[0]}
             </Avatar>
           )}

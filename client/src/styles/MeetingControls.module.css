@@ -1,4 +1,4 @@
-.meeting__controls {
+.meetingControls {
   flex: 0.05;
   display: flex;
   flex-direction: row;
@@ -6,12 +6,12 @@
   align-items: center;
 }
 
-.meeting__controlsLeft,
-.meeting__controlsCenter {
+.left,
+.center {
   display: flex;
 }
 
-.meeting__controlsButton {
+.button {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -21,17 +21,17 @@
   cursor: pointer;
 }
 
-.meeting__controlsButton:hover {
+.button:hover {
   background-color: #343434;
   border-radius: 5px;
 }
 
-.micOff > .MuiSvgIcon-root,
-.videoOff > .MuiSvgIcon-root {
+.micOff > svg,
+.videoOff > svg {
   color: red;
 }
 
-#meeting__leave {
+#leave {
   color: red;
   text-transform: none;
 }

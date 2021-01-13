@@ -3,7 +3,7 @@
   height: 100%;
 }
 
-.registerContainer {
+.container {
   width: fit-content;
   height: 100%;
   display: flex;
@@ -11,7 +11,7 @@
   align-items: center;
 }
 
-.registerContainer > h1 {
+.container > h1 {
   padding: 50px;
 }
 
@@ -38,18 +38,18 @@
   height: 38px;
 }
 
-.registerContainer > p {
+.container > p {
   padding-top: 30px;
 }
 
-.registerContainer > form {
+.container > form {
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 30px;
 }
 
-.registerContainer > form > input {
+.container > form > input {
   width: 350px;
   height: 50px;
   font-size: 20px;
@@ -58,7 +58,7 @@
   border-radius: 5px;
 }
 
-.registerContainer > form > button {
+.container > form > button {
   width: 365px;
   height: 50px;
   font-size: large;
@@ -67,11 +67,11 @@
   border-radius: 5px;
 }
 
-.registerContainer > form > button:hover {
+.container > form > button:hover {
   background-color: #0053b1;
 }
 
-.register__link {
+.link {
   color: #0177b7;
   cursor: pointer;
   text-decoration: none;

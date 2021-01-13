@@ -1,6 +1,6 @@
 import Avatar from "@material-ui/core/Avatar";
 import React from "react";
-import "../styles/DropdownItem.css";
+import styles from "../styles/DropdownItem.module.css";
 
 type dropdownItemProps = {
   text: string;
@@ -16,11 +16,11 @@ export const DropdownItem: React.FC<dropdownItemProps> = ({
   onClick,
 }) => {
   return (
-    <div onClick={onClick} className="dropdownItem">
-      {avatar && <Avatar className="dropdownItem__icon">{text[0]}</Avatar>}
+    <div onClick={onClick} className={styles.dropdownItem}>
+      {avatar && <Avatar className={styles.icon}>{text[0]}</Avatar>}
       {icon && (
-        <div className="dropdonwItem__iconContainer">
-          <div className="dropdownItem__icon">{icon}</div>
+        <div className={styles.iconContainer}>
+          <div className={styles.icon}>{icon}</div>
         </div>
       )}
       {text && <h3>{text}</h3>}

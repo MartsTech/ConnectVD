@@ -1,0 +1,33 @@
+.dropdownItem {
+  height: 50px;
+  display: flex;
+  align-items: center;
+  border-radius: 8px;
+  transition: background 500ms;
+  padding: 0.5rem;
+}
+
+.dropdownItem:hover {
+  background-color: #525357;
+}
+
+.dropdownItem > h3 {
+  margin-left: 10px;
+}
+
+.icon {
+  margin-top: 4px;
+}
+
+.icon > svg {
+  font-size: 30px;
+}
+
+.iconContainer {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  background-color: #484a4d;
+  border-radius: 50%;
+}
