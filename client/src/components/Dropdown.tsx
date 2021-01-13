@@ -6,7 +6,7 @@ import { selectUser } from "../features/userSlice";
 import { auth } from "../firebase";
 import styles from "../styles/Dropdown.module.css";
 
-export const Dropdown: React.FC<{}> = ({}) => {
+export const Dropdown: React.FC = () => {
   const user = useSelector(selectUser);
 
   return (

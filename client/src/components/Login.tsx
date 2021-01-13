@@ -44,7 +44,10 @@ const Login: React.FC<any> = (props) => {
     <div className={styles.login}>
       <h1>Log in to your account</h1>
       <div className={styles.google} onClick={signInGoogle}>
-        <img src="https://kgo.googleusercontent.com/profile_vrt_raw_bytes_1587515358_10512.png" />
+        <img
+          alt="google"
+          src="https://kgo.googleusercontent.com/profile_vrt_raw_bytes_1587515358_10512.png"
+        />
         <button>Log in with Google</button>
       </div>
 

@@ -8,7 +8,7 @@ const Access = lazy(() => import("./Access"));
 const Main = lazy(() => import("./Main"));
 const Meeting = lazy(() => import("./Meeting"));
 
-const App: React.FC<{}> = ({}) => {
+const App: React.FC<{}> = () => {
   const user = useSelector(selectUser);
 
   const dispatch = useDispatch();
@@ -26,6 +26,7 @@ const App: React.FC<{}> = ({}) => {
         dispatch(logout());
       }
     });
+    // eslint-disable-next-line
   }, []);
 
   return (

@@ -2,16 +2,15 @@ import { IconButton } from "@material-ui/core";
 import AddBoxIcon from "@material-ui/icons/AddBox";
 import VideoCallIcon from "@material-ui/icons/VideoCall";
 import React from "react";
-import { v1 as uuid } from "uuid";
 import Header from "../components/Header";
 import { useCreateRoomMutation } from "../generated/graphql";
 import styles from "../styles/Main.module.css";
 
 const Main: React.FC<any> = (props) => {
   const [createRoom] = useCreateRoomMutation();
-  const create = () => {
-    const id = uuid();
-    props.history.push(`/room/${id}`);
+  const create = async () => {
+    const { data } = await createRoom();
+    props.history.push(`/room/${data?.createRoom.id}`);
   };
 
   return (

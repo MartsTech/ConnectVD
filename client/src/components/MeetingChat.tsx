@@ -30,6 +30,7 @@ export const MeetingChat: React.FC<any> = (props) => {
           }))
         );
       });
+    // eslint-disable-next-line
   }, []);
 
   const sendMessage = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {

@@ -9,6 +9,7 @@ export const Video: React.FC<videoProps> = ({ peer }) => {
 
   useEffect(() => {
     peer.ontrack = handleTrackEvent;
+    // eslint-disable-next-line
   }, []);
 
   const handleTrackEvent = (e: RTCTrackEvent) => {

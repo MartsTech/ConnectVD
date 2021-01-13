@@ -9,9 +9,10 @@ import {
   setLeave,
   setScreen,
 } from "../features/controlsSlice";
-import { socketPayload } from "../types/socketPayload";
+import { socketPayload } from "../types";
 import { Video } from "./Video";
 import styles from "../styles/Room.module.css";
+import { useJoinRoomMutation, useUsersInRoomQuery } from "../generated/graphql";
 
 export const Room: React.FC<any> = (props) => {
   const [peers, setPeers] = useState<any[]>([]);
@@ -28,7 +29,12 @@ export const Room: React.FC<any> = (props) => {
   const screen: boolean = useSelector(selectScreen);
   const leave: boolean = useSelector(selectLeave);
 
-  const roomId = props.match.params.roomId;
+  const roomId: string = props.match.params.roomId;
+
+  const [joinRoom] = useJoinRoomMutation();
+  const { fetchMore } = useUsersInRoomQuery({
+    skip: true,
+  });
 
   const mediaConstraints = {
     audio: true,
@@ -51,15 +57,22 @@ export const Room: React.FC<any> = (props) => {
   useEffect(() => {
     getUserStream();
     socketRef.current = io.connect("/");
-    socketRef.current.emit("join room", roomId);
-
-    socketRef.current.on("other users", (users: string[]) => {
+    socketRef.current.emit("get socketId");
+    socketRef.current.on("send socketId", async (id: string) => {
+      await joinRoom({
+        variables: { roomId, socketId: id },
+      });
+      const { data } = await fetchMore({
+        variables: { roomId },
+      });
       const peers: Array<{ id: string; peer: RTCPeerConnection }> = [];
-      users.forEach((id) => {
-        const peer = createPeer(id);
-        peersRef.current.push({ id, peer });
-        peers.push({ id, peer });
-        setTracks(id);
+      data.usersInRoom.forEach(({ socketId }) => {
+        if (socketId !== id) {
+          const peer = createPeer(socketId);
+          peersRef.current.push({ id: socketId, peer });
+          peers.push({ id: socketId, peer });
+          setTracks(socketId);
+        }
       });
       setPeers(peers);
     });
@@ -73,6 +86,7 @@ export const Room: React.FC<any> = (props) => {
     socketRef.current.on("offer", handleOffer);
     socketRef.current.on("answer", handleAnswer);
     socketRef.current.on("ice-candidate", handleNewICECandidateMsg);
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
@@ -129,6 +143,7 @@ export const Room: React.FC<any> = (props) => {
     if (screen) {
       shareScreen();
     }
+    // eslint-disable-next-line
   }, [screen]);
 
   useEffect(() => {
@@ -139,6 +154,7 @@ export const Room: React.FC<any> = (props) => {
       });
       dispatch(setLeave({ leave: false }));
     }
+    // eslint-disable-next-line
   }, [leave]);
 
   const getUserStream = async () => {
