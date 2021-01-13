@@ -1,6 +1,7 @@
 .main {
   display: grid;
   place-items: center;
+  position: relative;
   width: 100%;
   height: 93vh;
   background-color: whitesmoke;

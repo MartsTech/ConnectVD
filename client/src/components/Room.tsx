@@ -33,13 +33,9 @@ export const Room: React.FC<any> = (props) => {
 
   const [joinRoom] = useJoinRoomMutation();
   const { fetchMore } = useUsersInRoomQuery({
+    variables: { roomId },
     skip: true,
   });
-
-  const mediaConstraints = {
-    audio: true,
-    video: { height: window.innerHeight / 2.5, width: window.innerWidth / 2.5 },
-  };
 
   const iceConfiguration = {
     iceServers: [
@@ -90,54 +86,42 @@ export const Room: React.FC<any> = (props) => {
   }, []);
 
   useEffect(() => {
-    const toggleAudio = (state: boolean) => {
-      if (userStream.current) {
-        const audioTrack = (userStream.current.getAudioTracks()[0].enabled = state);
-        senders.current.forEach((sender) => {
-          if (sender.track.kind === "audio") {
-            sender.replaceTrack(audioTrack).catch(() => {});
-          }
-        });
-      }
-    };
     toggleAudio(audio);
   }, [audio]);
 
   useEffect(() => {
-    const toggleVideo = (state: boolean) => {
-      if (userStream.current) {
-        const videoTrack = (userStream.current.getVideoTracks()[0].enabled = state);
-        senders.current.forEach((sender) => {
-          if (sender.track.kind === "video") {
-            sender.replaceTrack(videoTrack).catch(() => {});
-          }
-        });
-      }
-    };
     toggleVideo(video);
   }, [video]);
 
   useEffect(() => {
     const shareScreen = async () => {
-      // @ts-ignore
-      const stream = await navigator.mediaDevices.getDisplayMedia({
-        cursor: true,
-      });
-      const screenTrack = stream.getTracks()[0];
-      senders.current.forEach((sender) => {
-        if (sender.track.kind === "video") {
-          sender.replaceTrack(screenTrack);
-        }
-      });
+      let stream;
+      try {
+        // @ts-ignore
+        stream = await navigator.mediaDevices.getDisplayMedia({
+          cursor: true,
+        });
+      } catch {
+        dispatch(setScreen({ screen: false }));
+      }
 
-      screenTrack.onended = () => {
+      if (typeof stream !== "undefined") {
+        const screenTrack = stream.getTracks()[0];
         senders.current.forEach((sender) => {
           if (sender.track.kind === "video") {
-            sender.replaceTrack(userStream.current?.getTracks()[1]);
+            sender.replaceTrack(screenTrack);
           }
         });
-        dispatch(setScreen({ screen: false }));
-      };
+
+        screenTrack.onended = () => {
+          senders.current.forEach((sender) => {
+            if (sender.track.kind === "video") {
+              sender.replaceTrack(userStream.current?.getTracks()[1]);
+            }
+          });
+          dispatch(setScreen({ screen: false }));
+        };
+      }
     };
 
     if (screen) {
@@ -158,9 +142,36 @@ export const Room: React.FC<any> = (props) => {
   }, [leave]);
 
   const getUserStream = async () => {
-    const stream = await navigator.mediaDevices.getUserMedia(mediaConstraints);
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: true,
+      audio: true,
+    });
     userStream.current = stream;
+    toggleAudio(audio);
+    toggleVideo(video);
     userVideo.current.srcObject = stream;
+  };
+
+  const toggleAudio = (state: boolean) => {
+    if (userStream.current) {
+      const audioTrack = (userStream.current.getAudioTracks()[0].enabled = state);
+      senders.current.forEach((sender) => {
+        if (sender.track.kind === "audio") {
+          sender.replaceTrack(audioTrack).catch(() => {});
+        }
+      });
+    }
+  };
+
+  const toggleVideo = (state: boolean) => {
+    if (userStream.current) {
+      const videoTrack = (userStream.current.getVideoTracks()[0].enabled = state);
+      senders.current.forEach((sender) => {
+        if (sender.track.kind === "video") {
+          sender.replaceTrack(videoTrack).catch(() => {});
+        }
+      });
+    }
   };
 
   const createPeer = (id: string | undefined) => {
