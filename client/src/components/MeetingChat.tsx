@@ -2,12 +2,15 @@ import firebase from "firebase";
 import React, { useEffect, useState } from "react";
 import FlipMove from "react-flip-move";
 import { useSelector } from "react-redux";
+import { RouteComponentProps } from "react-router";
 import { selectUser } from "../features/userSlice";
 import db from "../firebase";
 import styles from "../styles/MeetingChat.module.css";
 import { Message } from "./Message";
 
-export const MeetingChat: React.FC<any> = (props) => {
+interface MeetingChatProps extends RouteComponentProps<any> {}
+
+export const MeetingChat: React.FC<MeetingChatProps> = ({ match }) => {
   const [input, setInput] = useState<string>("");
   const [messages, setMessages] = useState<
     Array<{ id: string; data: firebase.firestore.DocumentData }>
@@ -15,7 +18,7 @@ export const MeetingChat: React.FC<any> = (props) => {
 
   const user = useSelector(selectUser);
 
-  const roomId = props.match.params.roomId;
+  const roomId = match.params.roomId;
 
   useEffect(() => {
     db.collection("rooms")

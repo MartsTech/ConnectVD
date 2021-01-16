@@ -1,0 +1,3 @@
+mutation Register($id: String!) {
+  register(id: $id)
+}

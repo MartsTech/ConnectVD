@@ -1,18 +1,19 @@
-import React, { useState } from "react";
+import { Checkbox } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Paper, { PaperProps } from "@material-ui/core/Paper";
+import TextField from "@material-ui/core/TextField";
+import React, { useState } from "react";
 import Draggable from "react-draggable";
 import { useDispatch } from "react-redux";
-import { closeDialog } from "../features/dialogSlide";
-import TextField from "@material-ui/core/TextField";
-import styles from "../styles/JoinRoom.module.css";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import { Checkbox } from "@material-ui/core";
+import { RouteComponentProps } from "react-router";
 import { setAudio, setVideo } from "../features/controlsSlice";
+import { closeDialog } from "../features/dialogSlide";
+import styles from "../styles/JoinRoom.module.css";
 
 const PaperComponent: React.FC = (props: PaperProps) => {
   return (
@@ -25,7 +26,9 @@ const PaperComponent: React.FC = (props: PaperProps) => {
   );
 };
 
-export const JoinRoom: React.FC<any> = (props) => {
+interface JoinRoomProps extends RouteComponentProps<any> {}
+
+export const JoinRoom: React.FC<JoinRoomProps> = ({ history }) => {
   const [input, setInput] = useState<string>("");
   const [audio, setCurrentAudio] = useState<boolean>(true);
   const [video, setCurrentVideo] = useState<boolean>(true);
@@ -39,7 +42,7 @@ export const JoinRoom: React.FC<any> = (props) => {
   const join = () => {
     dispatch(setAudio({ audio }));
     dispatch(setVideo({ video }));
-    props.history.push(`/room/${input}`);
+    history.push(`/room/${input}`);
     close();
   };
 

@@ -1,3 +1,4 @@
+import { LinearProgress } from "@material-ui/core";
 import React, { lazy, Suspense, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
@@ -33,12 +34,12 @@ const App: React.FC<{}> = () => {
     <BrowserRouter>
       <Switch>
         {!user ? (
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<LinearProgress />}>
             <Route path="/register" component={Access} />
             <Route path="/login" exact component={Access} />
           </Suspense>
         ) : (
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense fallback={<LinearProgress />}>
             <Route path="/" exact component={Main} />
             <Route path="/room/:roomId" component={Meeting} />
           </Suspense>

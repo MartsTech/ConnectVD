@@ -1,0 +1,45 @@
+.mainCards {
+}
+
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 350px;
+  height: 350px;
+}
+
+.cardsLeft,
+.cardsRight {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.card {
+  display: grid;
+  place-items: center;
+  height: 150px;
+  width: 150px;
+  border-radius: 20px;
+}
+
+.card > h3 {
+  margin-top: 20px;
+  font-weight: 500;
+}
+
+.icon > svg {
+  margin-top: 10px;
+  color: black;
+  font-size: 100px;
+}
+
+#newMeeting {
+  background-color: coral;
+}
+
+#joinRoom {
+  background-color: dodgerblue;
+}

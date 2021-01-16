@@ -1,14 +1,26 @@
 import { Field, ObjectType } from "type-graphql";
-import { BaseEntity, Column, Entity, PrimaryColumn } from "typeorm";
+import {
+  BaseEntity,
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryColumn,
+} from "typeorm";
 
 @ObjectType()
 @Entity()
 export class User extends BaseEntity {
-  @Field()
   @PrimaryColumn()
-  socketId!: string;
+  id!: string;
 
   @Field()
-  @Column()
-  roomId!: string;
+  @Column({ nullable: true })
+  socketId: string;
+
+  @Field()
+  @Column({ nullable: true })
+  roomId: string;
+
+  @CreateDateColumn()
+  createdAt: Date;
 }

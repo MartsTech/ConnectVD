@@ -1,5 +1,0 @@
-query UsersInRoom($roomId: String!) {
-  usersInRoom(roomId: $roomId) {
-    socketId
-  }
-}

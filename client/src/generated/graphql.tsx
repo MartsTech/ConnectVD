@@ -16,18 +16,13 @@ export type Scalars = {
 export type Query = {
   __typename?: 'Query';
   rooms: Array<Room>;
-  usersInRoom: Array<User>;
+  users: Array<User>;
 };
 
 
 export type QueryRoomsArgs = {
   cursor?: Maybe<Scalars['String']>;
   limit: Scalars['Int'];
-};
-
-
-export type QueryUsersInRoomArgs = {
-  roomId: Scalars['String'];
 };
 
 export type Room = {
@@ -40,30 +35,32 @@ export type User = {
   __typename?: 'User';
   socketId: Scalars['String'];
   roomId: Scalars['String'];
+  createdAt: Scalars['String'];
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
-  createRoom: Room;
-  deleteRoom: Scalars['Boolean'];
-  joinRoom: User;
-  leaveRoom: Scalars['Boolean'];
-};
-
-
-export type MutationDeleteRoomArgs = {
-  roomId: Scalars['String'];
+  createRoom: Scalars['String'];
+  joinRoom: JoinRoomRes;
+  register: Scalars['Boolean'];
 };
 
 
 export type MutationJoinRoomArgs = {
   socketId: Scalars['String'];
   roomId: Scalars['String'];
+  id: Scalars['String'];
 };
 
 
-export type MutationLeaveRoomArgs = {
-  socketId: Scalars['String'];
+export type MutationRegisterArgs = {
+  id: Scalars['String'];
+};
+
+export type JoinRoomRes = {
+  __typename?: 'JoinRoomRes';
+  users?: Maybe<Array<User>>;
+  error?: Maybe<Scalars['String']>;
 };
 
 export type CreateRoomMutationVariables = Exact<{ [key: string]: never; }>;
@@ -71,13 +68,11 @@ export type CreateRoomMutationVariables = Exact<{ [key: string]: never; }>;
 
 export type CreateRoomMutation = (
   { __typename?: 'Mutation' }
-  & { createRoom: (
-    { __typename?: 'Room' }
-    & Pick<Room, 'id' | 'createdAt'>
-  ) }
+  & Pick<Mutation, 'createRoom'>
 );
 
 export type JoinRoomMutationVariables = Exact<{
+  id: Scalars['String'];
   roomId: Scalars['String'];
   socketId: Scalars['String'];
 }>;
@@ -86,31 +81,29 @@ export type JoinRoomMutationVariables = Exact<{
 export type JoinRoomMutation = (
   { __typename?: 'Mutation' }
   & { joinRoom: (
-    { __typename?: 'User' }
-    & Pick<User, 'roomId' | 'socketId'>
+    { __typename?: 'JoinRoomRes' }
+    & Pick<JoinRoomRes, 'error'>
+    & { users?: Maybe<Array<(
+      { __typename?: 'User' }
+      & Pick<User, 'socketId'>
+    )>> }
   ) }
 );
 
-export type UsersInRoomQueryVariables = Exact<{
-  roomId: Scalars['String'];
+export type RegisterMutationVariables = Exact<{
+  id: Scalars['String'];
 }>;
 
 
-export type UsersInRoomQuery = (
-  { __typename?: 'Query' }
-  & { usersInRoom: Array<(
-    { __typename?: 'User' }
-    & Pick<User, 'socketId'>
-  )> }
+export type RegisterMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'register'>
 );
 
 
 export const CreateRoomDocument = gql`
     mutation CreateRoom {
-  createRoom {
-    id
-    createdAt
-  }
+  createRoom
 }
     `;
 export type CreateRoomMutationFn = Apollo.MutationFunction<CreateRoomMutation, CreateRoomMutationVariables>;
@@ -138,10 +131,12 @@ export type CreateRoomMutationHookResult = ReturnType<typeof useCreateRoomMutati
 export type CreateRoomMutationResult = Apollo.MutationResult<CreateRoomMutation>;
 export type CreateRoomMutationOptions = Apollo.BaseMutationOptions<CreateRoomMutation, CreateRoomMutationVariables>;
 export const JoinRoomDocument = gql`
-    mutation JoinRoom($roomId: String!, $socketId: String!) {
-  joinRoom(roomId: $roomId, socketId: $socketId) {
-    roomId
-    socketId
+    mutation JoinRoom($id: String!, $roomId: String!, $socketId: String!) {
+  joinRoom(id: $id, roomId: $roomId, socketId: $socketId) {
+    error
+    users {
+      socketId
+    }
   }
 }
     `;
@@ -160,6 +155,7 @@ export type JoinRoomMutationFn = Apollo.MutationFunction<JoinRoomMutation, JoinR
  * @example
  * const [joinRoomMutation, { data, loading, error }] = useJoinRoomMutation({
  *   variables: {
+ *      id: // value for 'id'
  *      roomId: // value for 'roomId'
  *      socketId: // value for 'socketId'
  *   },
@@ -171,36 +167,33 @@ export function useJoinRoomMutation(baseOptions?: Apollo.MutationHookOptions<Joi
 export type JoinRoomMutationHookResult = ReturnType<typeof useJoinRoomMutation>;
 export type JoinRoomMutationResult = Apollo.MutationResult<JoinRoomMutation>;
 export type JoinRoomMutationOptions = Apollo.BaseMutationOptions<JoinRoomMutation, JoinRoomMutationVariables>;
-export const UsersInRoomDocument = gql`
-    query UsersInRoom($roomId: String!) {
-  usersInRoom(roomId: $roomId) {
-    socketId
-  }
+export const RegisterDocument = gql`
+    mutation Register($id: String!) {
+  register(id: $id)
 }
     `;
+export type RegisterMutationFn = Apollo.MutationFunction<RegisterMutation, RegisterMutationVariables>;
 
 /**
- * __useUsersInRoomQuery__
+ * __useRegisterMutation__
  *
- * To run a query within a React component, call `useUsersInRoomQuery` and pass it any options that fit your needs.
- * When your component renders, `useUsersInRoomQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
+ * To run a mutation, you first call `useRegisterMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRegisterMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
  *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const { data, loading, error } = useUsersInRoomQuery({
+ * const [registerMutation, { data, loading, error }] = useRegisterMutation({
  *   variables: {
- *      roomId: // value for 'roomId'
+ *      id: // value for 'id'
  *   },
  * });
  */
-export function useUsersInRoomQuery(baseOptions: Apollo.QueryHookOptions<UsersInRoomQuery, UsersInRoomQueryVariables>) {
-        return Apollo.useQuery<UsersInRoomQuery, UsersInRoomQueryVariables>(UsersInRoomDocument, baseOptions);
+export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<RegisterMutation, RegisterMutationVariables>) {
+        return Apollo.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument, baseOptions);
       }
-export function useUsersInRoomLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UsersInRoomQuery, UsersInRoomQueryVariables>) {
-          return Apollo.useLazyQuery<UsersInRoomQuery, UsersInRoomQueryVariables>(UsersInRoomDocument, baseOptions);
-        }
-export type UsersInRoomQueryHookResult = ReturnType<typeof useUsersInRoomQuery>;
-export type UsersInRoomLazyQueryHookResult = ReturnType<typeof useUsersInRoomLazyQuery>;
-export type UsersInRoomQueryResult = Apollo.QueryResult<UsersInRoomQuery, UsersInRoomQueryVariables>;
+export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
+export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
+export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;

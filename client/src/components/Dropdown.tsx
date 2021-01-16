@@ -1,10 +1,10 @@
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import React from "react";
 import { useSelector } from "react-redux";
-import { DropdownItem } from "./DropdownItem";
 import { selectUser } from "../features/userSlice";
 import { auth } from "../firebase";
 import styles from "../styles/Dropdown.module.css";
+import { DropdownItem } from "./DropdownItem";
 
 export const Dropdown: React.FC = () => {
   const user = useSelector(selectUser);

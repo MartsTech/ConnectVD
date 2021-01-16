@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { RouteComponentProps } from "react-router";
 import io from "socket.io-client";
 import {
   selectAudio,
@@ -9,12 +10,15 @@ import {
   setLeave,
   setScreen,
 } from "../features/controlsSlice";
+import { selectUser } from "../features/userSlice";
+import { useJoinRoomMutation } from "../generated/graphql";
+import styles from "../styles/Room.module.css";
 import { socketPayload } from "../types";
 import { Video } from "./Video";
-import styles from "../styles/Room.module.css";
-import { useJoinRoomMutation, useUsersInRoomQuery } from "../generated/graphql";
 
-export const Room: React.FC<any> = (props) => {
+interface RoomProps extends RouteComponentProps<any> {}
+
+export const Room: React.FC<RoomProps> = ({ match, history }) => {
   const [peers, setPeers] = useState<any[]>([]);
 
   const userStream = useRef<MediaStream>();
@@ -24,18 +28,16 @@ export const Room: React.FC<any> = (props) => {
   const senders = useRef<any[]>([]);
 
   const dispatch = useDispatch();
+  const user = useSelector(selectUser);
+
   const audio: boolean = useSelector(selectAudio);
   const video: boolean = useSelector(selectVideo);
   const screen: boolean = useSelector(selectScreen);
   const leave: boolean = useSelector(selectLeave);
 
-  const roomId: string = props.match.params.roomId;
+  const roomId: string = match.params.roomId;
 
   const [joinRoom] = useJoinRoomMutation();
-  const { fetchMore } = useUsersInRoomQuery({
-    variables: { roomId },
-    skip: true,
-  });
 
   const iceConfiguration = {
     iceServers: [
@@ -55,14 +57,17 @@ export const Room: React.FC<any> = (props) => {
     socketRef.current = io.connect("/");
     socketRef.current.emit("get socketId");
     socketRef.current.on("send socketId", async (id: string) => {
-      await joinRoom({
-        variables: { roomId, socketId: id },
+      const { data } = await joinRoom({
+        variables: { id: user.uid, roomId, socketId: id },
       });
-      const { data } = await fetchMore({
-        variables: { roomId },
-      });
+      if (data?.joinRoom.error) {
+        leaveRoom();
+        history.push("/");
+        alert(data.joinRoom.error);
+        return;
+      }
       const peers: Array<{ id: string; peer: RTCPeerConnection }> = [];
-      data.usersInRoom.forEach(({ socketId }) => {
+      data?.joinRoom.users!.forEach(({ socketId }) => {
         if (socketId !== id) {
           const peer = createPeer(socketId);
           peersRef.current.push({ id: socketId, peer });
@@ -132,14 +137,18 @@ export const Room: React.FC<any> = (props) => {
 
   useEffect(() => {
     if (leave) {
-      socketRef.current?.disconnect();
-      userStream.current?.getTracks().forEach((track) => {
-        track.stop();
-      });
-      dispatch(setLeave({ leave: false }));
+      leaveRoom();
     }
     // eslint-disable-next-line
   }, [leave]);
+
+  const leaveRoom = () => {
+    socketRef.current?.disconnect();
+    userStream.current?.getTracks().forEach((track) => {
+      track.stop();
+    });
+    dispatch(setLeave({ leave: false }));
+  };
 
   const getUserStream = async () => {
     const stream = await navigator.mediaDevices.getUserMedia({
