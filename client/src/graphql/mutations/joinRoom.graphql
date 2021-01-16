@@ -1,6 +1,8 @@
-mutation JoinRoom($roomId: String!, $socketId: String!) {
-  joinRoom(roomId: $roomId, socketId: $socketId) {
-    roomId
-    socketId
+mutation JoinRoom($id: String!, $roomId: String!, $socketId: String!) {
+  joinRoom(id: $id, roomId: $roomId, socketId: $socketId) {
+    error
+    users {
+      socketId
+    }
   }
 }

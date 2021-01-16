@@ -1,10 +1,13 @@
 import React, { lazy } from "react";
+import { RouteComponentProps } from "react-router";
 import styles from "../styles/Access.module.css";
 
 const Login = lazy(() => import("../components/Login"));
 const Register = lazy(() => import("../components/Register"));
 
-const Access: React.FC<any> = (props) => {
+interface AccessProps extends RouteComponentProps<any> {}
+
+const Access: React.FC<AccessProps> = (props) => {
   const path = props.history.location.pathname;
 
   return (

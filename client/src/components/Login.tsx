@@ -1,18 +1,24 @@
 import { Button } from "@material-ui/core";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
+import { RouteComponentProps } from "react-router";
 import { Link } from "react-router-dom";
 import { login } from "../features/userSlice";
 import { auth, provider } from "../firebase";
+import { useRegisterMutation } from "../generated/graphql";
 import styles from "../styles/Login.module.css";
 
-const Login: React.FC<any> = (props) => {
+interface LoginProps extends RouteComponentProps<any> {}
+
+const Login: React.FC<LoginProps> = ({ history }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const [registerUser] = useRegisterMutation();
+
   const dispatch = useDispatch();
 
-  const signIn = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const signIn = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
 
     auth
@@ -26,7 +32,7 @@ const Login: React.FC<any> = (props) => {
         );
       })
       .then(() => {
-        props.history.push("/");
+        history.push("/");
       })
       .catch((err) => alert(err));
   };
@@ -34,8 +40,11 @@ const Login: React.FC<any> = (props) => {
   const signInGoogle = () => {
     auth
       .signInWithPopup(provider)
+      .then((userAuth) => {
+        registerUser({ variables: { id: userAuth.user!.uid } });
+      })
       .then(() => {
-        props.history.push("/");
+        history.push("/");
       })
       .catch((err) => alert(err));
   };
@@ -66,7 +75,7 @@ const Login: React.FC<any> = (props) => {
           type="password"
           placeholder="Password"
         />
-        <Button type="submit" onClick={() => signIn}>
+        <Button type="submit" onClick={signIn}>
           Login
         </Button>
       </form>

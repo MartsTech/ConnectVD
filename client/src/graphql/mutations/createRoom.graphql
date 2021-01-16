@@ -1,6 +1,3 @@
 mutation CreateRoom {
-  createRoom {
-    id
-    createdAt
-  }
+  createRoom
 }

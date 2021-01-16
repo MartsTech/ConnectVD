@@ -11,6 +11,7 @@ import { RoomResolver } from "./resolvers/room";
 import http from "http";
 import socket, { Server, Socket } from "socket.io";
 import { socketPayload } from "./types";
+import { UserResolver } from "./resolvers/user";
 
 const main = async () => {
   // App Config
@@ -27,6 +28,8 @@ const main = async () => {
     migrations: [path.join(__dirname, "./migrations/*")],
   });
   connection.runMigrations();
+  // await Room.delete({});
+  // await User.delete({});
 
   // Socket Endpoints
   const server = http.createServer(app);
@@ -41,7 +44,7 @@ const main = async () => {
   // Graphql Config
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [RoomResolver],
+      resolvers: [RoomResolver, UserResolver],
       validate: false,
     }),
   });
@@ -68,7 +71,7 @@ const main = async () => {
       const user = await User.findOne({ where: { socketId: socket.id } });
       const roomId = user?.roomId;
 
-      await User.delete({ socketId: socket.id });
+      await User.update({ socketId: socket.id }, { socketId: "", roomId: "" });
       socket.broadcast.emit("user left", socket.id);
 
       const users = await User.find({ where: { roomId } });

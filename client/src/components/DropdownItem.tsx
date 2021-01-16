@@ -23,7 +23,7 @@ export const DropdownItem: React.FC<dropdownItemProps> = ({
           <div className={styles.icon}>{icon}</div>
         </div>
       )}
-      {text && <h3>{text}</h3>}
+      {text && <h5>{text}</h5>}
     </div>
   );
 };
