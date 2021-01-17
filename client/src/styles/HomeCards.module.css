@@ -1,19 +1,8 @@
-.mainCards {
-}
-
-.cards {
+.homeCards {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
   width: 350px;
   height: 350px;
-}
-
-.cardsLeft,
-.cardsRight {
-  display: flex;
   flex-wrap: wrap;
-  flex-direction: column;
   justify-content: space-between;
 }
 

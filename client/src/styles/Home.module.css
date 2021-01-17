@@ -1,12 +1,20 @@
+.home {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+}
+
+.body {
+  display: flex;
+  height: 100%;
+}
+
 .main {
   display: grid;
   place-items: center;
-  position: relative;
-  width: 100%;
-  height: 100vh;
+  flex: 0.7;
   min-width: 375px;
-  border: 1px solid black;
-  background-color: whitesmoke;
 }
 
 .container {

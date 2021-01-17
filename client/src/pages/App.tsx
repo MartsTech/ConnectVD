@@ -6,7 +6,7 @@ import { login, logout, selectUser } from "../features/userSlice";
 import { auth } from "../firebase";
 
 const Access = lazy(() => import("./Access"));
-const Main = lazy(() => import("./Main"));
+const Main = lazy(() => import("./Home"));
 const Meeting = lazy(() => import("./Meeting"));
 
 const App: React.FC = () => {
@@ -15,12 +15,14 @@ const App: React.FC = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    auth.onAuthStateChanged((authUser) => {
-      if (authUser) {
+    auth.onAuthStateChanged((user) => {
+      if (user) {
         dispatch(
           login({
-            displayName: authUser.displayName,
-            uid: authUser.uid,
+            displayName: user.displayName!,
+            email: user.email!,
+            photoUrl: user.photoURL!,
+            uid: user.uid,
           })
         );
       } else {

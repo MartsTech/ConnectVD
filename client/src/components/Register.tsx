@@ -30,32 +30,38 @@ const Register: React.FC = () => {
 
     auth
       .createUserWithEmailAndPassword(email, password)
-      .then((userAuth) => {
-        userAuth.user
-          ?.updateProfile({ displayName: name })
-          .then(() => {
-            registerUser({ variables: { id: userAuth.user!.uid } });
-          })
-          .then(() => {
-            dispatch(
-              login({
-                displayName: userAuth.user?.displayName,
-                uid: userAuth.user?.uid,
-              })
-            );
-          })
-          .then(() => {
-            history.push("/");
-          });
+      .then(({ user }) => {
+        if (user) {
+          user
+            .updateProfile({ displayName: name })
+            .then(() => {
+              registerUser({ variables: { id: user.uid } });
+            })
+            .then(() => {
+              dispatch(
+                login({
+                  displayName: user.displayName!,
+                  email: user.email!,
+                  photoUrl: user.photoURL!,
+                  uid: user.uid,
+                })
+              );
+            });
+        }
+      })
+      .then(() => {
+        history.push("/");
       })
       .catch((err) => alert(err));
   };
 
-  const signInGoogle = () => {
+  const signInWithGoogle = () => {
     auth
       .signInWithPopup(provider)
-      .then((userAuth) => {
-        registerUser({ variables: { id: userAuth.user!.uid } });
+      .then(({ user }) => {
+        if (user) {
+          registerUser({ variables: { id: user.uid } });
+        }
       })
       .then(() => {
         history.push("/");
@@ -67,7 +73,7 @@ const Register: React.FC = () => {
     <div className={styles.register}>
       <div className={styles.container}>
         <h1>Create your account</h1>
-        <div className={styles.google} onClick={signInGoogle}>
+        <div className={styles.google} onClick={signInWithGoogle}>
           <img
             alt="google"
             src="https://kgo.googleusercontent.com/profile_vrt_raw_bytes_1587515358_10512.png"
