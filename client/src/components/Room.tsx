@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RouteComponentProps } from "react-router";
+import { useHistory, useRouteMatch } from "react-router";
 import io from "socket.io-client";
 import {
   selectAudio,
@@ -16,9 +16,7 @@ import styles from "../styles/Room.module.css";
 import { socketPayload } from "../types";
 import { Video } from "./Video";
 
-interface RoomProps extends RouteComponentProps<any> {}
-
-export const Room: React.FC<RoomProps> = ({ match, history }) => {
+export const Room: React.FC = () => {
   const [peers, setPeers] = useState<any[]>([]);
 
   const userStream = useRef<MediaStream>();
@@ -26,6 +24,9 @@ export const Room: React.FC<RoomProps> = ({ match, history }) => {
   const socketRef = useRef<SocketIOClient.Socket>();
   const peersRef = useRef<Array<{ id: string; peer: RTCPeerConnection }>>([]);
   const senders = useRef<any[]>([]);
+
+  const history = useHistory();
+  const match: any = useRouteMatch();
 
   const dispatch = useDispatch();
   const user = useSelector(selectUser);

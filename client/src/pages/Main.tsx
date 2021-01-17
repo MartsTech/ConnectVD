@@ -1,23 +1,20 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { RouteComponentProps } from "react-router";
 import { JoinRoom } from "../components/JoinRoom";
 import { MainCards } from "../components/MainCards";
 import { MiniDrawer } from "../components/Header";
 import { selectDialog } from "../features/dialogSlide";
 import styles from "../styles/Main.module.css";
 
-interface MainProps extends RouteComponentProps<any> {}
-
-const Main: React.FC<MainProps> = (props) => {
+const Main: React.FC = () => {
   const dialog = useSelector(selectDialog);
   return (
     <>
       <MiniDrawer />
-      {dialog && <JoinRoom {...props} />}
+      {dialog && <JoinRoom />}
       <div className={styles.main}>
         <div className={styles.container}>
-          <MainCards {...props} />
+          <MainCards />
         </div>
       </div>
     </>

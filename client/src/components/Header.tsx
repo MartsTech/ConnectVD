@@ -183,14 +183,9 @@ export const MiniDrawer: React.FC = () => {
               <NotificationsIcon />
             </Badge>
           </IconButton>
-          <IconButton color="inherit">
+          <IconButton onClick={() => setClicked(!clicked)} color="inherit">
             {user && (
-              <Avatar
-                className={styles.avatar}
-                onClick={() => setClicked(!clicked)}
-              >
-                {user?.displayName[0]}
-              </Avatar>
+              <Avatar className={styles.avatar}>{user?.displayName[0]}</Avatar>
             )}
             {clicked && <Dropdown />}
           </IconButton>

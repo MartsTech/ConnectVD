@@ -1,18 +1,18 @@
 import { Button } from "@material-ui/core";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { RouteComponentProps } from "react-router";
+import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
 import { login } from "../features/userSlice";
 import { auth, provider } from "../firebase";
 import { useRegisterMutation } from "../generated/graphql";
 import styles from "../styles/Login.module.css";
 
-interface LoginProps extends RouteComponentProps<any> {}
-
-const Login: React.FC<LoginProps> = ({ history }) => {
+const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const history = useHistory();
 
   const [registerUser] = useRegisterMutation();
 

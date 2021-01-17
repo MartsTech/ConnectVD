@@ -9,7 +9,7 @@ const Access = lazy(() => import("./Access"));
 const Main = lazy(() => import("./Main"));
 const Meeting = lazy(() => import("./Meeting"));
 
-const App: React.FC<{}> = () => {
+const App: React.FC = () => {
   const user = useSelector(selectUser);
 
   const dispatch = useDispatch();

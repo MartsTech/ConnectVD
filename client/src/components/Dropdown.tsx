@@ -13,8 +13,8 @@ export const Dropdown: React.FC = () => {
     <div className={styles.dropdown}>
       <DropdownItem avatar={true} text={user.displayName} />
       <DropdownItem
-        icon={<ExitToAppIcon />}
         text="Log Out"
+        Icon={ExitToAppIcon}
         onClick={() => auth.signOut()}
       />
     </div>

@@ -10,7 +10,7 @@ import TextField from "@material-ui/core/TextField";
 import React, { useState } from "react";
 import Draggable from "react-draggable";
 import { useDispatch } from "react-redux";
-import { RouteComponentProps } from "react-router";
+import { useHistory } from "react-router";
 import { setAudio, setVideo } from "../features/controlsSlice";
 import { closeDialog } from "../features/dialogSlide";
 import styles from "../styles/JoinRoom.module.css";
@@ -26,12 +26,12 @@ const PaperComponent: React.FC = (props: PaperProps) => {
   );
 };
 
-interface JoinRoomProps extends RouteComponentProps<any> {}
-
-export const JoinRoom: React.FC<JoinRoomProps> = ({ history }) => {
+export const JoinRoom: React.FC = () => {
   const [input, setInput] = useState<string>("");
   const [audio, setCurrentAudio] = useState<boolean>(true);
   const [video, setCurrentVideo] = useState<boolean>(true);
+
+  const history = useHistory();
 
   const dispatch = useDispatch();
 

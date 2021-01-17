@@ -2,19 +2,19 @@ import firebase from "firebase";
 import React, { useEffect, useState } from "react";
 import FlipMove from "react-flip-move";
 import { useSelector } from "react-redux";
-import { RouteComponentProps } from "react-router";
+import { useRouteMatch } from "react-router";
 import { selectUser } from "../features/userSlice";
 import db from "../firebase";
 import styles from "../styles/MeetingChat.module.css";
 import { Message } from "./Message";
 
-interface MeetingChatProps extends RouteComponentProps<any> {}
-
-export const MeetingChat: React.FC<MeetingChatProps> = ({ match }) => {
+export const MeetingChat: React.FC = () => {
   const [input, setInput] = useState<string>("");
   const [messages, setMessages] = useState<
     Array<{ id: string; data: firebase.firestore.DocumentData }>
   >([]);
+
+  const match: any = useRouteMatch();
 
   const user = useSelector(selectUser);
 
