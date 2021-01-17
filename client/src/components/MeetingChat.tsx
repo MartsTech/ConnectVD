@@ -40,7 +40,7 @@ export const MeetingChat: React.FC = () => {
     e.preventDefault();
 
     db.collection("rooms").doc(roomId).collection("messages").add({
-      displayName: user.displayName,
+      displayName: user?.displayName,
       message: input,
       timestamp: firebase.firestore.FieldValue.serverTimestamp(),
     });

@@ -23,13 +23,17 @@ const Login: React.FC = () => {
 
     auth
       .signInWithEmailAndPassword(email, password)
-      .then((userAuth) => {
-        dispatch(
-          login({
-            displayName: userAuth.user?.displayName,
-            uid: userAuth.user?.uid,
-          })
-        );
+      .then(({ user }) => {
+        if (user) {
+          dispatch(
+            login({
+              displayName: user.displayName!,
+              email: user.email!,
+              photoUrl: user.photoURL!,
+              uid: user.uid,
+            })
+          );
+        }
       })
       .then(() => {
         history.push("/");
@@ -37,11 +41,13 @@ const Login: React.FC = () => {
       .catch((err) => alert(err));
   };
 
-  const signInGoogle = () => {
+  const signInWithGoogle = () => {
     auth
       .signInWithPopup(provider)
-      .then((userAuth) => {
-        registerUser({ variables: { id: userAuth.user!.uid } });
+      .then(({ user }) => {
+        if (user) {
+          registerUser({ variables: { id: user.uid } });
+        }
       })
       .then(() => {
         history.push("/");
@@ -52,7 +58,7 @@ const Login: React.FC = () => {
   return (
     <div className={styles.login}>
       <h1>Log in to your account</h1>
-      <div className={styles.google} onClick={signInGoogle}>
+      <div className={styles.google} onClick={signInWithGoogle}>
         <img
           alt="google"
           src="https://kgo.googleusercontent.com/profile_vrt_raw_bytes_1587515358_10512.png"

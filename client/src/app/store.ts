@@ -8,6 +8,7 @@ import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import controlsReducer from "../features/controlsSlice";
 import dialogReducer from "../features/dialogSlide";
+import dropdownReducer from "../features/dropdownSlice";
 import userReducer from "../features/userSlice";
 
 const controlsPersistConfig = {
@@ -25,6 +26,7 @@ export const store = configureStore({
     user: userReducer,
     controls: controlsPersistedReducer,
     dialog: dialogReducer,
+    dropdown: dropdownReducer,
   },
   middleware: getDefaultMiddleware({
     serializableCheck: false,

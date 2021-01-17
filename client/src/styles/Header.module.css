@@ -1,25 +1,44 @@
 .header {
   display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid whitesmoke;
 }
 
-.menuButton {
-  margin-right: 36px;
+.left {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin-left: 10px;
 }
 
-.hide {
-  display: "none";
+.middle {
+  display: flex;
+  flex: 0.7;
+  align-items: center;
+  background-color: whitesmoke;
+  padding: 10px;
+  border-radius: 5px;
 }
 
-.drawer {
-  width: 240px;
-  flex-shrink: 0;
-  white-space: nowrap;
+.middle > svg {
+  color: gray;
 }
 
-.avatar {
-  transition: filter 300ms;
+.middle > input {
+  border: none;
+  width: 100%;
+  padding: 10px;
+  outline: none;
+  font-size: medium;
+  background-color: transparent;
 }
 
-.avatar:hover {
-  filter: brightness(1.1);
+.right {
+  display: flex;
+  padding-right: 20px;
+}
+
+.letter {
+  text-transform: capitalize;
 }

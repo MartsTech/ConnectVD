@@ -59,7 +59,7 @@ export const Room: React.FC = () => {
     socketRef.current.emit("get socketId");
     socketRef.current.on("send socketId", async (id: string) => {
       const { data } = await joinRoom({
-        variables: { id: user.uid, roomId, socketId: id },
+        variables: { id: user!.uid, roomId, socketId: id },
       });
       if (data?.joinRoom.error) {
         leaveRoom();

@@ -1,8 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../app/store";
 
+type UserContext = {
+  displayName: string;
+  email: string;
+  photoUrl: string;
+  uid: string;
+};
+
 interface UserState {
-  user: any;
+  user: UserContext | null;
 }
 
 const initialState: UserState = {
@@ -13,7 +20,7 @@ export const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    login: (state, action) => {
+    login: (state, action: { payload: UserContext }) => {
       state.user = action.payload;
     },
     logout: (state) => {
