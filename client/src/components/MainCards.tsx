@@ -3,15 +3,15 @@ import AddBoxIcon from "@material-ui/icons/AddBox";
 import VideoCallIcon from "@material-ui/icons/VideoCall";
 import React from "react";
 import { useDispatch } from "react-redux";
-import { RouteComponentProps } from "react-router";
+import { useHistory } from "react-router";
 import { openDialog } from "../features/dialogSlide";
 import { useCreateRoomMutation } from "../generated/graphql";
 import styles from "../styles/MainCards.module.css";
 
-interface MainCardsProps extends RouteComponentProps<any> {}
-
-export const MainCards: React.FC<MainCardsProps> = ({ history }) => {
+export const MainCards: React.FC = () => {
   const [createRoom] = useCreateRoomMutation();
+
+  const history = useHistory();
 
   const dispatch = useDispatch();
 

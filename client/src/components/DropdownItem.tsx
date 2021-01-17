@@ -1,26 +1,30 @@
+import { SvgIconTypeMap } from "@material-ui/core";
 import Avatar from "@material-ui/core/Avatar";
+import { OverridableComponent } from "@material-ui/core/OverridableComponent";
 import React from "react";
 import styles from "../styles/DropdownItem.module.css";
 
 type dropdownItemProps = {
   text: string;
   avatar?: boolean;
-  icon?: any;
+  Icon?: OverridableComponent<SvgIconTypeMap<{}, "svg">>;
   onClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
 };
 
 export const DropdownItem: React.FC<dropdownItemProps> = ({
   avatar,
   text,
-  icon,
+  Icon,
   onClick,
 }) => {
   return (
     <div onClick={onClick} className={styles.dropdownItem}>
       {avatar && <Avatar className={styles.icon}>{text[0]}</Avatar>}
-      {icon && (
+      {Icon && (
         <div className={styles.iconContainer}>
-          <div className={styles.icon}>{icon}</div>
+          <div className={styles.icon}>
+            <Icon />
+          </div>
         </div>
       )}
       {text && <h5>{text}</h5>}

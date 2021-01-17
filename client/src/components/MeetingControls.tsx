@@ -7,7 +7,7 @@ import VideocamIcon from "@material-ui/icons/Videocam";
 import VideocamOffIcon from "@material-ui/icons/VideocamOff";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RouteComponentProps } from "react-router";
+import { useHistory } from "react-router";
 import {
   selectAudio,
   selectChat,
@@ -16,18 +16,16 @@ import {
   setChat,
   setLeave,
   setScreen,
-  setVideo
+  setVideo,
 } from "../features/controlsSlice";
 import styles from "../styles/MeetingControls.module.css";
 
-interface MeetingControlsProps extends RouteComponentProps<any> {}
-
-export const MeetingControls: React.FC<MeetingControlsProps> = ({
-  history,
-}) => {
+export const MeetingControls: React.FC = () => {
   const audio: boolean = useSelector(selectAudio);
   const video: boolean = useSelector(selectVideo);
   const chat: boolean = useSelector(selectChat);
+
+  const history = useHistory();
 
   const dispatch = useDispatch();
 
