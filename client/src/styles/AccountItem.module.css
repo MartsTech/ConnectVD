@@ -27,21 +27,3 @@
   font-size: 18px;
   margin-left: 15px;
 }
-
-.icon {
-  margin-top: 4px;
-}
-
-.icon > svg {
-  font-size: 30px;
-}
-
-.iconContainer {
-  display: grid;
-  place-items: center;
-  width: 40px;
-  height: 40px;
-  background-color: #484a4d;
-  color: white;
-  border-radius: 50%;
-}

@@ -7,7 +7,7 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "../features/userSlice";
 import styles from "../styles/Header.module.css";
-import { StyledBadge } from "../utils/StyledBadge";
+import { StatusBadge } from "./StatusBadge";
 import { Account } from "./Account";
 
 export const Header: React.FC = () => {
@@ -38,18 +38,11 @@ export const Header: React.FC = () => {
           </Badge>
         </IconButton>
         <IconButton onClick={() => setClickAvatar(!clickAvatar)}>
-          <StyledBadge
-            overlap="circle"
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "right",
-            }}
-            variant="dot"
-          >
+          <StatusBadge status="available">
             <Avatar src={user?.photoUrl}>
               <span className={styles.letter}>{user?.email[0]}</span>
             </Avatar>
-          </StyledBadge>
+          </StatusBadge>
         </IconButton>
       </div>
       {clickAvatar && <Account />}
