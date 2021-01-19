@@ -7,6 +7,12 @@ import {
   PrimaryColumn,
 } from "typeorm";
 
+// @ObjectType()
+// class StatusContext {
+//   @Field()
+//   status: "available" | "away" | "busy";
+// }
+
 @ObjectType()
 @Entity()
 export class User extends BaseEntity {
@@ -20,6 +26,10 @@ export class User extends BaseEntity {
   @Field()
   @Column({ nullable: true })
   roomId: string;
+
+  @Field()
+  @Column({ default: "available" })
+  status: string;
 
   @CreateDateColumn()
   createdAt: Date;

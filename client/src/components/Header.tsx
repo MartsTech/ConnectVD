@@ -4,16 +4,34 @@ import MenuIcon from "@material-ui/icons/Menu";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import SearchIcon from "@material-ui/icons/Search";
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "../features/userSlice";
 import styles from "../styles/Header.module.css";
 import { StatusBadge } from "./StatusBadge";
-import { Account } from "./Account";
+import { Dropdown } from "./dropdown/Dropdown";
+import { useMeQuery } from "../generated/graphql";
+import { openMenu } from "../features/dropdownSlice";
 
 export const Header: React.FC = () => {
-  const [clickAvatar, setClickAvatar] = useState<boolean>(false);
+  const [dropdown, setDropdown] = useState<boolean>(false);
+  const [activeDropdown, setActiveDropdown] = useState<string>("");
 
   const user = useSelector(selectUser);
+
+  const dispatch = useDispatch();
+
+  const { data } = useMeQuery({ variables: { id: user!.uid } });
+
+  const activateMenu = (menu: "main" | "notifications") => {
+    if (menu === activeDropdown) {
+      setDropdown(false);
+      setActiveDropdown("");
+    } else {
+      setDropdown(true);
+      setActiveDropdown(menu);
+    }
+    dispatch(openMenu(menu));
+  };
 
   return (
     <div className={styles.header}>
@@ -28,24 +46,24 @@ export const Header: React.FC = () => {
       </div>
       <div className={styles.right}>
         <IconButton>
-          <Badge badgeContent={11} color="secondary">
+          <Badge badgeContent={14} color="secondary">
             <MailIcon />
           </Badge>
         </IconButton>
-        <IconButton>
-          <Badge badgeContent={4} color="secondary">
+        <IconButton onClick={() => activateMenu("notifications")}>
+          <Badge badgeContent={1} color="secondary">
             <NotificationsIcon />
           </Badge>
         </IconButton>
-        <IconButton onClick={() => setClickAvatar(!clickAvatar)}>
-          <StatusBadge status="available">
+        <IconButton onClick={() => activateMenu("main")}>
+          <StatusBadge status={data?.me?.status}>
             <Avatar src={user?.photoUrl}>
               <span className={styles.letter}>{user?.email[0]}</span>
             </Avatar>
           </StatusBadge>
         </IconButton>
       </div>
-      {clickAvatar && <Account />}
+      {dropdown && <Dropdown />}
     </div>
   );
 };

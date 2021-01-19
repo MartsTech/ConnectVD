@@ -1,6 +1,14 @@
 import { User } from "../entities/User";
 import { Arg, Mutation, Query, Resolver } from "type-graphql";
+import { getConnection } from "typeorm";
 
+// @ObjectType()
+// class MessageContext{
+//   @Field()
+//   photo: string
+//   @Field()
+//   desc: string
+//   }
 @Resolver(User)
 export class UserResolver {
   @Query(() => [User])
@@ -16,4 +24,28 @@ export class UserResolver {
     await User.create({ id }).save();
     return true;
   }
+  @Query(() => User, { nullable: true })
+  me(@Arg("id") id: string): Promise<User | undefined> {
+    return User.findOne(id);
+  }
+  @Mutation(() => User, { nullable: true })
+  async changeStatus(
+    @Arg("id") id: string,
+    @Arg("status") status: string
+  ): Promise<User | undefined> {
+    const options = ["available", "away", "busy"];
+    if (!options.includes(status)) {
+      return;
+    }
+    const user = await getConnection()
+      .createQueryBuilder()
+      .update(User)
+      .set({ status })
+      .where("id = :id", { id })
+      .returning("*")
+      .execute();
+    return user.raw[0];
+  }
+  // @Mutation()
+  // makeRequest(@Arg("email") email: string, @Arg("message")) {}
 }
