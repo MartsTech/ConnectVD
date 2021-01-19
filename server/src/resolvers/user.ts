@@ -1,14 +1,6 @@
 import { User } from "../entities/User";
 import { Arg, Mutation, Query, Resolver } from "type-graphql";
 import { getConnection } from "typeorm";
-
-// @ObjectType()
-// class MessageContext{
-//   @Field()
-//   photo: string
-//   @Field()
-//   desc: string
-//   }
 @Resolver(User)
 export class UserResolver {
   @Query(() => [User])
@@ -16,12 +8,18 @@ export class UserResolver {
     return User.find({});
   }
   @Mutation(() => Boolean)
-  async register(@Arg("id") id: string): Promise<Boolean> {
+  async register(
+    @Arg("id") id: string,
+    @Arg("email") email: string,
+    @Arg("displayName") displayName: string,
+    @Arg("photoUrl", () => String, { nullable: true })
+    photoUrl: string | undefined
+  ): Promise<Boolean> {
     const user = await User.findOne({ id });
     if (user) {
       return false;
     }
-    await User.create({ id }).save();
+    await User.create({ id, email, displayName, photoUrl }).save();
     return true;
   }
   @Query(() => User, { nullable: true })
@@ -46,6 +44,4 @@ export class UserResolver {
       .execute();
     return user.raw[0];
   }
-  // @Mutation()
-  // makeRequest(@Arg("email") email: string, @Arg("message")) {}
 }

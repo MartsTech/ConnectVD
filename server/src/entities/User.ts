@@ -4,20 +4,32 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryColumn,
 } from "typeorm";
-
-// @ObjectType()
-// class StatusContext {
-//   @Field()
-//   status: "available" | "away" | "busy";
-// }
+import { Friend } from "./Friend";
 
 @ObjectType()
 @Entity()
 export class User extends BaseEntity {
   @PrimaryColumn()
   id!: string;
+
+  @Field()
+  @Column({ unique: true })
+  email!: string;
+
+  @Field()
+  @Column()
+  displayName!: string;
+
+  @Field()
+  @Column({ nullable: true })
+  photoUrl: string;
+
+  @Field()
+  @Column({ default: "available" })
+  status!: string;
 
   @Field()
   @Column({ nullable: true })
@@ -27,9 +39,8 @@ export class User extends BaseEntity {
   @Column({ nullable: true })
   roomId: string;
 
-  @Field()
-  @Column({ default: "available" })
-  status: string;
+  @OneToMany(() => Friend, (friend) => friend.user)
+  friends: Friend[];
 
   @CreateDateColumn()
   createdAt: Date;

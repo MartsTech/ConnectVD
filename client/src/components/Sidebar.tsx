@@ -1,5 +1,6 @@
 import { Avatar } from "@material-ui/core";
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
+import AddIcon from "@material-ui/icons/Add";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import InboxIcon from "@material-ui/icons/Inbox";
 import LabelImportantIcon from "@material-ui/icons/LabelImportant";
@@ -10,23 +11,28 @@ import StarIcon from "@material-ui/icons/Star";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "../features/userSlice";
-import { useMeQuery } from "../generated/graphql";
+import {
+  useCreateFriendRequestMutation,
+  useFriendsQuery,
+} from "../generated/graphql";
 import styles from "../styles/Sidebar.module.css";
 import { Section } from "./Section";
 import { SidebarOption } from "./SidebarOption";
 import { StatusBadge } from "./StatusBadge";
-import AddIcon from "@material-ui/icons/Add";
 
 export const Sidebar: React.FC = () => {
   const [email, setEmail] = useState<string>("");
 
   const user = useSelector(selectUser);
 
-  const { data } = useMeQuery({ variables: { id: user!.uid } });
+  const { data } = useFriendsQuery({
+    variables: { id: user!.uid },
+  });
+  const [createFriendRequest] = useCreateFriendRequestMutation();
 
   const submitEmail = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+    createFriendRequest({ variables: { input: { id: user!.uid, email } } });
     setEmail("");
   };
 
@@ -65,17 +71,18 @@ export const Sidebar: React.FC = () => {
         number={54}
       />
       <div className={styles.friends}>
-        <Section
-          LeftIcon={
-            <StatusBadge status={data?.me?.status}>
-              <Avatar src={user?.photoUrl}>
-                <span className={styles.letter}>{user?.email[0]}</span>
-              </Avatar>
-            </StatusBadge>
-          }
-          title={user?.displayName}
-          onClick={() => console.log("hi")}
-        />
+        {data?.friends.map(({ user }) => (
+          <Section
+            LeftIcon={
+              <StatusBadge status={user.status}>
+                <Avatar src={user.photoUrl}>
+                  <span className={styles.letter}>{user.email[0]}</span>
+                </Avatar>
+              </StatusBadge>
+            }
+            title={user.displayName}
+          />
+        ))}
       </div>
     </div>
   );

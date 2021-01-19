@@ -9,7 +9,7 @@ import { selectUser } from "../features/userSlice";
 import styles from "../styles/Header.module.css";
 import { StatusBadge } from "./StatusBadge";
 import { Dropdown } from "./dropdown/Dropdown";
-import { useMeQuery } from "../generated/graphql";
+import { useFriendRequestsQuery, useMeQuery } from "../generated/graphql";
 import { openMenu } from "../features/dropdownSlice";
 
 export const Header: React.FC = () => {
@@ -21,6 +21,9 @@ export const Header: React.FC = () => {
   const dispatch = useDispatch();
 
   const { data } = useMeQuery({ variables: { id: user!.uid } });
+  const { data: Requests } = useFriendRequestsQuery({
+    variables: { id: user!.uid },
+  });
 
   const activateMenu = (menu: "main" | "notifications") => {
     if (menu === activeDropdown) {
@@ -51,7 +54,10 @@ export const Header: React.FC = () => {
           </Badge>
         </IconButton>
         <IconButton onClick={() => activateMenu("notifications")}>
-          <Badge badgeContent={1} color="secondary">
+          <Badge
+            badgeContent={Requests?.friendRequests.length}
+            color="secondary"
+          >
             <NotificationsIcon />
           </Badge>
         </IconButton>

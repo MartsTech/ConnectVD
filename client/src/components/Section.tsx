@@ -6,7 +6,7 @@ type SectionProps = {
   el?: any;
   LeftIcon?: any;
   RightIcon?: any;
-  onClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+  onClick?: any;
 };
 
 export const Section: React.FC<SectionProps> = ({

@@ -35,14 +35,19 @@ const Register: React.FC = () => {
           user
             .updateProfile({ displayName: name })
             .then(() => {
-              registerUser({ variables: { id: user.uid } });
+              registerUser({
+                variables: {
+                  id: user.uid,
+                  email: user.email!,
+                  displayName: user.displayName!,
+                },
+              });
             })
             .then(() => {
               dispatch(
                 login({
                   displayName: user.displayName!,
                   email: user.email!,
-                  photoUrl: user.photoURL!,
                   uid: user.uid,
                 })
               );
@@ -60,7 +65,14 @@ const Register: React.FC = () => {
       .signInWithPopup(provider)
       .then(({ user }) => {
         if (user) {
-          registerUser({ variables: { id: user.uid } });
+          registerUser({
+            variables: {
+              id: user.uid,
+              email: user.email!,
+              displayName: user.displayName!,
+              photoUrl: user.photoURL!,
+            },
+          });
         }
       })
       .then(() => {

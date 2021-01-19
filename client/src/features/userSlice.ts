@@ -4,7 +4,7 @@ import { RootState } from "../app/store";
 type UserContext = {
   displayName: string;
   email: string;
-  photoUrl: string;
+  photoUrl?: string;
   uid: string;
 };
 

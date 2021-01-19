@@ -1,0 +1,3 @@
+mutation CreateFriendRequest($input: FriendRequestInput!) {
+  createFriendRequest(input: $input)
+}
