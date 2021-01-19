@@ -1,17 +1,20 @@
-import "dotenv-safe/config";
-import "reflect-metadata";
 import { ApolloServer } from "apollo-server-express";
+import "dotenv-safe/config";
 import express from "express";
+import http from "http";
 import path from "path";
+import "reflect-metadata";
+import socket, { Server, Socket } from "socket.io";
 import { buildSchema } from "type-graphql";
 import { createConnection } from "typeorm";
+import { Friend } from "./entities/Friend";
 import { Room } from "./entities/Room";
 import { User } from "./entities/User";
+import { FriendResolver } from "./resolvers/friend";
 import { RoomResolver } from "./resolvers/room";
-import http from "http";
-import socket, { Server, Socket } from "socket.io";
-import { socketPayload } from "./types";
 import { UserResolver } from "./resolvers/user";
+import { socketPayload } from "./types";
+import { createUserLoader } from "./utils/createUserLoader";
 
 const main = async () => {
   // App Config
@@ -20,7 +23,7 @@ const main = async () => {
 
   // DB Config
   const connection = await createConnection({
-    entities: [Room, User],
+    entities: [Room, User, Friend],
     type: "postgres",
     url: process.env.DATABASE_URL,
     logging: true,
@@ -30,6 +33,7 @@ const main = async () => {
   connection.runMigrations();
   // await Room.delete({});
   // await User.delete({});
+  // await Friend.delete({});
 
   // Socket Endpoints
   const server = http.createServer(app);
@@ -44,9 +48,10 @@ const main = async () => {
   // Graphql Config
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [RoomResolver, UserResolver],
+      resolvers: [RoomResolver, UserResolver, FriendResolver],
       validate: false,
     }),
+    context: () => ({ userLoader: createUserLoader() }),
   });
   apolloServer.applyMiddleware({ app, path: "/graphql" });
 

@@ -1,7 +1,7 @@
 import { withStyles, Theme, createStyles, Badge } from "@material-ui/core";
 
 interface StatusBageProps {
-  status: "available" | "away" | "busy";
+  status: string | undefined;
   className?: string;
   id?: string;
 }

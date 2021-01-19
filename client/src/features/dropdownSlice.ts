@@ -2,28 +2,34 @@ import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../app/store";
 
 interface DropdownState {
-  activeMenu: "main" | "status";
+  activeMenu: "main" | "status" | "notifications";
+  menuHeight: string;
 }
 
 const initialState: DropdownState = {
   activeMenu: "main",
+  menuHeight: "",
 };
 
 export const dropdownSlice = createSlice({
   name: "dropdown",
   initialState,
   reducers: {
-    openMain: (state) => {
-      state.activeMenu = "main";
+    openMenu: (
+      state,
+      action: { payload: "main" | "status" | "notifications" }
+    ) => {
+      state.activeMenu = action.payload;
     },
-    openStatus: (state) => {
-      state.activeMenu = "status";
+    setMenuHeight: (state, action: { payload: string }) => {
+      state.menuHeight = action.payload;
     },
   },
 });
 
-export const { openMain, openStatus } = dropdownSlice.actions;
+export const { openMenu, setMenuHeight } = dropdownSlice.actions;
 
-export const selectDropdown = (state: RootState) => state.dropdown.activeMenu;
+export const selectActiveMenu = (state: RootState) => state.dropdown.activeMenu;
+export const selectMenuHeight = (state: RootState) => state.dropdown.menuHeight;
 
 export default dropdownSlice.reducer;

@@ -1,3 +1,13 @@
-mutation Register($id: String!) {
-  register(id: $id)
+mutation Register(
+  $id: String!
+  $email: String!
+  $displayName: String!
+  $photoUrl: String
+) {
+  register(
+    id: $id
+    email: $email
+    displayName: $displayName
+    photoUrl: $photoUrl
+  )
 }

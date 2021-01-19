@@ -1,0 +1,11 @@
+mutation AcceptFriendRequest($input: FriendRequestInput!) {
+  acceptFriendRequest(input: $input) {
+    createdAt
+    user {
+      displayName
+      email
+      photoUrl
+      status
+    }
+  }
+}

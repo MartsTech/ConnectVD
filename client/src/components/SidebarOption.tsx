@@ -5,14 +5,16 @@ import React from "react";
 import styles from "../styles/SidebarOption.module.css";
 
 interface SidebarOptionProps {
-  Icon: OverridableComponent<SvgIconTypeMap<{}, "svg">>;
+  LeftIcon: OverridableComponent<SvgIconTypeMap<{}, "svg">>;
+  RightIcon?: OverridableComponent<SvgIconTypeMap<{}, "svg">>;
   title: string;
   number: number;
   selected?: boolean;
 }
 
 export const SidebarOption: React.FC<SidebarOptionProps> = ({
-  Icon,
+  LeftIcon,
+  RightIcon,
   title,
   number,
   selected,
@@ -23,9 +25,10 @@ export const SidebarOption: React.FC<SidebarOptionProps> = ({
         [styles.active]: selected,
       })}
     >
-      <Icon />
+      <LeftIcon />
       <h3>{title}</h3>
       <p>{number}</p>
+      {RightIcon && <RightIcon />}
     </div>
   );
 };

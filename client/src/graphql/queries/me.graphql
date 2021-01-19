@@ -1,0 +1,5 @@
+query Me($id: String!) {
+  me(id: $id) {
+    status
+  }
+}

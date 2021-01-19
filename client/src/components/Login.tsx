@@ -46,7 +46,14 @@ const Login: React.FC = () => {
       .signInWithPopup(provider)
       .then(({ user }) => {
         if (user) {
-          registerUser({ variables: { id: user.uid } });
+          registerUser({
+            variables: {
+              id: user.uid,
+              email: user.email!,
+              displayName: user.displayName!,
+              photoUrl: user.photoURL!,
+            },
+          });
         }
       })
       .then(() => {
