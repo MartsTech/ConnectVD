@@ -17,10 +17,10 @@ import {
   setLeave,
   setScreen,
   setVideo,
-} from "../features/controlsSlice";
-import styles from "../styles/MeetingControls.module.css";
+} from "../../features/controlsSlice";
+import styles from "../../styles/Controls.module.css";
 
-export const MeetingControls: React.FC = () => {
+export const Controls: React.FC = () => {
   const audio: boolean = useSelector(selectAudio);
   const video: boolean = useSelector(selectVideo);
   const chat: boolean = useSelector(selectChat);
@@ -35,7 +35,7 @@ export const MeetingControls: React.FC = () => {
   };
 
   return (
-    <div className={styles.meetingControls}>
+    <div className={styles.controls}>
       <div className={styles.left}>
         <div
           onClick={() => {

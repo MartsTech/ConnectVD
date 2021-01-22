@@ -1,15 +1,15 @@
+import { Avatar } from "@material-ui/core";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { CSSTransition } from "react-transition-group";
+import * as timeago from "timeago.js";
 import { selectActiveMenu, setMenuHeight } from "../../features/dropdownSlice";
-import styles from "../../styles/Dropdown.module.css";
-import { Section } from "../Section";
-import { Avatar } from "@material-ui/core";
 import {
   useAcceptFriendRequestMutation,
   useFriendRequestsQuery,
 } from "../../generated/graphql";
-import * as timeago from "timeago.js";
+import styles from "../../styles/Dropdown.module.css";
+import { Section } from "../Section";
 
 export const Notifications: React.FC = () => {
   const activeMenu = useSelector(selectActiveMenu);

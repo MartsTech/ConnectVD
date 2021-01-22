@@ -35,12 +35,12 @@ export const validateFriendRequest = async (
     if (requestExist) {
       return { message: "Request is pending.", status: "warning" };
     }
-    const friends = await Friend.findOne({
-      where: { userId: sender.id, friendId: receiver.id, status: "accepted" },
-    });
-    if (friends) {
-      return { message: "You are already friends.", status: "warning" };
-    }
+  }
+  const friends = await Friend.findOne({
+    where: { userId: sender.id, friendId: receiver.id, status: "accepted" },
+  });
+  if (friends) {
+    return { message: "You are already friends.", status: "warning" };
   }
 
   return receiver!.id;

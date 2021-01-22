@@ -9,7 +9,6 @@ import storage from "redux-persist/lib/storage";
 import controlsReducer from "../features/controlsSlice";
 import dialogReducer from "../features/dialogSlide";
 import dropdownReducer from "../features/dropdownSlice";
-import userReducer from "../features/userSlice";
 import snackbarReducer from "../features/snackbarSlice";
 
 const controlsPersistConfig = {
@@ -24,7 +23,6 @@ const controlsPersistedReducer = persistReducer(
 
 export const store = configureStore({
   reducer: {
-    user: userReducer,
     controls: controlsPersistedReducer,
     dialog: dialogReducer,
     dropdown: dropdownReducer,

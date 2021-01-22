@@ -1,5 +1,3 @@
 mutation ChangeStatus($status: String!) {
-  changeStatus(status: $status) {
-    status
-  }
+  changeStatus(status: $status)
 }

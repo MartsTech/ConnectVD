@@ -4,8 +4,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import SearchIcon from "@material-ui/icons/Search";
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { selectUser } from "../features/userSlice";
+import { useDispatch } from "react-redux";
 import styles from "../styles/Header.module.css";
 import { StatusBadge } from "./StatusBadge";
 import { Dropdown } from "./dropdown/Dropdown";
@@ -23,8 +22,6 @@ export const Header: React.FC = () => {
   const [dropdown, setDropdown] = useState<boolean>(false);
   const [activeDropdown, setActiveDropdown] = useState<string>("");
 
-  const user = useSelector(selectUser);
-
   const dispatch = useDispatch();
 
   const { data } = useMeQuery();
@@ -37,7 +34,6 @@ export const Header: React.FC = () => {
       updateQuery: (prev, { subscriptionData }) => {
         if (!subscriptionData.data) return prev;
         const newRequest = subscriptionData.data;
-        console.log(newRequest);
         return Object.assign({}, prev, {
           friendRequests: [newRequest, prev],
         });
@@ -86,8 +82,8 @@ export const Header: React.FC = () => {
         </IconButton>
         <IconButton onClick={() => activateMenu("main")}>
           <StatusBadge status={data?.me?.status}>
-            <Avatar src={user?.photoUrl}>
-              <span className={styles.letter}>{user?.email[0]}</span>
+            <Avatar src={data?.me?.photoUrl}>
+              <span className={styles.letter}>{data?.me?.email[0]}</span>
             </Avatar>
           </StatusBadge>
         </IconButton>

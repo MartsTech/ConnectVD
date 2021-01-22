@@ -31,6 +31,7 @@ export class FriendResolver {
   user(@Root() friend: Friend, @Ctx() { userLoader }: MyContext) {
     return userLoader.load(friend.friendId);
   }
+
   @Query(() => [Friend])
   friends(@Ctx() { req }: MyContext): Promise<Friend[]> {
     return Friend.find({
@@ -45,7 +46,7 @@ export class FriendResolver {
   }
 
   @Subscription(() => Friend, {
-    topics: "REQUESTS",
+    topics: "FRIEND_REQUESTS",
     filter: ({ payload, context }) => {
       return (
         payload.userId === context.connection.context.req &&
@@ -82,7 +83,7 @@ export class FriendResolver {
   async createFriendRequest(
     @Arg("email") email: string,
     @Ctx() { req }: MyContext,
-    @PubSub("REQUESTS") notifyAboutNewRequest: Publisher<Friend>
+    @PubSub("FRIEND_REQUESTS") notifyAboutNewRequest: Publisher<Friend>
   ): Promise<RequestResponse> {
     const checkCopy = true;
     const friend = await validateFriendRequest(
@@ -102,32 +103,41 @@ export class FriendResolver {
 
     return { message: "Friend request successfully sent.", status: "success" };
   }
-  @Mutation(() => Friend, { nullable: true })
+  @Mutation(() => RequestResponse)
   async acceptFriendRequest(
     @Arg("email") email: string,
-    @Ctx() { req }: MyContext
-  ): Promise<Friend | undefined> {
-    const request = await validateFriendRequest(req.session.userId, email);
-    if (typeof request === "object") {
-      return undefined;
+    @Ctx() { req }: MyContext,
+    @PubSub("FRIENDS") notifyAboutNewFriend: Publisher<Friend>
+  ): Promise<RequestResponse> {
+    const friend = await validateFriendRequest(req.session.userId, email);
+    if (typeof friend === "object") {
+      return friend;
     }
-    const friend = await getConnection()
+    const sender = await getConnection()
       .createQueryBuilder()
       .update(Friend)
       .set({ status: "accepted" })
-      .where('"userId" = :id and "friendId" = :request', {
+      .where('"userId" = :id and "friendId" = :friend', {
         id: req.session.userId,
-        request,
+        friend,
       })
       .returning("*")
       .execute();
 
-    await Friend.create({
-      userId: request,
+    await notifyAboutNewFriend(sender.raw[0]);
+
+    const receiver = await Friend.create({
+      userId: friend,
       friendId: req.session.userId,
       status: "accepted",
     }).save();
-    return friend.raw[0];
+
+    await notifyAboutNewFriend(receiver);
+
+    return {
+      message: "Friend request successfully accepted.",
+      status: "success",
+    };
   }
   @Mutation(() => Boolean)
   async declineFriendRequest(

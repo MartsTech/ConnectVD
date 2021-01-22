@@ -1,11 +1,6 @@
 mutation AcceptFriendRequest($email: String!) {
   acceptFriendRequest(email: $email) {
-    user {
-      email
-      displayName
-      photoUrl
-      status
-    }
-    createdAt
+    message
+    status
   }
 }

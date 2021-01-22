@@ -1,5 +1,5 @@
-query FriendRequests {
-  friendRequests {
+subscription NewFriend {
+  newFriend {
     createdAt
     user {
       email

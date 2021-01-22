@@ -10,7 +10,7 @@ import "reflect-metadata";
 import socket, { Server, Socket } from "socket.io";
 import { buildSchema } from "type-graphql";
 import { createConnection } from "typeorm";
-import { __prod__ } from "./constants";
+import { COOKIE_NAME, __prod__ } from "./constants";
 import { Friend } from "./entities/Friend";
 import { Room } from "./entities/Room";
 import { User } from "./entities/User";
@@ -33,10 +33,9 @@ const main = async () => {
       mongoOptions: {
         useUnifiedTopology: true,
         useNewUrlParser: true,
-        useCreateIndex: true,
       },
     }),
-    name: "qid",
+    name: COOKIE_NAME,
     cookie: {
       httpOnly: true,
       sameSite: "lax",

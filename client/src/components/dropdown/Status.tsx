@@ -7,7 +7,6 @@ import {
   selectActiveMenu,
   setMenuHeight,
 } from "../../features/dropdownSlice";
-import { selectUser } from "../../features/userSlice";
 import {
   MeDocument,
   MeQuery,
@@ -18,7 +17,6 @@ import { Section } from "../Section";
 import { StatusBadge } from "../StatusBadge";
 
 export const Status: React.FC = () => {
-  const user = useSelector(selectUser);
   const activeMenu = useSelector(selectActiveMenu);
 
   const dispatch = useDispatch();
@@ -31,7 +29,6 @@ export const Status: React.FC = () => {
       update: (cache, { data }) => {
         cache.writeQuery<MeQuery>({
           query: MeDocument,
-          variables: { id: user!.uid },
           data: {
             me: data!.changeStatus as any,
           },
