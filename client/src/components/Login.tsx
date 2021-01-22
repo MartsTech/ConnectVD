@@ -5,7 +5,7 @@ import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
 import { login } from "../features/userSlice";
 import { auth, provider } from "../firebase";
-import { useRegisterMutation } from "../generated/graphql";
+import { useSignInMutation } from "../generated/graphql";
 import styles from "../styles/Login.module.css";
 
 const Login: React.FC = () => {
@@ -14,11 +14,13 @@ const Login: React.FC = () => {
 
   const history = useHistory();
 
-  const [registerUser] = useRegisterMutation();
+  const [signIn] = useSignInMutation();
 
   const dispatch = useDispatch();
 
-  const signIn = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const signInWithEmail = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
     e.preventDefault();
 
     auth
@@ -33,6 +35,16 @@ const Login: React.FC = () => {
               uid: user.uid,
             })
           );
+          signIn({
+            variables: {
+              options: {
+                id: user.uid,
+                email: user.email!,
+                displayName: user.displayName!,
+                photoUrl: user.photoURL!,
+              },
+            },
+          });
         }
       })
       .then(() => {
@@ -46,12 +58,14 @@ const Login: React.FC = () => {
       .signInWithPopup(provider)
       .then(({ user }) => {
         if (user) {
-          registerUser({
+          signIn({
             variables: {
-              id: user.uid,
-              email: user.email!,
-              displayName: user.displayName!,
-              photoUrl: user.photoURL!,
+              options: {
+                id: user.uid,
+                email: user.email!,
+                displayName: user.displayName!,
+                photoUrl: user.photoURL!,
+              },
             },
           });
         }
@@ -88,7 +102,7 @@ const Login: React.FC = () => {
           type="password"
           placeholder="Password"
         />
-        <Button type="submit" onClick={signIn}>
+        <Button type="submit" onClick={signInWithEmail}>
           Login
         </Button>
       </form>

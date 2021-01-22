@@ -1,5 +1,8 @@
-query Me($id: String!) {
-  me(id: $id) {
+query Me {
+  me {
+    email
+    displayName
+    photoUrl
     status
   }
 }

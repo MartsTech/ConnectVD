@@ -1,3 +1,6 @@
-mutation CreateFriendRequest($input: FriendRequestInput!) {
-  createFriendRequest(input: $input)
+mutation CreateFriendRequest($email: String!) {
+  createFriendRequest(email: $email) {
+    message
+    status
+  }
 }

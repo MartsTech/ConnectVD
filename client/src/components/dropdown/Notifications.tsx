@@ -4,7 +4,6 @@ import { CSSTransition } from "react-transition-group";
 import { selectActiveMenu, setMenuHeight } from "../../features/dropdownSlice";
 import styles from "../../styles/Dropdown.module.css";
 import { Section } from "../Section";
-import { selectUser } from "../../features/userSlice";
 import { Avatar } from "@material-ui/core";
 import {
   useAcceptFriendRequestMutation,
@@ -13,12 +12,11 @@ import {
 import * as timeago from "timeago.js";
 
 export const Notifications: React.FC = () => {
-  const user = useSelector(selectUser);
   const activeMenu = useSelector(selectActiveMenu);
 
   const dispatch = useDispatch();
 
-  const { data } = useFriendRequestsQuery({ variables: { id: user!.uid } });
+  const { data } = useFriendRequestsQuery();
   const [acceptFriendRequest] = useAcceptFriendRequestMutation();
 
   const calcHeight = (el: any) => {
@@ -39,6 +37,7 @@ export const Notifications: React.FC = () => {
         <div className={styles.items}>
           {data?.friendRequests.map((request) => (
             <Section
+              key={request.user.email}
               el={
                 <div className={styles.message}>
                   <p>
@@ -62,7 +61,7 @@ export const Notifications: React.FC = () => {
               onClick={() =>
                 acceptFriendRequest({
                   variables: {
-                    input: { id: user!.uid, email: request.user.email },
+                    email: request.user.email,
                   },
                 })
               }

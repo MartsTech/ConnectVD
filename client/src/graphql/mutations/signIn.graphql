@@ -1,0 +1,3 @@
+mutation SignIn($options: RegisterOptionsInput!) {
+  signIn(options: $options)
+}

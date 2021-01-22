@@ -1,11 +1,11 @@
-query FriendRequests($id: String!) {
-  friendRequests(id: $id) {
-    createdAt
+query FriendRequests {
+  friendRequests {
     user {
-      displayName
       email
+      displayName
       photoUrl
       status
     }
+    createdAt
   }
 }

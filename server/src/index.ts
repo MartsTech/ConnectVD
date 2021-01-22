@@ -1,12 +1,16 @@
 import { ApolloServer } from "apollo-server-express";
+import connectMongo from "connect-mongo";
+import cors from "cors";
 import "dotenv-safe/config";
 import express from "express";
+import session from "express-session";
 import http from "http";
 import path from "path";
 import "reflect-metadata";
 import socket, { Server, Socket } from "socket.io";
 import { buildSchema } from "type-graphql";
 import { createConnection } from "typeorm";
+import { __prod__ } from "./constants";
 import { Friend } from "./entities/Friend";
 import { Room } from "./entities/Room";
 import { User } from "./entities/User";
@@ -19,7 +23,38 @@ import { createUserLoader } from "./utils/createUserLoader";
 const main = async () => {
   // App Config
   const app = express();
-  const port = process.env.PORT;
+  const port = parseInt(process.env.PORT);
+
+  // Middlewares
+  const MongoStore = connectMongo(session);
+  const sessionMiddleware = session({
+    store: new MongoStore({
+      url: process.env.MONGO_URL,
+      mongoOptions: {
+        useUnifiedTopology: true,
+        useNewUrlParser: true,
+        useCreateIndex: true,
+      },
+    }),
+    name: "qid",
+    cookie: {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: __prod__,
+      maxAge: 1000 * 60 * 60 * 24 * 356 * 10,
+    },
+    saveUninitialized: false,
+    secret: process.env.MONGO_SECRET,
+    resave: false,
+  });
+  app.set("proxy", 1);
+  app.use(
+    cors({
+      origin: process.env.CORS_ORIGIN,
+      credentials: true,
+    })
+  );
+  app.use(sessionMiddleware);
 
   // DB Config
   const connection = await createConnection({
@@ -39,10 +74,7 @@ const main = async () => {
   const server = http.createServer(app);
   // @ts-ignore
   const io: Server = socket(server, {
-    cors: {
-      origin: process.env.CLIENT_URL,
-      methods: ["GET", "POST"],
-    },
+    cors: false,
   });
 
   // Graphql Config
@@ -51,9 +83,25 @@ const main = async () => {
       resolvers: [RoomResolver, UserResolver, FriendResolver],
       validate: false,
     }),
-    context: () => ({ userLoader: createUserLoader() }),
+    context: ({ req, res, connection }) => ({
+      req,
+      res,
+      connection,
+      userLoader: createUserLoader(),
+    }),
+    subscriptions: {
+      path: "/subscriptions",
+      onConnect: (_, ws: any) => {
+        return new Promise((res) =>
+          sessionMiddleware(ws.upgradeReq, {} as any, () => {
+            res({ req: ws.upgradeReq.session.userId });
+          })
+        );
+      },
+    },
   });
-  apolloServer.applyMiddleware({ app, path: "/graphql" });
+  apolloServer.applyMiddleware({ app, path: "/graphql", cors: false });
+  apolloServer.installSubscriptionHandlers(server);
 
   io.on("connection", (socket: Socket) => {
     socket.on("get socketId", () => {

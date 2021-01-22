@@ -19,7 +19,7 @@ export class Friend extends BaseEntity {
   friendId!: string;
 
   @Column({ default: "pending" })
-  status!: string;
+  status!: "pending" | "accepted";
 
   @Field()
   @ManyToOne(() => User, (user) => user.friends)

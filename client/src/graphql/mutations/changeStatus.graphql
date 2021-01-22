@@ -1,5 +1,5 @@
-mutation ChangeStatus($id: String!, $status: String!) {
-  changeStatus(id: $id, status: $status) {
+mutation ChangeStatus($status: String!) {
+  changeStatus(status: $status) {
     status
   }
 }

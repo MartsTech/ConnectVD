@@ -9,8 +9,8 @@ import NoteIcon from "@material-ui/icons/Note";
 import PersonIcon from "@material-ui/icons/Person";
 import StarIcon from "@material-ui/icons/Star";
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
-import { selectUser } from "../features/userSlice";
+import { useDispatch } from "react-redux";
+import { openSnackbar } from "../features/snackbarSlice";
 import {
   useCreateFriendRequestMutation,
   useFriendsQuery,
@@ -18,26 +18,45 @@ import {
 import styles from "../styles/Sidebar.module.css";
 import { Section } from "./Section";
 import { SidebarOption } from "./SidebarOption";
+import { Snackbar } from "./Snackbar";
 import { StatusBadge } from "./StatusBadge";
 
 export const Sidebar: React.FC = () => {
   const [email, setEmail] = useState<string>("");
+  const [message, setMessage] = useState<{
+    message: string;
+    status: "error" | "warning" | "info" | "success";
+  }>();
 
-  const user = useSelector(selectUser);
+  const dispatch = useDispatch();
 
-  const { data } = useFriendsQuery({
-    variables: { id: user!.uid },
-  });
+  const { data } = useFriendsQuery();
   const [createFriendRequest] = useCreateFriendRequestMutation();
 
-  const submitEmail = (e: React.FormEvent<HTMLFormElement>) => {
+  const submitEmail = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    createFriendRequest({ variables: { input: { id: user!.uid, email } } });
-    setEmail("");
+    if (email === "") {
+      return;
+    }
+    const response = await createFriendRequest({
+      variables: { email },
+    });
+    if (response.data?.createFriendRequest) {
+      setMessage({
+        message: response.data.createFriendRequest.message,
+        status: response.data.createFriendRequest.status as any,
+      });
+      dispatch(openSnackbar());
+      setEmail("");
+    }
   };
 
   return (
     <div className={styles.sidebar}>
+      {message && (
+        <Snackbar message={message.message} status={message.status} />
+      )}
+
       <form onSubmit={submitEmail} className={styles.addFriend}>
         <AddIcon />
         <input

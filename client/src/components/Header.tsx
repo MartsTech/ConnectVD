@@ -3,14 +3,21 @@ import MailIcon from "@material-ui/icons/Mail";
 import MenuIcon from "@material-ui/icons/Menu";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import SearchIcon from "@material-ui/icons/Search";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "../features/userSlice";
 import styles from "../styles/Header.module.css";
 import { StatusBadge } from "./StatusBadge";
 import { Dropdown } from "./dropdown/Dropdown";
-import { useFriendRequestsQuery, useMeQuery } from "../generated/graphql";
+import {
+  NewFriendRequstDocument,
+  useFriendRequestsQuery,
+  useMeQuery,
+  useNewFriendRequstSubscription,
+} from "../generated/graphql";
 import { openMenu } from "../features/dropdownSlice";
+import { Snackbar } from "./Snackbar";
+import { openSnackbar } from "../features/snackbarSlice";
 
 export const Header: React.FC = () => {
   const [dropdown, setDropdown] = useState<boolean>(false);
@@ -20,10 +27,25 @@ export const Header: React.FC = () => {
 
   const dispatch = useDispatch();
 
-  const { data } = useMeQuery({ variables: { id: user!.uid } });
-  const { data: Requests } = useFriendRequestsQuery({
-    variables: { id: user!.uid },
-  });
+  const { data } = useMeQuery();
+  const { data: NewFriendReq } = useNewFriendRequstSubscription();
+  const { data: Requests, subscribeToMore } = useFriendRequestsQuery();
+
+  useEffect(() => {
+    subscribeToMore({
+      document: NewFriendRequstDocument,
+      updateQuery: (prev, { subscriptionData }) => {
+        if (!subscriptionData.data) return prev;
+        const newRequest = subscriptionData.data;
+        console.log(newRequest);
+        return Object.assign({}, prev, {
+          friendRequests: [newRequest, prev],
+        });
+      },
+    });
+    dispatch(openSnackbar());
+    // eslint-disable-next-line
+  }, [NewFriendReq]);
 
   const activateMenu = (menu: "main" | "notifications") => {
     if (menu === activeDropdown) {
@@ -38,6 +60,7 @@ export const Header: React.FC = () => {
 
   return (
     <div className={styles.header}>
+      {NewFriendReq && <Snackbar message="New Friend Request" status="info" />}
       <div className={styles.left}>
         <IconButton>
           <MenuIcon />

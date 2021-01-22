@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { Link, useHistory } from "react-router-dom";
 import { login } from "../features/userSlice";
 import { auth, provider } from "../firebase";
-import { useRegisterMutation } from "../generated/graphql";
+import { useSignInMutation } from "../generated/graphql";
 import styles from "../styles/Register.module.css";
 
 const Register: React.FC = () => {
@@ -13,7 +13,7 @@ const Register: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const [registerUser] = useRegisterMutation();
+  const [signInUser] = useSignInMutation();
 
   const history = useHistory();
 
@@ -35,11 +35,13 @@ const Register: React.FC = () => {
           user
             .updateProfile({ displayName: name })
             .then(() => {
-              registerUser({
+              signInUser({
                 variables: {
-                  id: user.uid,
-                  email: user.email!,
-                  displayName: user.displayName!,
+                  options: {
+                    id: user.uid,
+                    email: user.email!,
+                    displayName: user.displayName!,
+                  },
                 },
               });
             })
@@ -65,12 +67,14 @@ const Register: React.FC = () => {
       .signInWithPopup(provider)
       .then(({ user }) => {
         if (user) {
-          registerUser({
+          signInUser({
             variables: {
-              id: user.uid,
-              email: user.email!,
-              displayName: user.displayName!,
-              photoUrl: user.photoURL!,
+              options: {
+                id: user.uid,
+                email: user.email!,
+                displayName: user.displayName!,
+                photoUrl: user.photoURL!,
+              },
             },
           });
         }

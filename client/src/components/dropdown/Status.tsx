@@ -27,13 +27,13 @@ export const Status: React.FC = () => {
 
   const setNewStatus = async (status: string) => {
     await changeStatus({
-      variables: { id: user!.uid, status },
+      variables: { status },
       update: (cache, { data }) => {
         cache.writeQuery<MeQuery>({
           query: MeDocument,
           variables: { id: user!.uid },
           data: {
-            me: data!.changeStatus,
+            me: data!.changeStatus as any,
           },
         });
       },

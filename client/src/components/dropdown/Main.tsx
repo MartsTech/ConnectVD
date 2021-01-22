@@ -24,7 +24,7 @@ export const Main: React.FC = () => {
 
   const dispatch = useDispatch();
 
-  const { data } = useMeQuery({ variables: { id: user!.uid } });
+  const { data } = useMeQuery();
 
   useEffect(() => {
     setPrevMenu(activeMenu);

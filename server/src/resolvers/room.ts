@@ -1,5 +1,6 @@
 import {
   Arg,
+  Ctx,
   Field,
   Int,
   Mutation,
@@ -11,6 +12,7 @@ import { getConnection } from "typeorm";
 import { v4 as uuid } from "uuid";
 import { Room } from "../entities/Room";
 import { User } from "../entities/User";
+import { MyContext } from "../types";
 
 @ObjectType()
 class JoinRoomRes {
@@ -55,19 +57,21 @@ export class RoomResolver {
   }
   @Mutation(() => JoinRoomRes)
   async joinRoom(
-    @Arg("id") id: string,
     @Arg("roomId") roomId: string,
-    @Arg("socketId") socketId: string
+    @Arg("socketId") socketId: string,
+    @Ctx() { req }: MyContext
   ): Promise<JoinRoomRes> {
     const room = await Room.findOne({ id: roomId });
     if (!room) {
-      return { error: "room doesn't exist" };
+      return { error: "Room doesn't exist." };
     }
-    const user = await User.findOne({ where: { id, roomId } });
+    const user = await User.findOne({
+      where: { id: req.session.userId, roomId },
+    });
     if (user) {
-      return { error: "user already in room" };
+      return { error: "User already in room." };
     }
-    await User.update({ id }, { socketId, roomId });
+    await User.update({ id: req.session.userId }, { socketId, roomId });
     const users = await User.find({ where: { roomId } });
     return { users };
   }
