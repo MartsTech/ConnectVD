@@ -1,8 +1,5 @@
 mutation SignIn($options: SignInOptionsInput!) {
   signIn(options: $options) {
-    email
-    displayName
-    photoUrl
-    status
+    ...RegularUserResponse
   }
 }

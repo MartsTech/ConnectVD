@@ -1,4 +1,3 @@
-import { useApolloClient } from "@apollo/client";
 import { Avatar } from "@material-ui/core";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
@@ -22,10 +21,8 @@ export const Main: React.FC = () => {
 
   const dispatch = useDispatch();
 
-  const { data } = useMeQuery();
-  const [signOut] = useSignOutMutation();
-
-  const apolloClient = useApolloClient();
+  const [{ data }] = useMeQuery();
+  const [, signOut] = useSignOutMutation();
 
   useEffect(() => {
     setPrevMenu(activeMenu);
@@ -78,7 +75,6 @@ export const Main: React.FC = () => {
             }
             onClick={async () => {
               await signOut();
-              await apolloClient.resetStore();
             }}
           />
         </div>

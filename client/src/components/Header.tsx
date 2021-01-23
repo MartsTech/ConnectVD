@@ -9,7 +9,6 @@ import styles from "../styles/Header.module.css";
 import { StatusBadge } from "./StatusBadge";
 import { Dropdown } from "./dropdown/Dropdown";
 import {
-  NewFriendRequstDocument,
   useFriendRequestsQuery,
   useMeQuery,
   useNewFriendRequstSubscription,
@@ -24,23 +23,13 @@ export const Header: React.FC = () => {
 
   const dispatch = useDispatch();
 
-  const { data } = useMeQuery();
-  const { data: NewFriendReq } = useNewFriendRequstSubscription();
-  const { data: Requests, subscribeToMore } = useFriendRequestsQuery();
+  const [{ data }] = useMeQuery();
+  const [{ data: Requests }] = useFriendRequestsQuery();
+  const [{ data: NewFriendReq }] = useNewFriendRequstSubscription();
 
   useEffect(() => {
-    subscribeToMore({
-      document: NewFriendRequstDocument,
-      updateQuery: (prev, { subscriptionData }) => {
-        if (!subscriptionData.data) return prev;
-        const newRequest = subscriptionData.data;
-        return Object.assign({}, prev, {
-          friendRequests: [newRequest, prev],
-        });
-      },
-    });
-    dispatch(openSnackbar());
-    // eslint-disable-next-line
+    if (typeof NewFriendReq !== "undefined") dispatch(openSnackbar());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [NewFriendReq]);
 
   const activateMenu = (menu: "main" | "notifications") => {

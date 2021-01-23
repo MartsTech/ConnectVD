@@ -9,7 +9,7 @@ import { useCreateRoomMutation } from "../generated/graphql";
 import styles from "../styles/HomeCards.module.css";
 
 export const HomeCards: React.FC = () => {
-  const [createRoom] = useCreateRoomMutation();
+  const [, createRoom] = useCreateRoomMutation();
 
   const history = useHistory();
 

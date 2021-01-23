@@ -1,3 +1,4 @@
+import { User } from "../entities/User";
 import {
   Arg,
   Ctx,
@@ -39,7 +40,7 @@ export class FriendResolver {
     });
   }
   @Query(() => [Friend])
-  friendRequests(@Ctx() { req }: MyContext): Promise<Friend[]> {
+  friendRequests(@Ctx() { req }: any): Promise<Friend[]> {
     return Friend.find({
       where: { userId: req.session.userId, status: "pending" },
     });
@@ -94,9 +95,11 @@ export class FriendResolver {
     if (typeof friend === "object") {
       return friend;
     }
+    const me = await User.findOne({ where: { id: req.session.userId } });
     const request = await Friend.create({
       userId: friend,
       friendId: req.session.userId,
+      id: me!.email,
     }).save();
 
     await notifyAboutNewRequest(request);
@@ -126,9 +129,12 @@ export class FriendResolver {
 
     await notifyAboutNewFriend(sender.raw[0]);
 
+    const me = await User.findOne({ where: { id: req.session.userId } });
+
     const receiver = await Friend.create({
       userId: friend,
       friendId: req.session.userId,
+      id: me!.email,
       status: "accepted",
     }).save();
 

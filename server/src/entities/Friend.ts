@@ -18,6 +18,10 @@ export class Friend extends BaseEntity {
   @PrimaryColumn()
   friendId!: string;
 
+  @Field()
+  @Column()
+  id!: string;
+
   @Column({ default: "pending" })
   status!: "pending" | "accepted";
 

@@ -22,8 +22,8 @@ export const Request: React.FC = () => {
 
   const dispatch = useDispatch();
 
-  const [acceptRequest] = useAcceptFriendRequestMutation();
-  const [declineRequest] = useDeclineFriendRequestMutation();
+  const [, acceptRequest] = useAcceptFriendRequestMutation();
+  const [, declineRequest] = useDeclineFriendRequestMutation();
 
   const calcHeight = (el: any) => {
     const menuHeight = el.offsetHeight;
@@ -46,7 +46,7 @@ export const Request: React.FC = () => {
                 <Button
                   onClick={async () => {
                     await acceptRequest({
-                      variables: { email: email! },
+                      email: email!,
                     });
                     dispatch(openMenu("notifications"));
                   }}
@@ -58,7 +58,7 @@ export const Request: React.FC = () => {
                 <Button
                   onClick={async () => {
                     await declineRequest({
-                      variables: { email: email! },
+                      email: email!,
                     });
                     dispatch(openMenu("notifications"));
                   }}

@@ -18,7 +18,7 @@ export const Notifications: React.FC = () => {
 
   const dispatch = useDispatch();
 
-  const { data } = useFriendRequestsQuery();
+  const [{ data }] = useFriendRequestsQuery();
 
   const calcHeight = (el: any) => {
     const menuHeight = el.offsetHeight;

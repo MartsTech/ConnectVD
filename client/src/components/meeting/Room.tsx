@@ -36,7 +36,7 @@ export const Room: React.FC = () => {
 
   const roomId: string = match.params.roomId;
 
-  const [joinRoom] = useJoinRoomMutation();
+  const [, joinRoom] = useJoinRoomMutation();
 
   const iceConfiguration = {
     iceServers: [
@@ -57,7 +57,7 @@ export const Room: React.FC = () => {
     socketRef.current.emit("get socketId");
     socketRef.current.on("send socketId", async (id: string) => {
       const { data } = await joinRoom({
-        variables: { input: { roomId, socketId: id } },
+        input: { roomId, socketId: id },
       });
       if (data?.joinRoom.error) {
         leaveRoom();

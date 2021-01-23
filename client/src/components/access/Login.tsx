@@ -3,11 +3,7 @@ import React, { useState } from "react";
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
 import { auth, provider } from "../../firebase";
-import {
-  MeDocument,
-  MeQuery,
-  useSignInMutation,
-} from "../../generated/graphql";
+import { useSignInMutation } from "../../generated/graphql";
 import styles from "../../styles/Login.module.css";
 
 const Login: React.FC = () => {
@@ -16,7 +12,7 @@ const Login: React.FC = () => {
 
   const history = useHistory();
 
-  const [signIn] = useSignInMutation();
+  const [, signIn] = useSignInMutation();
 
   const signInWithEmail = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -28,21 +24,10 @@ const Login: React.FC = () => {
       .then(({ user }) => {
         if (user) {
           signIn({
-            variables: {
-              options: {
-                id: user.uid,
-                email: user.email!,
-                displayName: user.displayName!,
-              },
-            },
-            update: (cache, { data }) => {
-              cache.writeQuery<MeQuery>({
-                query: MeDocument,
-                data: {
-                  __typename: "Query",
-                  me: data?.signIn,
-                },
-              });
+            options: {
+              id: user.uid,
+              email: user.email!,
+              displayName: user.displayName!,
             },
           });
         }
@@ -59,22 +44,11 @@ const Login: React.FC = () => {
       .then(({ user }) => {
         if (user) {
           signIn({
-            variables: {
-              options: {
-                id: user.uid,
-                email: user.email!,
-                displayName: user.displayName!,
-                photoUrl: user.photoURL!,
-              },
-            },
-            update: (cache, { data }) => {
-              cache.writeQuery<MeQuery>({
-                query: MeDocument,
-                data: {
-                  __typename: "Query",
-                  me: data?.signIn,
-                },
-              });
+            options: {
+              id: user.uid,
+              email: user.email!,
+              displayName: user.displayName!,
+              photoUrl: user.photoURL!,
             },
           });
         }

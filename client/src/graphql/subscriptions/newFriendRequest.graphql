@@ -1,11 +1,5 @@
 subscription NewFriendRequst {
   newFriendRequst {
-    createdAt
-    user {
-      email
-      displayName
-      photoUrl
-      status
-    }
+    ...RegularFriendResponse
   }
 }

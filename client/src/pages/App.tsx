@@ -8,7 +8,7 @@ const Main = lazy(() => import("./Home"));
 const Meeting = lazy(() => import("./Meeting"));
 
 const App: React.FC = () => {
-  const { data } = useMeQuery();
+  const [{ data }] = useMeQuery();
 
   return (
     <BrowserRouter>

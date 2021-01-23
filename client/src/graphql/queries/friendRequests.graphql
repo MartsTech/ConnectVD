@@ -1,11 +1,5 @@
 query FriendRequests {
   friendRequests {
-    createdAt
-    user {
-      email
-      displayName
-      photoUrl
-      status
-    }
+    ...RegularFriendResponse
   }
 }

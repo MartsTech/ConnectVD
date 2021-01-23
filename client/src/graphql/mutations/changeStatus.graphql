@@ -1,8 +1,5 @@
 mutation ChangeStatus($status: String!) {
   changeStatus(status: $status) {
-    email
-    displayName
-    photoUrl
-    status
+    ...RegularUserResponse
   }
 }

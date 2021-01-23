@@ -2,11 +2,7 @@ import { Button } from "@material-ui/core";
 import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { auth, provider } from "../../firebase";
-import {
-  MeDocument,
-  MeQuery,
-  useSignInMutation,
-} from "../../generated/graphql";
+import { useSignInMutation } from "../../generated/graphql";
 import styles from "../../styles/Register.module.css";
 
 const Register: React.FC = () => {
@@ -15,7 +11,7 @@ const Register: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const [signInUser] = useSignInMutation();
+  const [, signIn] = useSignInMutation();
 
   const history = useHistory();
 
@@ -33,22 +29,11 @@ const Register: React.FC = () => {
       .then(({ user }) => {
         if (user) {
           user.updateProfile({ displayName: name }).then(() => {
-            signInUser({
-              variables: {
-                options: {
-                  id: user.uid,
-                  email: user.email!,
-                  displayName: user.displayName!,
-                },
-              },
-              update: (cache, { data }) => {
-                cache.writeQuery<MeQuery>({
-                  query: MeDocument,
-                  data: {
-                    __typename: "Query",
-                    me: data?.signIn,
-                  },
-                });
+            signIn({
+              options: {
+                id: user.uid,
+                email: user.email!,
+                displayName: user.displayName!,
               },
             });
           });
@@ -65,23 +50,12 @@ const Register: React.FC = () => {
       .signInWithPopup(provider)
       .then(({ user }) => {
         if (user) {
-          signInUser({
-            variables: {
-              options: {
-                id: user.uid,
-                email: user.email!,
-                displayName: user.displayName!,
-                photoUrl: user.photoURL!,
-              },
-            },
-            update: (cache, { data }) => {
-              cache.writeQuery<MeQuery>({
-                query: MeDocument,
-                data: {
-                  __typename: "Query",
-                  me: data?.signIn,
-                },
-              });
+          signIn({
+            options: {
+              id: user.uid,
+              email: user.email!,
+              displayName: user.displayName!,
+              photoUrl: user.photoURL!,
             },
           });
         }

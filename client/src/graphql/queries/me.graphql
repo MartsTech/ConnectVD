@@ -1,8 +1,5 @@
 query Me {
   me {
-    email
-    displayName
-    photoUrl
-    status
+    ...RegularUserResponse
   }
 }

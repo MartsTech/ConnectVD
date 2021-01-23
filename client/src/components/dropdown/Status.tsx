@@ -7,11 +7,7 @@ import {
   selectActiveMenu,
   setMenuHeight,
 } from "../../features/dropdownSlice";
-import {
-  MeDocument,
-  MeQuery,
-  useChangeStatusMutation,
-} from "../../generated/graphql";
+import { useChangeStatusMutation } from "../../generated/graphql";
 import styles from "../../styles/Dropdown.module.css";
 import { Section } from "../Section";
 import { StatusBadge } from "../StatusBadge";
@@ -21,19 +17,11 @@ export const Status: React.FC = () => {
 
   const dispatch = useDispatch();
 
-  const [changeStatus] = useChangeStatusMutation();
+  const [, changeStatus] = useChangeStatusMutation();
 
   const setNewStatus = async (status: string) => {
     await changeStatus({
-      variables: { status },
-      update: (cache, { data }) => {
-        cache.writeQuery<MeQuery>({
-          query: MeDocument,
-          data: {
-            me: data!.changeStatus,
-          },
-        });
-      },
+      status,
     });
     dispatch(openMenu("main"));
   };

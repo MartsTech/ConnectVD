@@ -37,14 +37,13 @@ export class UserResolver {
     @Arg("options") options: SignInOptionsInput,
     @Ctx() { req }: MyContext
   ): Promise<User> {
-    const exits = await User.findOne({ where: { id: options.id } });
-    if (!exits) {
-      const user = await User.create({ ...options }).save();
+    const exists = await User.findOne({ where: { id: options.id } });
+    if (!exists) {
       req.session.userId = options.id;
-      return user;
+      return User.create({ ...options }).save();
     }
     req.session.userId = options.id;
-    return exits;
+    return exists;
   }
   @Mutation(() => Boolean)
   async signOut(@Ctx() { req, res }: MyContext): Promise<Boolean> {

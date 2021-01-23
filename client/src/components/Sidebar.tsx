@@ -8,13 +8,14 @@ import NearMeIcon from "@material-ui/icons/NearMe";
 import NoteIcon from "@material-ui/icons/Note";
 import PersonIcon from "@material-ui/icons/Person";
 import StarIcon from "@material-ui/icons/Star";
-import React, { /*useEffect,*/ useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { openSnackbar } from "../features/snackbarSlice";
 import {
   // NewFriendDocument,
   useCreateFriendRequestMutation,
   useFriendsQuery,
+  useNewFriendSubscription,
 } from "../generated/graphql";
 import styles from "../styles/Sidebar.module.css";
 import { Section } from "./Section";
@@ -31,24 +32,20 @@ export const Sidebar: React.FC = () => {
 
   const dispatch = useDispatch();
 
-  const { data } = useFriendsQuery();
-  const [createFriendRequest] = useCreateFriendRequestMutation();
-  // const { data: Friends, subscribeToMore } = useFriendsQuery();
+  const [{ data }] = useFriendsQuery();
+  const [, createFriendRequest] = useCreateFriendRequestMutation();
+  const [{ data: NewFriend }] = useNewFriendSubscription();
 
-  // useEffect(() => {
-  //   subscribeToMore({
-  //     document: NewFriendDocument,
-  //     updateQuery: (prev, { subscriptionData }) => {
-  //       if (!subscriptionData.data) return prev;
-  //       const newFriend = subscriptionData.data;
-  //       return Object.assign({}, prev, {
-  //         friendRequests: [newFriend, prev],
-  //       });
-  //     },
-  //   });
-  //   dispatch(openSnackbar());
-  //   // eslint-disable-next-line
-  // }, [Friends]);
+  useEffect(() => {
+    if (typeof NewFriend !== "undefined") {
+      setMessage({
+        message: "New Friend.",
+        status: "info",
+      });
+      dispatch(openSnackbar());
+    }
+    // eslint-disable-next-line
+  }, [NewFriend]);
 
   const submitEmail = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -56,7 +53,7 @@ export const Sidebar: React.FC = () => {
       return;
     }
     const response = await createFriendRequest({
-      variables: { email },
+      email,
     });
     if (response.data?.createFriendRequest) {
       setMessage({

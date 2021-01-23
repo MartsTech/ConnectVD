@@ -13,7 +13,7 @@ export const Chat: React.FC = () => {
     Array<{ id: string; data: firebase.firestore.DocumentData }>
   >([]);
 
-  const { data } = useMeQuery();
+  const [{ data }] = useMeQuery();
 
   const match: any = useRouteMatch();
 
