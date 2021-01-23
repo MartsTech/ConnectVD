@@ -1,22 +1,21 @@
 import firebase from "firebase";
 import React, { useEffect, useState } from "react";
 import FlipMove from "react-flip-move";
-import { useSelector } from "react-redux";
 import { useRouteMatch } from "react-router";
-import { selectUser } from "../features/userSlice";
-import db from "../firebase";
-import styles from "../styles/MeetingChat.module.css";
-import { Message } from "./Message";
+import db from "../../firebase";
+import { useMeQuery } from "../../generated/graphql";
+import { Message } from "../Message";
+import styles from "../../styles/Chat.module.css";
 
-export const MeetingChat: React.FC = () => {
+export const Chat: React.FC = () => {
   const [input, setInput] = useState<string>("");
   const [messages, setMessages] = useState<
     Array<{ id: string; data: firebase.firestore.DocumentData }>
   >([]);
 
-  const match: any = useRouteMatch();
+  const [{ data }] = useMeQuery();
 
-  const user = useSelector(selectUser);
+  const match: any = useRouteMatch();
 
   const roomId = match.params.roomId;
 
@@ -40,7 +39,7 @@ export const MeetingChat: React.FC = () => {
     e.preventDefault();
 
     db.collection("rooms").doc(roomId).collection("messages").add({
-      displayName: user?.displayName,
+      displayName: data?.me?.displayName,
       message: input,
       timestamp: firebase.firestore.FieldValue.serverTimestamp(),
     });
@@ -49,7 +48,7 @@ export const MeetingChat: React.FC = () => {
   };
 
   return (
-    <div className={styles.meetingChat}>
+    <div className={styles.chat}>
       <div className={styles.header}>
         <h2>Chat</h2>
       </div>

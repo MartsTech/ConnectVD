@@ -9,22 +9,20 @@ import {
   selectActiveMenu,
   setMenuHeight,
 } from "../../features/dropdownSlice";
-import { selectUser } from "../../features/userSlice";
-import { auth } from "../../firebase";
-import { useMeQuery } from "../../generated/graphql";
+import { useMeQuery, useSignOutMutation } from "../../generated/graphql";
 import styles from "../../styles/Dropdown.module.css";
 import { Section } from "../Section";
 import { StatusBadge } from "../StatusBadge";
 
 export const Main: React.FC = () => {
-  const user = useSelector(selectUser);
   const activeMenu = useSelector(selectActiveMenu);
 
   const [prevMenu, setPrevMenu] = useState<string>(activeMenu);
 
   const dispatch = useDispatch();
 
-  const { data } = useMeQuery({ variables: { id: user!.uid } });
+  const [{ data }] = useMeQuery();
+  const [, signOut] = useSignOutMutation();
 
   useEffect(() => {
     setPrevMenu(activeMenu);
@@ -50,32 +48,34 @@ export const Main: React.FC = () => {
     >
       <div className={styles.menu}>
         <div className={styles.profile}>
-          <Avatar className={styles.avatar} src={user?.photoUrl}>
-            <span className={styles.letter}>{user?.email[0]}</span>
+          <Avatar className={styles.avatar} src={data?.me?.photoUrl}>
+            <span className={styles.letter}>{data?.me?.email[0]}</span>
           </Avatar>
-          <h3>{user?.displayName}</h3>
-          <p>{user?.email}</p>
+          <h3>{data?.me?.displayName}</h3>
+          <p>{data?.me?.email}</p>
         </div>
         <div className={styles.items}>
           <Section
             title={data?.me?.status}
-            LeftIcon={
+            left={
               <StatusBadge
                 status={data?.me?.status}
                 className={styles.status}
               />
             }
-            RightIcon={<ArrowForwardIosIcon />}
+            right={<ArrowForwardIosIcon />}
             onClick={() => dispatch(openMenu("status"))}
           />
           <Section
             title="Log Out"
-            LeftIcon={
+            left={
               <div className={styles.icon}>
                 <ExitToAppIcon />
               </div>
             }
-            onClick={() => auth.signOut()}
+            onClick={async () => {
+              await signOut();
+            }}
           />
         </div>
       </div>

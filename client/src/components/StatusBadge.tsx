@@ -1,4 +1,4 @@
-import { withStyles, Theme, createStyles, Badge } from "@material-ui/core";
+import { Badge, createStyles, Theme, withStyles } from "@material-ui/core";
 
 interface StatusBageProps {
   status: string | undefined;

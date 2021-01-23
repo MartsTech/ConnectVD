@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../app/store";
 
 interface DropdownState {
-  activeMenu: "main" | "status" | "notifications";
+  activeMenu: "main" | "status" | "notifications" | "request";
   menuHeight: string;
 }
 
@@ -17,7 +17,7 @@ export const dropdownSlice = createSlice({
   reducers: {
     openMenu: (
       state,
-      action: { payload: "main" | "status" | "notifications" }
+      action: { payload: "main" | "status" | "notifications" | "request" }
     ) => {
       state.activeMenu = action.payload;
     },

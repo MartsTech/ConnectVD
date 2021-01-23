@@ -2,8 +2,8 @@ import React, { lazy } from "react";
 import { useHistory } from "react-router";
 import styles from "../styles/Access.module.css";
 
-const Login = lazy(() => import("../components/Login"));
-const Register = lazy(() => import("../components/Register"));
+const Login = lazy(() => import("../components/access/Login"));
+const Register = lazy(() => import("../components/access/Register"));
 
 const Access: React.FC = () => {
   const history = useHistory();

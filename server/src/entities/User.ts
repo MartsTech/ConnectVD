@@ -29,13 +29,11 @@ export class User extends BaseEntity {
 
   @Field()
   @Column({ default: "available" })
-  status!: string;
+  status!: "available" | "away" | "busy";
 
-  @Field()
   @Column({ nullable: true })
   socketId: string;
 
-  @Field()
   @Column({ nullable: true })
   roomId: string;
 

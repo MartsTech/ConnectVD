@@ -7,36 +7,21 @@ import {
   selectActiveMenu,
   setMenuHeight,
 } from "../../features/dropdownSlice";
-import { selectUser } from "../../features/userSlice";
-import {
-  MeDocument,
-  MeQuery,
-  useChangeStatusMutation,
-} from "../../generated/graphql";
+import { useChangeStatusMutation } from "../../generated/graphql";
 import styles from "../../styles/Dropdown.module.css";
 import { Section } from "../Section";
 import { StatusBadge } from "../StatusBadge";
 
 export const Status: React.FC = () => {
-  const user = useSelector(selectUser);
   const activeMenu = useSelector(selectActiveMenu);
 
   const dispatch = useDispatch();
 
-  const [changeStatus] = useChangeStatusMutation();
+  const [, changeStatus] = useChangeStatusMutation();
 
   const setNewStatus = async (status: string) => {
     await changeStatus({
-      variables: { id: user!.uid, status },
-      update: (cache, { data }) => {
-        cache.writeQuery<MeQuery>({
-          query: MeDocument,
-          variables: { id: user!.uid },
-          data: {
-            me: data!.changeStatus,
-          },
-        });
-      },
+      status,
     });
     dispatch(openMenu("main"));
   };
@@ -57,12 +42,12 @@ export const Status: React.FC = () => {
       <div className={styles.menu}>
         <div className={styles.items}>
           <Section
-            LeftIcon={<ArrowBackIosIcon />}
+            left={<ArrowBackIosIcon />}
             onClick={() => dispatch(openMenu("main"))}
           />
           <Section
             title="Available"
-            LeftIcon={
+            left={
               <StatusBadge
                 status="available"
                 className={styles.status}
@@ -73,7 +58,7 @@ export const Status: React.FC = () => {
           />
           <Section
             title="Appear away"
-            LeftIcon={
+            left={
               <StatusBadge
                 status="away"
                 className={styles.status}
@@ -84,7 +69,7 @@ export const Status: React.FC = () => {
           />
           <Section
             title="Do not disturb"
-            LeftIcon={
+            left={
               <StatusBadge
                 status="busy"
                 className={styles.status}

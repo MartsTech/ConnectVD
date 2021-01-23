@@ -3,27 +3,34 @@ import MailIcon from "@material-ui/icons/Mail";
 import MenuIcon from "@material-ui/icons/Menu";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import SearchIcon from "@material-ui/icons/Search";
-import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { selectUser } from "../features/userSlice";
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import styles from "../styles/Header.module.css";
 import { StatusBadge } from "./StatusBadge";
 import { Dropdown } from "./dropdown/Dropdown";
-import { useFriendRequestsQuery, useMeQuery } from "../generated/graphql";
+import {
+  useFriendRequestsQuery,
+  useMeQuery,
+  useNewFriendRequstSubscription,
+} from "../generated/graphql";
 import { openMenu } from "../features/dropdownSlice";
+import { Snackbar } from "./Snackbar";
+import { openSnackbar } from "../features/snackbarSlice";
 
 export const Header: React.FC = () => {
   const [dropdown, setDropdown] = useState<boolean>(false);
   const [activeDropdown, setActiveDropdown] = useState<string>("");
 
-  const user = useSelector(selectUser);
-
   const dispatch = useDispatch();
 
-  const { data } = useMeQuery({ variables: { id: user!.uid } });
-  const { data: Requests } = useFriendRequestsQuery({
-    variables: { id: user!.uid },
-  });
+  const [{ data }] = useMeQuery();
+  const [{ data: Requests }] = useFriendRequestsQuery();
+  const [{ data: NewFriendReq }] = useNewFriendRequstSubscription();
+
+  useEffect(() => {
+    if (typeof NewFriendReq !== "undefined") dispatch(openSnackbar());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [NewFriendReq]);
 
   const activateMenu = (menu: "main" | "notifications") => {
     if (menu === activeDropdown) {
@@ -38,6 +45,7 @@ export const Header: React.FC = () => {
 
   return (
     <div className={styles.header}>
+      {NewFriendReq && <Snackbar message="New Friend Request" status="info" />}
       <div className={styles.left}>
         <IconButton>
           <MenuIcon />
@@ -63,8 +71,8 @@ export const Header: React.FC = () => {
         </IconButton>
         <IconButton onClick={() => activateMenu("main")}>
           <StatusBadge status={data?.me?.status}>
-            <Avatar src={user?.photoUrl}>
-              <span className={styles.letter}>{user?.email[0]}</span>
+            <Avatar src={data?.me?.photoUrl}>
+              <span className={styles.letter}>{data?.me?.email[0]}</span>
             </Avatar>
           </StatusBadge>
         </IconButton>

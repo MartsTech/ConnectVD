@@ -2,14 +2,15 @@ import {
   Action,
   configureStore,
   getDefaultMiddleware,
-  ThunkAction
+  ThunkAction,
 } from "@reduxjs/toolkit";
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import controlsReducer from "../features/controlsSlice";
 import dialogReducer from "../features/dialogSlide";
 import dropdownReducer from "../features/dropdownSlice";
-import userReducer from "../features/userSlice";
+import friendReducer from "../features/friendSlice";
+import snackbarReducer from "../features/snackbarSlice";
 
 const controlsPersistConfig = {
   key: "controls",
@@ -23,10 +24,11 @@ const controlsPersistedReducer = persistReducer(
 
 export const store = configureStore({
   reducer: {
-    user: userReducer,
     controls: controlsPersistedReducer,
     dialog: dialogReducer,
     dropdown: dropdownReducer,
+    snackbar: snackbarReducer,
+    friend: friendReducer,
   },
   middleware: getDefaultMiddleware({
     serializableCheck: false,

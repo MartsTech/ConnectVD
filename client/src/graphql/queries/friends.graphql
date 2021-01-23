@@ -1,11 +1,5 @@
-query Friends($id: String!) {
-  friends(id: $id) {
-    createdAt
-    user {
-      displayName
-      email
-      photoUrl
-      status
-    }
+query Friends {
+  friends {
+    ...RegularFriendResponse
   }
 }

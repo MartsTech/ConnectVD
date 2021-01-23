@@ -9,12 +9,11 @@ import {
   selectVideo,
   setLeave,
   setScreen,
-} from "../features/controlsSlice";
-import { selectUser } from "../features/userSlice";
-import { useJoinRoomMutation } from "../generated/graphql";
-import styles from "../styles/Room.module.css";
-import { socketPayload } from "../types";
-import { Video } from "./Video";
+} from "../../features/controlsSlice";
+import { useJoinRoomMutation } from "../../generated/graphql";
+import { socketPayload } from "../../types";
+import styles from "../../styles/Room.module.css";
+import { Video } from "../Video";
 
 export const Room: React.FC = () => {
   const [peers, setPeers] = useState<any[]>([]);
@@ -29,7 +28,6 @@ export const Room: React.FC = () => {
   const match: any = useRouteMatch();
 
   const dispatch = useDispatch();
-  const user = useSelector(selectUser);
 
   const audio: boolean = useSelector(selectAudio);
   const video: boolean = useSelector(selectVideo);
@@ -38,7 +36,7 @@ export const Room: React.FC = () => {
 
   const roomId: string = match.params.roomId;
 
-  const [joinRoom] = useJoinRoomMutation();
+  const [, joinRoom] = useJoinRoomMutation();
 
   const iceConfiguration = {
     iceServers: [
@@ -59,7 +57,7 @@ export const Room: React.FC = () => {
     socketRef.current.emit("get socketId");
     socketRef.current.on("send socketId", async (id: string) => {
       const { data } = await joinRoom({
-        variables: { id: user!.uid, roomId, socketId: id },
+        input: { roomId, socketId: id },
       });
       if (data?.joinRoom.error) {
         leaveRoom();
@@ -68,7 +66,7 @@ export const Room: React.FC = () => {
         return;
       }
       const peers: Array<{ id: string; peer: RTCPeerConnection }> = [];
-      data?.joinRoom.users!.forEach(({ socketId }) => {
+      data?.joinRoom.users!.forEach((socketId) => {
         if (socketId !== id) {
           const peer = createPeer(socketId);
           peersRef.current.push({ id: socketId, peer });

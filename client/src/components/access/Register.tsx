@@ -1,11 +1,9 @@
 import { Button } from "@material-ui/core";
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
 import { Link, useHistory } from "react-router-dom";
-import { login } from "../features/userSlice";
-import { auth, provider } from "../firebase";
-import { useRegisterMutation } from "../generated/graphql";
-import styles from "../styles/Register.module.css";
+import { auth, provider } from "../../firebase";
+import { useSignInMutation } from "../../generated/graphql";
+import styles from "../../styles/Register.module.css";
 
 const Register: React.FC = () => {
   const [firstName, setFirstName] = useState("");
@@ -13,11 +11,9 @@ const Register: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const [registerUser] = useRegisterMutation();
+  const [, signIn] = useSignInMutation();
 
   const history = useHistory();
-
-  const dispatch = useDispatch();
 
   const register = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
@@ -32,26 +28,15 @@ const Register: React.FC = () => {
       .createUserWithEmailAndPassword(email, password)
       .then(({ user }) => {
         if (user) {
-          user
-            .updateProfile({ displayName: name })
-            .then(() => {
-              registerUser({
-                variables: {
-                  id: user.uid,
-                  email: user.email!,
-                  displayName: user.displayName!,
-                },
-              });
-            })
-            .then(() => {
-              dispatch(
-                login({
-                  displayName: user.displayName!,
-                  email: user.email!,
-                  uid: user.uid,
-                })
-              );
+          user.updateProfile({ displayName: name }).then(() => {
+            signIn({
+              options: {
+                id: user.uid,
+                email: user.email!,
+                displayName: user.displayName!,
+              },
             });
+          });
         }
       })
       .then(() => {
@@ -65,8 +50,8 @@ const Register: React.FC = () => {
       .signInWithPopup(provider)
       .then(({ user }) => {
         if (user) {
-          registerUser({
-            variables: {
+          signIn({
+            options: {
               id: user.uid,
               email: user.email!,
               displayName: user.displayName!,

@@ -1,8 +1,8 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { MeetingChat } from "../components/MeetingChat";
-import { MeetingControls } from "../components/MeetingControls";
-import { Room } from "../components/Room";
+import { Chat } from "../components/meeting/Chat";
+import { Controls } from "../components/meeting/Controls";
+import { Room } from "../components/meeting/Room";
 import { selectChat } from "../features/controlsSlice";
 import styles from "../styles/Meeting.module.css";
 
@@ -13,9 +13,9 @@ const Meeting: React.FC = () => {
     <div className={styles.meeting}>
       <div className={styles.main}>
         <Room />
-        <MeetingControls />
+        <Controls />
       </div>
-      {chat && <MeetingChat />}
+      {chat && <Chat />}
     </div>
   );
 };

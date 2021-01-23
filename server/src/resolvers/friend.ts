@@ -1,25 +1,29 @@
-import { Friend } from "../entities/Friend";
+import { User } from "../entities/User";
 import {
-  Mutation,
   Arg,
-  Resolver,
-  Query,
-  InputType,
+  Ctx,
   Field,
   FieldResolver,
+  Mutation,
+  ObjectType,
+  Publisher,
+  PubSub,
+  Query,
+  Resolver,
   Root,
-  Ctx,
+  Subscription,
 } from "type-graphql";
 import { getConnection } from "typeorm";
+import { Friend } from "../entities/Friend";
+import { MyContext } from "../types";
 import { validateFriendRequest } from "../utils/validateFriendRequest";
-import { MyContext } from "src/types";
 
-@InputType()
-class FriendRequestInput {
+@ObjectType()
+class RequestResponse {
   @Field()
-  id: string;
+  message: string;
   @Field()
-  email: string;
+  status: string;
 }
 
 @Resolver(Friend)
@@ -28,66 +32,131 @@ export class FriendResolver {
   user(@Root() friend: Friend, @Ctx() { userLoader }: MyContext) {
     return userLoader.load(friend.friendId);
   }
+
   @Query(() => [Friend])
-  friends(@Arg("id") id: string): Promise<Friend[]> {
-    return Friend.find({ where: { userId: id, status: "accepted" } });
+  friends(@Ctx() { req }: MyContext): Promise<Friend[]> {
+    return Friend.find({
+      where: { userId: req.session.userId, status: "accepted" },
+    });
   }
   @Query(() => [Friend])
-  friendRequests(@Arg("id") id: string): Promise<Friend[]> {
-    return Friend.find({ where: { userId: id, status: "pending" } });
+  friendRequests(@Ctx() { req }: any): Promise<Friend[]> {
+    return Friend.find({
+      where: { userId: req.session.userId, status: "pending" },
+    });
   }
-  @Mutation(() => Boolean)
+
+  @Subscription(() => Friend, {
+    topics: "FRIEND_REQUESTS",
+    filter: ({ payload, context }) => {
+      return (
+        payload.userId === context.connection.context.req &&
+        payload.status === "pending"
+      );
+    },
+  })
+  newFriendRequst(
+    @Root() request: Friend,
+    // @ts-ignore
+    @Ctx() context: any
+  ): Friend {
+    return request;
+  }
+
+  @Subscription(() => Friend, {
+    topics: "FRIENDS",
+    filter: ({ payload, context }) => {
+      return (
+        payload.userId === context.connection.context.req &&
+        payload.status === "accepted"
+      );
+    },
+  })
+  newFriend(
+    @Root() request: Friend,
+    // @ts-ignore
+    @Ctx() context: any
+  ): Friend {
+    return request;
+  }
+
+  @Mutation(() => RequestResponse)
   async createFriendRequest(
-    @Arg("input") { id, email }: FriendRequestInput
-  ): Promise<boolean> {
+    @Arg("email") email: string,
+    @Ctx() { req }: MyContext,
+    @PubSub("FRIEND_REQUESTS") notifyAboutNewRequest: Publisher<Friend>
+  ): Promise<RequestResponse> {
     const checkCopy = true;
-    const friendId = await validateFriendRequest(id, email, checkCopy);
-    if (typeof friendId === "undefined") {
-      return false;
+    const friend = await validateFriendRequest(
+      req.session.userId,
+      email,
+      checkCopy
+    );
+    if (typeof friend === "object") {
+      return friend;
     }
-    await Friend.create({
-      userId: friendId,
-      friendId: id,
+    const me = await User.findOne({ where: { id: req.session.userId } });
+    const request = await Friend.create({
+      userId: friend,
+      friendId: req.session.userId,
+      id: me!.email,
     }).save();
-    return true;
+
+    await notifyAboutNewRequest(request);
+
+    return { message: "Friend request successfully sent.", status: "success" };
   }
-  @Mutation(() => Friend, { nullable: true })
+  @Mutation(() => RequestResponse)
   async acceptFriendRequest(
-    @Arg("input") { id, email }: FriendRequestInput
-  ): Promise<Friend | undefined> {
-    const friendId = await validateFriendRequest(id, email);
-    if (typeof friendId === "undefined") {
-      return undefined;
+    @Arg("email") email: string,
+    @Ctx() { req }: MyContext,
+    @PubSub("FRIENDS") notifyAboutNewFriend: Publisher<Friend>
+  ): Promise<RequestResponse> {
+    const friend = await validateFriendRequest(req.session.userId, email);
+    if (typeof friend === "object") {
+      return friend;
     }
-    const request = await getConnection()
+    const sender = await getConnection()
       .createQueryBuilder()
       .update(Friend)
       .set({ status: "accepted" })
-      .where('"userId" = :id and "friendId" = :friendId', {
-        id,
-        friendId,
+      .where('"userId" = :id and "friendId" = :friend', {
+        id: req.session.userId,
+        friend,
       })
       .returning("*")
       .execute();
 
-    await Friend.create({
-      userId: friendId,
-      friendId: id,
+    await notifyAboutNewFriend(sender.raw[0]);
+
+    const me = await User.findOne({ where: { id: req.session.userId } });
+
+    const receiver = await Friend.create({
+      userId: friend,
+      friendId: req.session.userId,
+      id: me!.email,
       status: "accepted",
     }).save();
-    return request.raw[0];
+
+    await notifyAboutNewFriend(receiver);
+
+    return {
+      message: "Friend request successfully accepted.",
+      status: "success",
+    };
   }
   @Mutation(() => Boolean)
   async declineFriendRequest(
-    @Arg("input") { id, email }: FriendRequestInput
+    @Arg("email") email: string,
+    @Ctx() { req }: MyContext
   ): Promise<boolean> {
-    const friendId = await validateFriendRequest(id, email);
-    if (typeof friendId === "undefined") {
+    const request = await validateFriendRequest(req.session.userId, email);
+    if (typeof request === "object") {
       return false;
     }
     await Friend.delete({
-      userId: id,
-      friendId: friendId,
+      userId: req.session.userId,
+      friendId: request,
     });
     return true;
   }

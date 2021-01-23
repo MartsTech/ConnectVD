@@ -1,23 +1,36 @@
 import {
   Arg,
+  Ctx,
   Field,
+  InputType,
   Int,
   Mutation,
   ObjectType,
   Query,
   Resolver,
+  UseMiddleware,
 } from "type-graphql";
 import { getConnection } from "typeorm";
 import { v4 as uuid } from "uuid";
 import { Room } from "../entities/Room";
 import { User } from "../entities/User";
+import { isAuth } from "../middlewares/isAuth";
+import { MyContext } from "../types";
 
 @ObjectType()
 class JoinRoomRes {
-  @Field(() => [User], { nullable: true })
-  users?: User[];
+  @Field(() => [String], { nullable: true })
+  users?: string[];
   @Field(() => String, { nullable: true })
   error?: string;
+}
+
+@InputType()
+class JoinRoomInput {
+  @Field()
+  roomId: string;
+  @Field()
+  socketId: string;
 }
 
 @Resolver(Room)
@@ -25,7 +38,7 @@ export class RoomResolver {
   @Query(() => [Room])
   async rooms(
     @Arg("limit", () => Int) limit: number,
-    @Arg("cursor", () => String, { nullable: true }) cursor: string | null
+    @Arg("cursor", () => String, { nullable: true }) cursor?: string
   ): Promise<Room[]> {
     const realLimit = Math.min(50, limit) + 1;
 
@@ -48,27 +61,33 @@ export class RoomResolver {
     return rooms;
   }
   @Mutation(() => String)
+  @UseMiddleware(isAuth)
   async createRoom(): Promise<string> {
     const id = uuid();
     await Room.create({ id }).save();
     return id;
   }
   @Mutation(() => JoinRoomRes)
+  @UseMiddleware(isAuth)
   async joinRoom(
-    @Arg("id") id: string,
-    @Arg("roomId") roomId: string,
-    @Arg("socketId") socketId: string
+    @Arg("input") { roomId, socketId }: JoinRoomInput,
+    @Ctx() { req }: MyContext
   ): Promise<JoinRoomRes> {
     const room = await Room.findOne({ id: roomId });
     if (!room) {
-      return { error: "room doesn't exist" };
+      return { error: "Room doesn't exist." };
     }
-    const user = await User.findOne({ where: { id, roomId } });
+    const user = await User.findOne({
+      where: { id: req.session.userId, roomId },
+    });
     if (user) {
-      return { error: "user already in room" };
+      return { error: "User already in room." };
     }
-    await User.update({ id }, { socketId, roomId });
+    await User.update({ id: req.session.userId }, { socketId, roomId });
     const users = await User.find({ where: { roomId } });
-    return { users };
+    const socketIds = users.map((user) => {
+      return user.socketId;
+    });
+    return { users: socketIds };
   }
 }

@@ -1,12 +1,10 @@
 import { Button } from "@material-ui/core";
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
-import { login } from "../features/userSlice";
-import { auth, provider } from "../firebase";
-import { useRegisterMutation } from "../generated/graphql";
-import styles from "../styles/Login.module.css";
+import { auth, provider } from "../../firebase";
+import { useSignInMutation } from "../../generated/graphql";
+import styles from "../../styles/Login.module.css";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -14,25 +12,24 @@ const Login: React.FC = () => {
 
   const history = useHistory();
 
-  const [registerUser] = useRegisterMutation();
+  const [, signIn] = useSignInMutation();
 
-  const dispatch = useDispatch();
-
-  const signIn = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const signInWithEmail = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
     e.preventDefault();
 
     auth
       .signInWithEmailAndPassword(email, password)
       .then(({ user }) => {
         if (user) {
-          dispatch(
-            login({
-              displayName: user.displayName!,
+          signIn({
+            options: {
+              id: user.uid,
               email: user.email!,
-              photoUrl: user.photoURL!,
-              uid: user.uid,
-            })
-          );
+              displayName: user.displayName!,
+            },
+          });
         }
       })
       .then(() => {
@@ -46,8 +43,8 @@ const Login: React.FC = () => {
       .signInWithPopup(provider)
       .then(({ user }) => {
         if (user) {
-          registerUser({
-            variables: {
+          signIn({
+            options: {
               id: user.uid,
               email: user.email!,
               displayName: user.displayName!,
@@ -88,7 +85,7 @@ const Login: React.FC = () => {
           type="password"
           placeholder="Password"
         />
-        <Button type="submit" onClick={signIn}>
+        <Button type="submit" onClick={signInWithEmail}>
           Login
         </Button>
       </form>
