@@ -19,6 +19,7 @@ import { RoomResolver } from "./resolvers/room";
 import { UserResolver } from "./resolvers/user";
 import { socketPayload } from "./types";
 import { createUserLoader } from "./utils/createUserLoader";
+// import NoIntrospection from "graphql-disable-introspection";
 
 const main = async () => {
   // App Config
@@ -82,6 +83,7 @@ const main = async () => {
       resolvers: [RoomResolver, UserResolver, FriendResolver],
       validate: false,
     }),
+    // validationRules: [NoIntrospection],
     context: ({ req, res, connection }) => ({
       req,
       res,

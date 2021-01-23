@@ -7,6 +7,7 @@ import {
   Query,
   Resolver,
 } from "type-graphql";
+import { getConnection } from "typeorm";
 import { COOKIE_NAME } from "../constants";
 import { User } from "../entities/User";
 import { MyContext } from "../types";
@@ -57,16 +58,24 @@ export class UserResolver {
       });
     });
   }
-  @Mutation(() => String)
+  @Mutation(() => User, { nullable: true })
   async changeStatus(
     @Arg("status") status: string,
     @Ctx() { req }: MyContext
-  ): Promise<string> {
+  ): Promise<User | undefined> {
     const options = ["available", "away", "busy"];
     if (!options.includes(status)) {
-      throw new Error("invalid status");
+      return undefined;
     }
-    await User.update({ id: req.session.userId }, { status: status as any });
-    return status;
+    const user = await getConnection()
+      .createQueryBuilder()
+      .update(User)
+      .set({
+        status: status as any,
+      })
+      .where("id = :id", { id: req.session.userId })
+      .returning("*")
+      .execute();
+    return user.raw[0];
   }
 }

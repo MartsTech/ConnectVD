@@ -33,6 +33,7 @@
     "express": "^4.17.1",
     "express-session": "^1.17.1",
     "graphql": "^15.4.0",
+    "graphql-disable-introspection": "^1.1.0",
     "pg": "^8.5.1",
     "reflect-metadata": "^0.1.13",
     "socket.io": "^3.0.5",

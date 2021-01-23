@@ -30,7 +30,7 @@ export const Status: React.FC = () => {
         cache.writeQuery<MeQuery>({
           query: MeDocument,
           data: {
-            me: data!.changeStatus as any,
+            me: data!.changeStatus,
           },
         });
       },
@@ -54,12 +54,12 @@ export const Status: React.FC = () => {
       <div className={styles.menu}>
         <div className={styles.items}>
           <Section
-            LeftIcon={<ArrowBackIosIcon />}
+            left={<ArrowBackIosIcon />}
             onClick={() => dispatch(openMenu("main"))}
           />
           <Section
             title="Available"
-            LeftIcon={
+            left={
               <StatusBadge
                 status="available"
                 className={styles.status}
@@ -70,7 +70,7 @@ export const Status: React.FC = () => {
           />
           <Section
             title="Appear away"
-            LeftIcon={
+            left={
               <StatusBadge
                 status="away"
                 className={styles.status}
@@ -81,7 +81,7 @@ export const Status: React.FC = () => {
           />
           <Section
             title="Do not disturb"
-            LeftIcon={
+            left={
               <StatusBadge
                 status="busy"
                 className={styles.status}

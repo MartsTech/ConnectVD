@@ -8,10 +8,11 @@ import NearMeIcon from "@material-ui/icons/NearMe";
 import NoteIcon from "@material-ui/icons/Note";
 import PersonIcon from "@material-ui/icons/Person";
 import StarIcon from "@material-ui/icons/Star";
-import React, { useState } from "react";
+import React, { /*useEffect,*/ useState } from "react";
 import { useDispatch } from "react-redux";
 import { openSnackbar } from "../features/snackbarSlice";
 import {
+  // NewFriendDocument,
   useCreateFriendRequestMutation,
   useFriendsQuery,
 } from "../generated/graphql";
@@ -32,6 +33,22 @@ export const Sidebar: React.FC = () => {
 
   const { data } = useFriendsQuery();
   const [createFriendRequest] = useCreateFriendRequestMutation();
+  // const { data: Friends, subscribeToMore } = useFriendsQuery();
+
+  // useEffect(() => {
+  //   subscribeToMore({
+  //     document: NewFriendDocument,
+  //     updateQuery: (prev, { subscriptionData }) => {
+  //       if (!subscriptionData.data) return prev;
+  //       const newFriend = subscriptionData.data;
+  //       return Object.assign({}, prev, {
+  //         friendRequests: [newFriend, prev],
+  //       });
+  //     },
+  //   });
+  //   dispatch(openSnackbar());
+  //   // eslint-disable-next-line
+  // }, [Friends]);
 
   const submitEmail = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -92,7 +109,8 @@ export const Sidebar: React.FC = () => {
       <div className={styles.friends}>
         {data?.friends.map(({ user }) => (
           <Section
-            LeftIcon={
+            key={user.email}
+            left={
               <StatusBadge status={user.status}>
                 <Avatar src={user.photoUrl}>
                   <span className={styles.letter}>{user.email[0]}</span>

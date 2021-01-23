@@ -105,3 +105,7 @@
   font-weight: 800;
   color: #484a4d;
 }
+
+.options > button {
+  margin-left: 10px;
+}

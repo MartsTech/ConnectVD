@@ -60,18 +60,18 @@ export const Main: React.FC = () => {
         <div className={styles.items}>
           <Section
             title={data?.me?.status}
-            LeftIcon={
+            left={
               <StatusBadge
                 status={data?.me?.status}
                 className={styles.status}
               />
             }
-            RightIcon={<ArrowForwardIosIcon />}
+            right={<ArrowForwardIosIcon />}
             onClick={() => dispatch(openMenu("status"))}
           />
           <Section
             title="Log Out"
-            LeftIcon={
+            left={
               <div className={styles.icon}>
                 <ExitToAppIcon />
               </div>

@@ -5,6 +5,7 @@ import "../../styles/CSSTransition.css";
 import styles from "../../styles/Dropdown.module.css";
 import { Main } from "./Main";
 import { Notifications } from "./Notifications";
+import { Request } from "./Request";
 import { Status } from "./Status";
 
 export const Dropdown: React.FC = () => {
@@ -15,6 +16,7 @@ export const Dropdown: React.FC = () => {
       <Main />
       <Status />
       <Notifications />
+      <Request />
     </div>
   );
 };
