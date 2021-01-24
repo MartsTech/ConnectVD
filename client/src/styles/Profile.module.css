@@ -1,0 +1,45 @@
+.profile {
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  background-color: white;
+  border: 1px solid whitesmoke;
+  box-shadow: 0px 5px 7px 0px rgba(0, 0, 0, 0.24);
+  transition: height 500ms ease;
+  margin: 5px;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px;
+}
+
+.badge > span {
+  object-fit: contain;
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+}
+
+.avatar {
+  object-fit: contain;
+  height: 80px;
+  width: 80px;
+  margin-bottom: 10px;
+}
+
+.letter {
+  text-transform: capitalize;
+}
+
+.status {
+  margin: 20px;
+}
+
+.status > span {
+  object-fit: contain;
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+}

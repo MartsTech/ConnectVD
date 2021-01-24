@@ -16,6 +16,7 @@ import {
   useFriendsQuery,
 } from "../generated/graphql";
 import styles from "../styles/Sidebar.module.css";
+import { Profile } from "./Profile";
 import { Section } from "./Section";
 import { SidebarOption } from "./SidebarOption";
 import { Snackbar } from "./Snackbar";
@@ -27,6 +28,7 @@ export const Sidebar: React.FC = () => {
     message: string;
     status: "error" | "warning" | "info" | "success";
   }>();
+  const [active, setActive] = useState<string>("");
 
   const dispatch = useDispatch();
 
@@ -49,6 +51,10 @@ export const Sidebar: React.FC = () => {
       dispatch(openSnackbar());
       setEmail("");
     }
+  };
+
+  const timeout = (delay: number) => {
+    return new Promise((res) => setTimeout(res, delay));
   };
 
   return (
@@ -87,21 +93,42 @@ export const Sidebar: React.FC = () => {
         LeftIcon={PersonIcon}
         title="Friends"
         RightIcon={ExpandMoreIcon}
-        number={54}
+        number={data?.friends.length || 0}
       />
       <div className={styles.friends}>
         {data?.friends.map(({ user }) => (
-          <Section
-            key={user.email}
-            left={
-              <StatusBadge status={user.status}>
-                <Avatar src={user.photoUrl}>
-                  <span className={styles.letter}>{user.email[0]}</span>
-                </Avatar>
-              </StatusBadge>
-            }
-            title={user.displayName}
-          />
+          <div key={user.email} className={styles.friend}>
+            {active !== user.email ? (
+              <div
+                onMouseEnter={async () => {
+                  await timeout(300);
+                  setActive(user.email);
+                }}
+              >
+                <Section
+                  left={
+                    <StatusBadge status={user.status}>
+                      <Avatar src={user.photoUrl}>
+                        <span className={styles.letter}>{user.email[0]}</span>
+                      </Avatar>
+                    </StatusBadge>
+                  }
+                  title={user.displayName}
+                />
+              </div>
+            ) : (
+              <Profile
+                displayName={user.displayName}
+                email={user.email}
+                photoUrl={user.photoUrl}
+                status={user.status}
+                onMouseLeave={async () => {
+                  await timeout(300);
+                  setActive("");
+                }}
+              />
+            )}
+          </div>
         ))}
       </div>
     </div>
