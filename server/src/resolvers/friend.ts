@@ -106,15 +106,15 @@ export class FriendResolver {
 
     return { message: "Friend request successfully sent.", status: "success" };
   }
-  @Mutation(() => RequestResponse)
+  @Mutation(() => Boolean)
   async acceptFriendRequest(
     @Arg("email") email: string,
     @Ctx() { req }: MyContext,
     @PubSub("FRIENDS") notifyAboutNewFriend: Publisher<Friend>
-  ): Promise<RequestResponse> {
+  ): Promise<boolean> {
     const friend = await validateFriendRequest(req.session.userId, email);
     if (typeof friend === "object") {
-      return friend;
+      return false;
     }
     const sender = await getConnection()
       .createQueryBuilder()
@@ -140,10 +140,7 @@ export class FriendResolver {
 
     await notifyAboutNewFriend(receiver);
 
-    return {
-      message: "Friend request successfully accepted.",
-      status: "success",
-    };
+    return true;
   }
   @Mutation(() => Boolean)
   async declineFriendRequest(

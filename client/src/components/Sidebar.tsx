@@ -8,14 +8,12 @@ import NearMeIcon from "@material-ui/icons/NearMe";
 import NoteIcon from "@material-ui/icons/Note";
 import PersonIcon from "@material-ui/icons/Person";
 import StarIcon from "@material-ui/icons/Star";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { openSnackbar } from "../features/snackbarSlice";
 import {
-  // NewFriendDocument,
   useCreateFriendRequestMutation,
   useFriendsQuery,
-  useNewFriendSubscription,
 } from "../generated/graphql";
 import styles from "../styles/Sidebar.module.css";
 import { Section } from "./Section";
@@ -34,18 +32,6 @@ export const Sidebar: React.FC = () => {
 
   const [{ data }] = useFriendsQuery();
   const [, createFriendRequest] = useCreateFriendRequestMutation();
-  const [{ data: NewFriend }] = useNewFriendSubscription();
-
-  useEffect(() => {
-    if (typeof NewFriend !== "undefined") {
-      setMessage({
-        message: "New Friend.",
-        status: "info",
-      });
-      dispatch(openSnackbar());
-    }
-    // eslint-disable-next-line
-  }, [NewFriend]);
 
   const submitEmail = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
