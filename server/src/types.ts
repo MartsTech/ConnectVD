@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { User } from "./entities/User";
 import { createUserLoader } from "./utils/createUserLoader";
 
 export type MyContext = {
@@ -11,4 +12,14 @@ export type socketPayload = {
   caller: string;
   sdp: RTCSessionDescription | undefined;
   candidate: RTCIceCandidate | undefined;
+};
+
+export type NotifyError = {
+  message: string;
+  status: "error" | "warning" | "info" | "success";
+};
+
+export type Users = {
+  sender: User;
+  receiver: User;
 };

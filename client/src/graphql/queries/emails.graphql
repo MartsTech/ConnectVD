@@ -1,0 +1,8 @@
+query Emails($limit: Int!, $cursor: String) {
+  emails(limit: $limit, cursor: $cursor) {
+    hasMore
+    emails {
+      ...RegularEmailResponse
+    }
+  }
+}

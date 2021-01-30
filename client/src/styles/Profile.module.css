@@ -6,6 +6,8 @@
   box-shadow: 0px 5px 7px 0px rgba(0, 0, 0, 0.24);
   transition: height 500ms ease;
   margin: 5px;
+  height: 176px;
+  overflow-y: hidden;
 }
 
 .main {
@@ -22,7 +24,7 @@
   border-radius: 50%;
 }
 
-.avatar {
+.avatar > div {
   object-fit: contain;
   height: 80px;
   width: 80px;

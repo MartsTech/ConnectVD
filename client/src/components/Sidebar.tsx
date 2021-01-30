@@ -1,13 +1,6 @@
 import { Avatar } from "@material-ui/core";
-import AccessTimeIcon from "@material-ui/icons/AccessTime";
 import AddIcon from "@material-ui/icons/Add";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import InboxIcon from "@material-ui/icons/Inbox";
-import LabelImportantIcon from "@material-ui/icons/LabelImportant";
-import NearMeIcon from "@material-ui/icons/NearMe";
-import NoteIcon from "@material-ui/icons/Note";
 import PersonIcon from "@material-ui/icons/Person";
-import StarIcon from "@material-ui/icons/Star";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { openSnackbar } from "../features/snackbarSlice";
@@ -29,6 +22,7 @@ export const Sidebar: React.FC = () => {
     status: "error" | "warning" | "info" | "success";
   }>();
   const [active, setActive] = useState<string>("");
+  const [height, setHeight] = useState<string>("");
 
   const dispatch = useDispatch();
 
@@ -74,25 +68,9 @@ export const Sidebar: React.FC = () => {
       </form>
 
       <SidebarOption
-        LeftIcon={InboxIcon}
-        title="Inbox"
-        number={54}
-        selected={true}
-      />
-      <SidebarOption LeftIcon={StarIcon} title="Starred" number={54} />
-      <SidebarOption LeftIcon={AccessTimeIcon} title="Snoozed" number={54} />
-      <SidebarOption
-        LeftIcon={LabelImportantIcon}
-        title="Important"
-        number={54}
-      />
-
-      <SidebarOption LeftIcon={NearMeIcon} title="Sent" number={54} />
-      <SidebarOption LeftIcon={NoteIcon} title="Drafts" number={54} />
-      <SidebarOption
         LeftIcon={PersonIcon}
         title="Friends"
-        RightIcon={ExpandMoreIcon}
+        selected={true}
         number={data?.friends.length || 0}
       />
       <div className={styles.friends}>
@@ -101,8 +79,10 @@ export const Sidebar: React.FC = () => {
             {active !== user.email ? (
               <div
                 onMouseEnter={async () => {
-                  await timeout(300);
+                  await timeout(500);
                   setActive(user.email);
+                  await timeout(300);
+                  setHeight("246px");
                 }}
               >
                 <Section
@@ -118,13 +98,16 @@ export const Sidebar: React.FC = () => {
               </div>
             ) : (
               <Profile
+                height={height}
                 displayName={user.displayName}
                 email={user.email}
                 photoUrl={user.photoUrl}
                 status={user.status}
                 onMouseLeave={async () => {
-                  await timeout(300);
+                  await timeout(500);
                   setActive("");
+                  await timeout(300);
+                  setHeight("");
                 }}
               />
             )}

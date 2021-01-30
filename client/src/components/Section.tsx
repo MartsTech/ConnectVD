@@ -6,7 +6,6 @@ type SectionProps = {
   left?: any;
   right?: any;
   onClick?: any;
-  onMouseEnter?: any;
 };
 
 export const Section: React.FC<SectionProps> = ({

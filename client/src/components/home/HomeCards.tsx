@@ -4,11 +4,11 @@ import VideoCallIcon from "@material-ui/icons/VideoCall";
 import React from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
-import { openDialog } from "../features/dialogSlide";
-import { useCreateRoomMutation } from "../generated/graphql";
-import styles from "../styles/HomeCards.module.css";
+import { openDialog } from "../../features/dialogSlide";
+import { useCreateRoomMutation } from "../../generated/graphql";
+import styles from "../../styles/HomeCards.module.css";
 
-export const HomeCards: React.FC = () => {
+const HomeCards: React.FC = () => {
   const [, createRoom] = useCreateRoomMutation();
 
   const history = useHistory();
@@ -40,3 +40,5 @@ export const HomeCards: React.FC = () => {
     </div>
   );
 };
+
+export default HomeCards;

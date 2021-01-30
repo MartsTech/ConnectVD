@@ -1,17 +1,16 @@
+import { NotifyError, Users } from "../types";
 import { Friend } from "../entities/Friend";
 import { User } from "../entities/User";
 
-export const validateFriendRequest = async (
+export const validateRequest = async (
   id: string,
   email: string,
-  checkCopy?: boolean
-): Promise<
-  { message: string; status: "error" | "warning" | "info" | "success" } | string
-> => {
+  checkFriendRequest?: boolean
+): Promise<NotifyError | Users> => {
   const sender = await User.findOne({ where: { id } });
   if (!sender) {
     return {
-      message: "There was an error with the friend request.",
+      message: "There was an error with the request.",
       status: "error",
     };
   }
@@ -22,26 +21,26 @@ export const validateFriendRequest = async (
       status: "error",
     };
   }
-  if (checkCopy) {
-    if (sender.email === receiver.email) {
-      return {
-        message: "There was an error with the friend request.",
-        status: "error",
-      };
-    }
+  if (sender.email === receiver.email) {
+    return {
+      message: "There was an error with the request.",
+      status: "error",
+    };
+  }
+  if (checkFriendRequest) {
     const requestExist = await Friend.findOne({
       where: { userId: sender.id, friendId: receiver.id, status: "pending" },
     });
     if (requestExist) {
       return { message: "Request is pending.", status: "warning" };
     }
-  }
-  const friends = await Friend.findOne({
-    where: { userId: sender.id, friendId: receiver.id, status: "accepted" },
-  });
-  if (friends) {
-    return { message: "You are already friends.", status: "warning" };
+    const friends = await Friend.findOne({
+      where: { userId: sender.id, friendId: receiver.id, status: "accepted" },
+    });
+    if (friends) {
+      return { message: "You are already friends.", status: "warning" };
+    }
   }
 
-  return receiver!.id;
+  return { sender, receiver };
 };

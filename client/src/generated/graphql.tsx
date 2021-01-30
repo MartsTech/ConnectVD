@@ -20,15 +20,37 @@ export type Scalars = {
 
 export type Query = {
   __typename?: "Query";
+  emails: PaginatedEmails;
   friends: Array<Friend>;
   friendRequests: Array<Friend>;
   rooms: Array<Room>;
   me?: Maybe<User>;
 };
 
+export type QueryEmailsArgs = {
+  cursor?: Maybe<Scalars["String"]>;
+  limit: Scalars["Int"];
+};
+
 export type QueryRoomsArgs = {
   cursor?: Maybe<Scalars["String"]>;
   limit: Scalars["Int"];
+};
+
+export type PaginatedEmails = {
+  __typename?: "PaginatedEmails";
+  emails: Array<Email>;
+  hasMore: Scalars["Boolean"];
+};
+
+export type Email = {
+  __typename?: "Email";
+  id: Scalars["String"];
+  from: Scalars["String"];
+  to: Scalars["String"];
+  subject: Scalars["String"];
+  message: Scalars["String"];
+  createdAt: Scalars["String"];
 };
 
 export type Friend = {
@@ -54,6 +76,7 @@ export type Room = {
 
 export type Mutation = {
   __typename?: "Mutation";
+  sendEmail: SendEmailResonse;
   createFriendRequest: RequestResponse;
   acceptFriendRequest: Scalars["Boolean"];
   declineFriendRequest: Scalars["Boolean"];
@@ -62,6 +85,10 @@ export type Mutation = {
   signIn: User;
   signOut: Scalars["Boolean"];
   changeStatus?: Maybe<User>;
+};
+
+export type MutationSendEmailArgs = {
+  options: EmailContent;
 };
 
 export type MutationCreateFriendRequestArgs = {
@@ -88,10 +115,22 @@ export type MutationChangeStatusArgs = {
   status: Scalars["String"];
 };
 
+export type SendEmailResonse = {
+  __typename?: "SendEmailResonse";
+  email?: Maybe<Email>;
+  error?: Maybe<RequestResponse>;
+};
+
 export type RequestResponse = {
   __typename?: "RequestResponse";
   message: Scalars["String"];
   status: Scalars["String"];
+};
+
+export type EmailContent = {
+  to: Scalars["String"];
+  subject: Scalars["String"];
+  message: Scalars["String"];
 };
 
 export type JoinRoomRes = {
@@ -114,9 +153,15 @@ export type SignInOptionsInput = {
 
 export type Subscription = {
   __typename?: "Subscription";
+  newEmail: Email;
   newFriendRequst: Friend;
   newFriend: Friend;
 };
+
+export type RegularEmailResponseFragment = { __typename?: "Email" } & Pick<
+  Email,
+  "id" | "from" | "to" | "subject" | "message" | "createdAt"
+>;
 
 export type RegularFriendResponseFragment = { __typename?: "Friend" } & Pick<
   Friend,
@@ -183,6 +228,22 @@ export type JoinRoomMutation = { __typename?: "Mutation" } & {
   >;
 };
 
+export type SendEmailMutationVariables = Exact<{
+  options: EmailContent;
+}>;
+
+export type SendEmailMutation = { __typename?: "Mutation" } & {
+  sendEmail: { __typename?: "SendEmailResonse" } & {
+    email?: Maybe<{ __typename?: "Email" } & RegularEmailResponseFragment>;
+    error?: Maybe<
+      { __typename?: "RequestResponse" } & Pick<
+        RequestResponse,
+        "message" | "status"
+      >
+    >;
+  };
+};
+
 export type SignInMutationVariables = Exact<{
   options: SignInOptionsInput;
 }>;
@@ -197,6 +258,20 @@ export type SignOutMutation = { __typename?: "Mutation" } & Pick<
   Mutation,
   "signOut"
 >;
+
+export type EmailsQueryVariables = Exact<{
+  limit: Scalars["Int"];
+  cursor?: Maybe<Scalars["String"]>;
+}>;
+
+export type EmailsQuery = { __typename?: "Query" } & {
+  emails: { __typename?: "PaginatedEmails" } & Pick<
+    PaginatedEmails,
+    "hasMore"
+  > & {
+      emails: Array<{ __typename?: "Email" } & RegularEmailResponseFragment>;
+    };
+};
 
 export type FriendRequestsQueryVariables = Exact<{ [key: string]: never }>;
 
@@ -218,6 +293,12 @@ export type MeQuery = { __typename?: "Query" } & {
   me?: Maybe<{ __typename?: "User" } & RegularUserResponseFragment>;
 };
 
+export type NewEmailSubscriptionVariables = Exact<{ [key: string]: never }>;
+
+export type NewEmailSubscription = { __typename?: "Subscription" } & {
+  newEmail: { __typename?: "Email" } & RegularEmailResponseFragment;
+};
+
 export type NewFriendSubscriptionVariables = Exact<{ [key: string]: never }>;
 
 export type NewFriendSubscription = { __typename?: "Subscription" } & {
@@ -232,6 +313,16 @@ export type NewFriendRequstSubscription = { __typename?: "Subscription" } & {
   newFriendRequst: { __typename?: "Friend" } & RegularFriendResponseFragment;
 };
 
+export const RegularEmailResponseFragmentDoc = gql`
+  fragment RegularEmailResponse on Email {
+    id
+    from
+    to
+    subject
+    message
+    createdAt
+  }
+`;
 export const RegularUserResponseFragmentDoc = gql`
   fragment RegularUserResponse on User {
     email
@@ -328,6 +419,26 @@ export function useJoinRoomMutation() {
     JoinRoomDocument
   );
 }
+export const SendEmailDocument = gql`
+  mutation SendEmail($options: EmailContent!) {
+    sendEmail(options: $options) {
+      email {
+        ...RegularEmailResponse
+      }
+      error {
+        message
+        status
+      }
+    }
+  }
+  ${RegularEmailResponseFragmentDoc}
+`;
+
+export function useSendEmailMutation() {
+  return Urql.useMutation<SendEmailMutation, SendEmailMutationVariables>(
+    SendEmailDocument
+  );
+}
 export const SignInDocument = gql`
   mutation SignIn($options: SignInOptionsInput!) {
     signIn(options: $options) {
@@ -352,6 +463,23 @@ export function useSignOutMutation() {
   return Urql.useMutation<SignOutMutation, SignOutMutationVariables>(
     SignOutDocument
   );
+}
+export const EmailsDocument = gql`
+  query Emails($limit: Int!, $cursor: String) {
+    emails(limit: $limit, cursor: $cursor) {
+      hasMore
+      emails {
+        ...RegularEmailResponse
+      }
+    }
+  }
+  ${RegularEmailResponseFragmentDoc}
+`;
+
+export function useEmailsQuery(
+  options: Omit<Urql.UseQueryArgs<EmailsQueryVariables>, "query"> = {}
+) {
+  return Urql.useQuery<EmailsQuery>({ query: EmailsDocument, ...options });
 }
 export const FriendRequestsDocument = gql`
   query FriendRequests {
@@ -397,6 +525,28 @@ export function useMeQuery(
   options: Omit<Urql.UseQueryArgs<MeQueryVariables>, "query"> = {}
 ) {
   return Urql.useQuery<MeQuery>({ query: MeDocument, ...options });
+}
+export const NewEmailDocument = gql`
+  subscription NewEmail {
+    newEmail {
+      ...RegularEmailResponse
+    }
+  }
+  ${RegularEmailResponseFragmentDoc}
+`;
+
+export function useNewEmailSubscription<TData = NewEmailSubscription>(
+  options: Omit<
+    Urql.UseSubscriptionArgs<NewEmailSubscriptionVariables>,
+    "query"
+  > = {},
+  handler?: Urql.SubscriptionHandler<NewEmailSubscription, TData>
+) {
+  return Urql.useSubscription<
+    NewEmailSubscription,
+    TData,
+    NewEmailSubscriptionVariables
+  >({ query: NewEmailDocument, ...options }, handler);
 }
 export const NewFriendDocument = gql`
   subscription NewFriend {

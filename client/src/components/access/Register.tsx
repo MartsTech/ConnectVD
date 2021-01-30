@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { auth, provider } from "../../firebase";
 import { useSignInMutation } from "../../generated/graphql";
-import styles from "../../styles/Register.module.css";
+import styles from "../../styles/Access.module.css";
 
 const Register: React.FC = () => {
   const [firstName, setFirstName] = useState("");
@@ -67,7 +67,7 @@ const Register: React.FC = () => {
   };
 
   return (
-    <div className={styles.register}>
+    <div className={styles.section}>
       <div className={styles.container}>
         <h1>Create your account</h1>
         <div className={styles.google} onClick={signInWithGoogle}>

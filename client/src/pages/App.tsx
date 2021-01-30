@@ -19,10 +19,16 @@ const App: React.FC = () => {
             <Route path="/login" exact component={Access} />
           </Suspense>
         ) : (
-          <Suspense fallback={<LinearProgress />}>
-            <Route path="/" exact component={Main} />
-            <Route path="/room/:roomId" component={Meeting} />
-          </Suspense>
+          <>
+            <Suspense fallback={<LinearProgress />}>
+              <Route path="/" exact component={Main} />
+              <Route path="/messages" component={Main} />
+            </Suspense>
+
+            <Suspense fallback={<LinearProgress />}>
+              <Route path="/room/:roomId" component={Meeting} />
+            </Suspense>
+          </>
         )}
       </Switch>
     </BrowserRouter>

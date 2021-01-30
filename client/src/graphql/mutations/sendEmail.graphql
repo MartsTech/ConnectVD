@@ -1,0 +1,11 @@
+mutation SendEmail($options: EmailContent!) {
+  sendEmail(options: $options) {
+    email {
+      ...RegularEmailResponse
+    }
+    error {
+      message
+      status
+    }
+  }
+}

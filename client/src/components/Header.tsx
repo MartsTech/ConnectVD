@@ -9,6 +9,7 @@ import styles from "../styles/Header.module.css";
 import { StatusBadge } from "./StatusBadge";
 import { Dropdown } from "./dropdown/Dropdown";
 import {
+  useEmailsQuery,
   useFriendRequestsQuery,
   useMeQuery,
   useNewFriendRequstSubscription,
@@ -17,6 +18,12 @@ import {
 import { openMenu, setMenuHeight } from "../features/dropdownSlice";
 import { Snackbar } from "./Snackbar";
 import { openSnackbar, selectSnackbar } from "../features/snackbarSlice";
+import {
+  closeSidebar,
+  openSidebar,
+  selectSidebar,
+} from "../features/sidebarSlice";
+import { Link } from "react-router-dom";
 
 export const Header: React.FC = () => {
   const [dropdown, setDropdown] = useState<boolean>(false);
@@ -27,12 +34,14 @@ export const Header: React.FC = () => {
     status: "error" | "warning" | "info" | "success";
   }>();
 
-  const opened = useSelector(selectSnackbar);
+  const openedSnackbar = useSelector(selectSnackbar);
+  const openedSidebar = useSelector(selectSidebar);
 
   const dispatch = useDispatch();
 
   const [{ data }] = useMeQuery();
   const [{ data: Requests }] = useFriendRequestsQuery();
+  const [{ data: Emails }] = useEmailsQuery({ variables: { limit: 50 } });
   const [{ data: NewFriendReq }] = useNewFriendRequstSubscription();
   const [{ data: NewFriend }] = useNewFriendSubscription();
 
@@ -65,13 +74,21 @@ export const Header: React.FC = () => {
     dispatch(openMenu(menu));
   };
 
+  const handleSidebar = () => {
+    if (openedSidebar) {
+      dispatch(closeSidebar());
+    } else {
+      dispatch(openSidebar());
+    }
+  };
+
   return (
     <div className={styles.header}>
-      {opened && message && (
+      {openedSnackbar && message && (
         <Snackbar message={message!.message} status={message!.status} />
       )}
       <div className={styles.left}>
-        <IconButton>
+        <IconButton onClick={() => handleSidebar()}>
           <MenuIcon />
         </IconButton>
       </div>
@@ -80,11 +97,17 @@ export const Header: React.FC = () => {
         <input placeholder="Search" type="text" />
       </div>
       <div className={styles.right}>
-        <IconButton>
-          <Badge badgeContent={14} color="secondary">
-            <MailIcon />
-          </Badge>
-        </IconButton>
+        <Link to="/messages">
+          <IconButton>
+            <Badge
+              badgeContent={Emails?.emails.emails.length}
+              color="secondary"
+            >
+              <MailIcon />
+            </Badge>
+          </IconButton>
+        </Link>
+
         <IconButton onClick={() => activateMenu("notifications")}>
           <Badge
             badgeContent={Requests?.friendRequests.length}
