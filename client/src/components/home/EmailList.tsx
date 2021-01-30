@@ -15,7 +15,7 @@ const EmailList: React.FC = () => {
   const sendMail = useSelector(selectSendMessageIsOpen);
   const dispatch = useDispatch();
 
-  const [{ data }] = useEmailsQuery({ variables: { limit: 50 } });
+  const [{ data: Emails }] = useEmailsQuery({ variables: { limit: 50 } });
 
   const truncate = (str: string, n: number) => {
     if (str.length < n) {
@@ -42,7 +42,7 @@ const EmailList: React.FC = () => {
       </div>
 
       <div className={styles.list}>
-        {data?.emails.emails.map((email) => (
+        {Emails?.emails.emails.map((email) => (
           <EmailRow
             key={email.id}
             id={email.id}

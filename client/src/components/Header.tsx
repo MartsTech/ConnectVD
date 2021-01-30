@@ -3,38 +3,28 @@ import MailIcon from "@material-ui/icons/Mail";
 import MenuIcon from "@material-ui/icons/Menu";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import SearchIcon from "@material-ui/icons/Search";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import styles from "../styles/Header.module.css";
-import { StatusBadge } from "./StatusBadge";
-import { Dropdown } from "./dropdown/Dropdown";
-import {
-  useEmailsQuery,
-  useFriendRequestsQuery,
-  useMeQuery,
-  useNewFriendRequstSubscription,
-  useNewFriendSubscription,
-} from "../generated/graphql";
+import { Link } from "react-router-dom";
 import { openMenu, setMenuHeight } from "../features/dropdownSlice";
-import { Snackbar } from "./Snackbar";
-import { openSnackbar, selectSnackbar } from "../features/snackbarSlice";
 import {
   closeSidebar,
   openSidebar,
   selectSidebar,
 } from "../features/sidebarSlice";
-import { Link } from "react-router-dom";
+import {
+  useEmailsQuery,
+  useFriendRequestsQuery,
+  useMeQuery,
+} from "../generated/graphql";
+import styles from "../styles/Header.module.css";
+import { Dropdown } from "./dropdown/Dropdown";
+import { StatusBadge } from "./StatusBadge";
 
 export const Header: React.FC = () => {
   const [dropdown, setDropdown] = useState<boolean>(false);
   const [activeDropdown, setActiveDropdown] = useState<string>("");
-  const [lastMessage, setLastMessage] = useState<any>("");
-  const [message, setMessage] = useState<{
-    message: string;
-    status: "error" | "warning" | "info" | "success";
-  }>();
 
-  const openedSnackbar = useSelector(selectSnackbar);
   const openedSidebar = useSelector(selectSidebar);
 
   const dispatch = useDispatch();
@@ -42,25 +32,6 @@ export const Header: React.FC = () => {
   const [{ data }] = useMeQuery();
   const [{ data: Requests }] = useFriendRequestsQuery();
   const [{ data: Emails }] = useEmailsQuery({ variables: { limit: 50 } });
-  const [{ data: NewFriendReq }] = useNewFriendRequstSubscription();
-  const [{ data: NewFriend }] = useNewFriendSubscription();
-
-  useEffect(() => {
-    if (typeof NewFriend?.newFriend !== "undefined") {
-      if (NewFriend.newFriend !== lastMessage) {
-        setMessage({ message: "New Frined.", status: "info" });
-        setLastMessage(NewFriend.newFriend);
-        dispatch(openSnackbar());
-      }
-    } else if (typeof NewFriendReq?.newFriendRequst !== "undefined") {
-      if (NewFriendReq.newFriendRequst !== lastMessage) {
-        setMessage({ message: "New Frined Request.", status: "info" });
-        setLastMessage(NewFriendReq.newFriendRequst);
-        dispatch(openSnackbar());
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [NewFriendReq, NewFriend]);
 
   const activateMenu = (menu: "main" | "notifications") => {
     if (menu === activeDropdown) {
@@ -84,9 +55,6 @@ export const Header: React.FC = () => {
 
   return (
     <div className={styles.header}>
-      {openedSnackbar && message && (
-        <Snackbar message={message!.message} status={message!.status} />
-      )}
       <div className={styles.left}>
         <IconButton onClick={() => handleSidebar()}>
           <MenuIcon />

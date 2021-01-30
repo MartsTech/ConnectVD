@@ -4,6 +4,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { closeSendMessage } from "../features/mailSlice";
+import { openSnackbar, setSnackbarContent } from "../features/snackbarSlice";
 import { useSendEmailMutation } from "../generated/graphql";
 import styles from "../styles/SendMail.module.css";
 
@@ -25,6 +26,13 @@ export const SendMail: React.FC = () => {
     if (email.data?.sendEmail.error) {
       setError("to", { message: email.data.sendEmail.error.message });
     } else if (email.data?.sendEmail.email) {
+      dispatch(
+        setSnackbarContent({
+          message: "Email successfully sent.",
+          status: "success",
+        })
+      );
+      dispatch(openSnackbar());
       dispatch(closeSendMessage());
     }
   };
