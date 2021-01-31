@@ -3,7 +3,7 @@ import AddIcon from "@material-ui/icons/Add";
 import PersonIcon from "@material-ui/icons/Person";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { openSnackbar } from "../features/snackbarSlice";
+import { openSnackbar, setSnackbarContent } from "../features/snackbarSlice";
 import {
   useCreateFriendRequestMutation,
   useFriendsQuery,
@@ -12,15 +12,10 @@ import styles from "../styles/Sidebar.module.css";
 import { Profile } from "./Profile";
 import { Section } from "./Section";
 import { SidebarOption } from "./SidebarOption";
-import { Snackbar } from "./Snackbar";
 import { StatusBadge } from "./StatusBadge";
 
 export const Sidebar: React.FC = () => {
   const [email, setEmail] = useState<string>("");
-  const [message, setMessage] = useState<{
-    message: string;
-    status: "error" | "warning" | "info" | "success";
-  }>();
   const [active, setActive] = useState<string>("");
   const [height, setHeight] = useState<string>("");
 
@@ -38,10 +33,12 @@ export const Sidebar: React.FC = () => {
       email,
     });
     if (response.data?.createFriendRequest) {
-      setMessage({
-        message: response.data.createFriendRequest.message,
-        status: response.data.createFriendRequest.status as any,
-      });
+      dispatch(
+        setSnackbarContent({
+          message: response.data.createFriendRequest.message,
+          status: response.data.createFriendRequest.status as any,
+        })
+      );
       dispatch(openSnackbar());
       setEmail("");
     }
@@ -53,10 +50,6 @@ export const Sidebar: React.FC = () => {
 
   return (
     <div className={styles.sidebar}>
-      {message && (
-        <Snackbar message={message.message} status={message.status} />
-      )}
-
       <form onSubmit={submitEmail} className={styles.addFriend}>
         <AddIcon />
         <input

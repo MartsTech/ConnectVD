@@ -3,6 +3,10 @@
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid whitesmoke;
+  position: sticky;
+  z-index: 999;
+  top: 0;
+  background-color: white;
 }
 
 .left {

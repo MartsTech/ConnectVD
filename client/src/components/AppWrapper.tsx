@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { closeSidebar, selectSidebar } from "../features/sidebarSlice";
 import {
-  openSnackbar,
   selectSnackbar,
   selectSnackbarContent,
   setSnackbarContent,
+  openSnackbar,
 } from "../features/snackbarSlice";
 import {
   useNewFriendRequstSubscription,
@@ -18,11 +18,9 @@ import { Sidebar } from "./Sidebar";
 import { Snackbar } from "./Snackbar";
 
 export const AppWrapper: React.FC = ({ children }) => {
-  const [lastMessage, setLastMessage] = useState<any>("");
-
-  const sidebar = useSelector(selectSidebar);
   const snackbar = useSelector(selectSnackbar);
   const snackbarContent = useSelector(selectSnackbarContent);
+  const sidebar = useSelector(selectSidebar);
   const dispatch = useDispatch();
 
   const [{ data: NewFriendReq }] = useNewFriendRequstSubscription();
@@ -38,34 +36,38 @@ export const AppWrapper: React.FC = ({ children }) => {
   }, [width]);
 
   useEffect(() => {
-    if (typeof NewFriend?.newFriend !== "undefined") {
-      if (NewFriend.newFriend !== lastMessage) {
-        setSnackbarContent({ message: "New Frined.", status: "info" });
-        setLastMessage(NewFriend.newFriend);
-        dispatch(openSnackbar());
-      }
-    } else if (typeof NewFriendReq?.newFriendRequst !== "undefined") {
-      if (NewFriendReq.newFriendRequst !== lastMessage) {
-        setSnackbarContent({ message: "New Frined Request.", status: "info" });
-        setLastMessage(NewFriendReq.newFriendRequst);
-        dispatch(openSnackbar());
-      }
+    if (typeof NewFriendReq?.newFriendRequst !== "undefined") {
+      dispatch(
+        setSnackbarContent({
+          message: "New Frined Request.",
+          status: "info",
+        })
+      );
+      dispatch(openSnackbar());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [NewFriendReq, NewFriend]);
+  }, [NewFriendReq]);
+
+  useEffect(() => {
+    if (typeof NewFriend?.newFriend !== "undefined") {
+      dispatch(setSnackbarContent({ message: "New Frined.", status: "info" }));
+      dispatch(openSnackbar());
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [NewFriend]);
 
   return (
     <div className={styles.app}>
       <Header />
       <div className={styles.body}>
         {sidebar && <Sidebar />}
-        {children}
         {snackbar && snackbarContent && (
           <Snackbar
             message={snackbarContent.message}
             status={snackbarContent.status}
           />
         )}
+        {children}
       </div>
     </div>
   );

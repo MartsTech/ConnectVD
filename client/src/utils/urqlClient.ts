@@ -83,7 +83,7 @@ export const client = createClient({
     cacheExchange({
       keys: {
         User: () => null,
-        PaginatedPosts: () => null,
+        PaginatedEmails: () => null,
       },
       resolvers: {
         Query: {
