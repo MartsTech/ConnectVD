@@ -11,9 +11,16 @@ import dialogReducer from "../features/dialogSlide";
 import dropdownReducer from "../features/dropdownSlice";
 import friendReducer from "../features/friendSlice";
 import snackbarReducer from "../features/snackbarSlice";
+import mailReducer from "../features/mailSlice";
+import sidebarReducer from "../features/sidebarSlice";
 
 const controlsPersistConfig = {
   key: "controls",
+  storage,
+};
+
+const mailPersistConfig = {
+  key: "mail",
   storage,
 };
 
@@ -22,6 +29,8 @@ const controlsPersistedReducer = persistReducer(
   controlsReducer
 );
 
+const mailPersistedReducer = persistReducer(mailPersistConfig, mailReducer);
+
 export const store = configureStore({
   reducer: {
     controls: controlsPersistedReducer,
@@ -29,6 +38,8 @@ export const store = configureStore({
     dropdown: dropdownReducer,
     snackbar: snackbarReducer,
     friend: friendReducer,
+    mail: mailPersistedReducer,
+    sidebar: sidebarReducer,
   },
   middleware: getDefaultMiddleware({
     serializableCheck: false,

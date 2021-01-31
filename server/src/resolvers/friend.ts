@@ -1,11 +1,8 @@
-import { User } from "../entities/User";
 import {
   Arg,
   Ctx,
-  Field,
   FieldResolver,
   Mutation,
-  ObjectType,
   Publisher,
   PubSub,
   Query,
@@ -15,16 +12,9 @@ import {
 } from "type-graphql";
 import { getConnection } from "typeorm";
 import { Friend } from "../entities/Friend";
-import { MyContext } from "../types";
-import { validateFriendRequest } from "../utils/validateFriendRequest";
-
-@ObjectType()
-class RequestResponse {
-  @Field()
-  message: string;
-  @Field()
-  status: string;
-}
+import { MyContext, NotifyError, Users } from "../types";
+import { validateRequest } from "../utils/validateRequest";
+import { RequestResponse } from "./RequestResponse";
 
 @Resolver(Friend)
 export class FriendResolver {
@@ -82,81 +72,75 @@ export class FriendResolver {
 
   @Mutation(() => RequestResponse)
   async createFriendRequest(
-    @Arg("email") email: string,
     @Ctx() { req }: MyContext,
+    @Arg("email") email: string,
     @PubSub("FRIEND_REQUESTS") notifyAboutNewRequest: Publisher<Friend>
   ): Promise<RequestResponse> {
     const checkCopy = true;
-    const friend = await validateFriendRequest(
-      req.session.userId,
-      email,
-      checkCopy
-    );
-    if (typeof friend === "object") {
-      return friend;
+    const request = await validateRequest(req.session.userId, email, checkCopy);
+    if ((request as NotifyError).message && (request as NotifyError).status) {
+      return request as NotifyError;
     }
-    const me = await User.findOne({ where: { id: req.session.userId } });
-    const request = await Friend.create({
-      userId: friend,
+    const { sender, receiver } = request as Users;
+    const friend = await Friend.create({
+      userId: receiver.id,
       friendId: req.session.userId,
-      id: me!.email,
+      id: sender.email,
     }).save();
 
-    await notifyAboutNewRequest(request);
+    await notifyAboutNewRequest(friend);
 
     return { message: "Friend request successfully sent.", status: "success" };
   }
-  @Mutation(() => RequestResponse)
+  @Mutation(() => Boolean)
   async acceptFriendRequest(
-    @Arg("email") email: string,
     @Ctx() { req }: MyContext,
+    @Arg("email") email: string,
     @PubSub("FRIENDS") notifyAboutNewFriend: Publisher<Friend>
-  ): Promise<RequestResponse> {
-    const friend = await validateFriendRequest(req.session.userId, email);
-    if (typeof friend === "object") {
-      return friend;
+  ): Promise<boolean> {
+    const request = await validateRequest(req.session.userId, email);
+    if ((request as NotifyError).message && (request as NotifyError).status) {
+      return false;
     }
+    const { sender: initSender, receiver: initReceiver } = request as Users;
+
     const sender = await getConnection()
       .createQueryBuilder()
       .update(Friend)
       .set({ status: "accepted" })
-      .where('"userId" = :id and "friendId" = :friend', {
+      .where('"userId" = :id and "friendId" = :friendId', {
         id: req.session.userId,
-        friend,
+        friendId: initReceiver.id,
       })
       .returning("*")
       .execute();
 
     await notifyAboutNewFriend(sender.raw[0]);
 
-    const me = await User.findOne({ where: { id: req.session.userId } });
-
     const receiver = await Friend.create({
-      userId: friend,
+      userId: initReceiver.id,
       friendId: req.session.userId,
-      id: me!.email,
+      id: initSender.email,
       status: "accepted",
     }).save();
 
     await notifyAboutNewFriend(receiver);
 
-    return {
-      message: "Friend request successfully accepted.",
-      status: "success",
-    };
+    return true;
   }
   @Mutation(() => Boolean)
   async declineFriendRequest(
     @Arg("email") email: string,
     @Ctx() { req }: MyContext
   ): Promise<boolean> {
-    const request = await validateFriendRequest(req.session.userId, email);
-    if (typeof request === "object") {
+    const request = await validateRequest(req.session.userId, email);
+    if ((request as NotifyError).message && (request as NotifyError).status) {
       return false;
     }
+    const { receiver } = request as Users;
     await Friend.delete({
       userId: req.session.userId,
-      friendId: request,
+      friendId: receiver.id,
     });
     return true;
   }

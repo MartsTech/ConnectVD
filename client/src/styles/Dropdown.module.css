@@ -50,7 +50,7 @@
   margin: 20px;
 }
 
-.avatar {
+.profile > div {
   object-fit: contain;
   height: 80px;
   width: 80px;

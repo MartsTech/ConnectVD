@@ -20,6 +20,7 @@ export class Friend extends BaseEntity {
 
   @Field()
   @Column()
+  //email
   id!: string;
 
   @Column({ default: "pending" })

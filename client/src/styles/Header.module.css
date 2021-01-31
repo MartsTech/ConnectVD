@@ -3,13 +3,17 @@
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid whitesmoke;
+  position: sticky;
+  z-index: 999;
+  top: 0;
+  background-color: white;
 }
 
 .left {
   display: flex;
   align-items: center;
   text-align: center;
-  margin-left: 10px;
+  margin-left: 6px;
 }
 
 .middle {
@@ -36,7 +40,9 @@
 
 .right {
   display: flex;
-  padding-right: 20px;
+  align-items: center;
+  justify-content: center;
+  padding-right: 6px;
 }
 
 .letter {

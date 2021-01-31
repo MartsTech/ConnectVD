@@ -11,9 +11,11 @@ import socket, { Server, Socket } from "socket.io";
 import { buildSchema } from "type-graphql";
 import { createConnection } from "typeorm";
 import { COOKIE_NAME, __prod__ } from "./constants";
+import { Email } from "./entities/Email";
 import { Friend } from "./entities/Friend";
 import { Room } from "./entities/Room";
 import { User } from "./entities/User";
+import { EmailResolver } from "./resolvers/email";
 import { FriendResolver } from "./resolvers/friend";
 import { RoomResolver } from "./resolvers/room";
 import { UserResolver } from "./resolvers/user";
@@ -58,7 +60,7 @@ const main = async () => {
 
   // DB Config
   const connection = await createConnection({
-    entities: [Room, User, Friend],
+    entities: [Room, User, Friend, Email],
     type: "postgres",
     url: process.env.DATABASE_URL,
     logging: true,
@@ -80,7 +82,7 @@ const main = async () => {
   // Graphql Config
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [RoomResolver, UserResolver, FriendResolver],
+      resolvers: [RoomResolver, UserResolver, FriendResolver, EmailResolver],
       validate: false,
     }),
     // validationRules: [NoIntrospection],

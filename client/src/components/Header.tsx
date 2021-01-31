@@ -3,39 +3,41 @@ import MailIcon from "@material-ui/icons/Mail";
 import MenuIcon from "@material-ui/icons/Menu";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import SearchIcon from "@material-ui/icons/Search";
-import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import styles from "../styles/Header.module.css";
-import { StatusBadge } from "./StatusBadge";
-import { Dropdown } from "./dropdown/Dropdown";
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { openMenu, setMenuHeight } from "../features/dropdownSlice";
 import {
+  closeSidebar,
+  openSidebar,
+  selectSidebar,
+} from "../features/sidebarSlice";
+import {
+  useEmailsQuery,
   useFriendRequestsQuery,
   useMeQuery,
-  useNewFriendRequstSubscription,
 } from "../generated/graphql";
-import { openMenu } from "../features/dropdownSlice";
-import { Snackbar } from "./Snackbar";
-import { openSnackbar } from "../features/snackbarSlice";
+import styles from "../styles/Header.module.css";
+import { Dropdown } from "./dropdown/Dropdown";
+import { StatusBadge } from "./StatusBadge";
 
 export const Header: React.FC = () => {
   const [dropdown, setDropdown] = useState<boolean>(false);
   const [activeDropdown, setActiveDropdown] = useState<string>("");
 
+  const openedSidebar = useSelector(selectSidebar);
+
   const dispatch = useDispatch();
 
   const [{ data }] = useMeQuery();
   const [{ data: Requests }] = useFriendRequestsQuery();
-  const [{ data: NewFriendReq }] = useNewFriendRequstSubscription();
-
-  useEffect(() => {
-    if (typeof NewFriendReq !== "undefined") dispatch(openSnackbar());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [NewFriendReq]);
+  const [{ data: Emails }] = useEmailsQuery({ variables: { limit: 50 } });
 
   const activateMenu = (menu: "main" | "notifications") => {
     if (menu === activeDropdown) {
       setDropdown(false);
       setActiveDropdown("");
+      dispatch(setMenuHeight("316"));
     } else {
       setDropdown(true);
       setActiveDropdown(menu);
@@ -43,11 +45,18 @@ export const Header: React.FC = () => {
     dispatch(openMenu(menu));
   };
 
+  const handleSidebar = () => {
+    if (openedSidebar) {
+      dispatch(closeSidebar());
+    } else {
+      dispatch(openSidebar());
+    }
+  };
+
   return (
     <div className={styles.header}>
-      {NewFriendReq && <Snackbar message="New Friend Request" status="info" />}
       <div className={styles.left}>
-        <IconButton>
+        <IconButton onClick={() => handleSidebar()}>
           <MenuIcon />
         </IconButton>
       </div>
@@ -56,11 +65,17 @@ export const Header: React.FC = () => {
         <input placeholder="Search" type="text" />
       </div>
       <div className={styles.right}>
-        <IconButton>
-          <Badge badgeContent={14} color="secondary">
-            <MailIcon />
-          </Badge>
-        </IconButton>
+        <Link to="/messages">
+          <IconButton>
+            <Badge
+              badgeContent={Emails?.emails.emails.length}
+              color="secondary"
+            >
+              <MailIcon />
+            </Badge>
+          </IconButton>
+        </Link>
+
         <IconButton onClick={() => activateMenu("notifications")}>
           <Badge
             badgeContent={Requests?.friendRequests.length}

@@ -8,7 +8,7 @@ interface SidebarOptionProps {
   LeftIcon: OverridableComponent<SvgIconTypeMap<{}, "svg">>;
   RightIcon?: OverridableComponent<SvgIconTypeMap<{}, "svg">>;
   title: string;
-  number: number;
+  number?: number;
   selected?: boolean;
 }
 

@@ -4,7 +4,7 @@ import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
 import { auth, provider } from "../../firebase";
 import { useSignInMutation } from "../../generated/graphql";
-import styles from "../../styles/Login.module.css";
+import styles from "../../styles/Access.module.css";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -35,7 +35,7 @@ const Login: React.FC = () => {
       .then(() => {
         history.push("/");
       })
-      .catch((err) => alert(err));
+      .catch((err) => alert(err.message));
   };
 
   const signInWithGoogle = () => {
@@ -60,42 +60,55 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className={styles.login}>
-      <h1>Log in to your account</h1>
-      <div className={styles.google} onClick={signInWithGoogle}>
-        <img
-          alt="google"
-          src="https://kgo.googleusercontent.com/profile_vrt_raw_bytes_1587515358_10512.png"
-        />
-        <button>Log in with Google</button>
-      </div>
-
-      <p>or</p>
-
-      <form>
-        <input
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          type="email"
-          placeholder="Email"
-        />
-        <input
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          type="password"
-          placeholder="Password"
-        />
-        <Button type="submit" onClick={signInWithEmail}>
-          Login
+    <div className={styles.section}>
+      <div className={styles.container}>
+        <h1>Log in to your account</h1>
+        <Button
+          onClick={signInWithGoogle}
+          startIcon={
+            <img
+              className={styles.icon}
+              alt="google"
+              src="https://kgo.googleusercontent.com/profile_vrt_raw_bytes_1587515358_10512.png"
+            />
+          }
+          variant="contained"
+          color="primary"
+        >
+          Log in with Google
         </Button>
-      </form>
+        <p>or</p>
 
-      <p>
-        Don't have an account?{" "}
-        <Link className={styles.link} to="/register">
-          <span>Sign Up</span>
-        </Link>
-      </p>
+        <form>
+          <input
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            type="email"
+            placeholder="Email"
+          />
+          <input
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            type="password"
+            placeholder="Password"
+          />
+          <Button
+            variant="contained"
+            color="primary"
+            type="submit"
+            onClick={signInWithEmail}
+          >
+            Login
+          </Button>
+        </form>
+
+        <p>
+          Don't have an account?{" "}
+          <Link className={styles.link} to="/register">
+            <span>Sign Up</span>
+          </Link>
+        </p>
+      </div>
     </div>
   );
 };
