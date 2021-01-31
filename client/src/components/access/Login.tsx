@@ -63,14 +63,20 @@ const Login: React.FC = () => {
     <div className={styles.section}>
       <div className={styles.container}>
         <h1>Log in to your account</h1>
-        <div className={styles.google} onClick={signInWithGoogle}>
-          <img
-            alt="google"
-            src="https://kgo.googleusercontent.com/profile_vrt_raw_bytes_1587515358_10512.png"
-          />
-          <button>Log in with Google</button>
-        </div>
-
+        <Button
+          onClick={signInWithGoogle}
+          startIcon={
+            <img
+              className={styles.icon}
+              alt="google"
+              src="https://kgo.googleusercontent.com/profile_vrt_raw_bytes_1587515358_10512.png"
+            />
+          }
+          variant="contained"
+          color="primary"
+        >
+          Log in with Google
+        </Button>
         <p>or</p>
 
         <form>
@@ -86,7 +92,12 @@ const Login: React.FC = () => {
             type="password"
             placeholder="Password"
           />
-          <Button type="submit" onClick={signInWithEmail}>
+          <Button
+            variant="contained"
+            color="primary"
+            type="submit"
+            onClick={signInWithEmail}
+          >
             Login
           </Button>
         </form>

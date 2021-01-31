@@ -8,6 +8,7 @@ import styles from "../styles/Home.module.css";
 
 const Cards = lazy(() => import("../components/home/HomeCards"));
 const EmailList = lazy(() => import("../components/home/EmailList"));
+const Mail = lazy(() => import("../components/home/Mail"));
 
 const Home: React.FC = () => {
   const dialog = useSelector(selectDialog);
@@ -24,6 +25,7 @@ const Home: React.FC = () => {
           </div>
         )}
         {path === "/messages" && <EmailList />}
+        {path === "/mail" && <Mail />}
       </AppWrapper>
     </div>
   );

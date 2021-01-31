@@ -162,6 +162,9 @@ export const client = createClient({
               })
             );
           },
+          newEmail: (_, __, cache, ___) => {
+            invalidateAllEmails(cache);
+          },
         },
       },
     }),

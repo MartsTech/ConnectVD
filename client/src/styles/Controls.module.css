@@ -19,8 +19,11 @@
   align-items: center;
   text-align: center;
   padding: 8px 10px;
-  min-width: 80px;
+  min-width: 40px;
   cursor: pointer;
+  text-align: center;
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
 .button:hover {
@@ -36,4 +39,10 @@
 #leave {
   color: red;
   text-transform: none;
+}
+
+@media only screen and (max-width: 500px) {
+  .sendMail {
+    right: 0;
+  }
 }

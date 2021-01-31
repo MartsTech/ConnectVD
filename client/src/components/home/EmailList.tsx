@@ -17,13 +17,6 @@ const EmailList: React.FC = () => {
 
   const [{ data: Emails }] = useEmailsQuery({ variables: { limit: 50 } });
 
-  const truncate = (str: string, n: number) => {
-    if (str.length < n) {
-      return str;
-    }
-    return str.length ? str.substr(0, n - 1) + "..." : str;
-  };
-
   return (
     <div className={styles.emailList}>
       <div className={styles.settings}>
@@ -47,8 +40,8 @@ const EmailList: React.FC = () => {
             key={email.id}
             id={email.id}
             title={email.to}
-            subject={truncate(email.subject, 30)}
-            description={truncate(email.message, 30)}
+            subject={email.subject}
+            description={email.message}
             time={new Date(parseInt(email.createdAt)).toDateString()}
           />
         ))}

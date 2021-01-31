@@ -21,21 +21,23 @@ const HomeCards: React.FC = () => {
   };
   return (
     <div className={styles.homeCards}>
-      <div className={styles.card} id={styles.newMeeting}>
-        <IconButton onClick={create}>
-          <div className={styles.icon}>
-            <VideoCallIcon />
-          </div>
-        </IconButton>
-        <h3>New Meeting</h3>
-      </div>
-      <div className={styles.card} id={styles.joinRoom}>
-        <IconButton onClick={() => dispatch(openDialog())}>
-          <div className={styles.icon}>
-            <AddBoxIcon />
-          </div>
-        </IconButton>
-        <h3>Join Meeting</h3>
+      <div className={styles.cards}>
+        <div className={styles.card} id={styles.newMeeting}>
+          <IconButton onClick={create}>
+            <div className={styles.icon}>
+              <VideoCallIcon />
+            </div>
+          </IconButton>
+          <h3>New Meeting</h3>
+        </div>
+        <div className={styles.card} id={styles.joinRoom}>
+          <IconButton onClick={() => dispatch(openDialog())}>
+            <div className={styles.icon}>
+              <AddBoxIcon />
+            </div>
+          </IconButton>
+          <h3>Join Meeting</h3>
+        </div>
       </div>
     </div>
   );

@@ -8,6 +8,7 @@ import {
   openSnackbar,
 } from "../features/snackbarSlice";
 import {
+  useNewEmailSubscription,
   useNewFriendRequstSubscription,
   useNewFriendSubscription,
 } from "../generated/graphql";
@@ -25,6 +26,7 @@ export const AppWrapper: React.FC = ({ children }) => {
 
   const [{ data: NewFriendReq }] = useNewFriendRequstSubscription();
   const [{ data: NewFriend }] = useNewFriendSubscription();
+  const [{ data: NewEmail }] = useNewEmailSubscription();
 
   const width = useWindowWidth();
 
@@ -55,6 +57,14 @@ export const AppWrapper: React.FC = ({ children }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [NewFriend]);
+
+  useEffect(() => {
+    if (typeof NewEmail?.newEmail !== "undefined") {
+      dispatch(setSnackbarContent({ message: "New Email.", status: "info" }));
+      dispatch(openSnackbar());
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [NewEmail]);
 
   return (
     <div className={styles.app}>

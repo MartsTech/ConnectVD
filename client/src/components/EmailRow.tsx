@@ -43,6 +43,13 @@ export const EmailRow: React.FC<EmailRowProps> = ({
     history.push("/mail");
   };
 
+  const truncate = (str: string, n: number) => {
+    if (str.length < n) {
+      return str;
+    }
+    return str.length ? str.substr(0, n - 1) + "..." : str;
+  };
+
   return (
     <div className={styles.emailRow}>
       <div className={styles.options}>
@@ -62,7 +69,10 @@ export const EmailRow: React.FC<EmailRowProps> = ({
         <h3 className={styles.title}>{title}</h3>
         <div className={styles.message}>
           <h4>
-            {subject} <span className={styles.description}>{description}</span>
+            {truncate(subject, 20)}{" "}
+            <span className={styles.description}>
+              {truncate(description, 20)}
+            </span>
           </h4>
         </div>
         <div className={styles.time}>

@@ -19,10 +19,17 @@ const controlsPersistConfig = {
   storage,
 };
 
+const mailPersistConfig = {
+  key: "mail",
+  storage,
+};
+
 const controlsPersistedReducer = persistReducer(
   controlsPersistConfig,
   controlsReducer
 );
+
+const mailPersistedReducer = persistReducer(mailPersistConfig, mailReducer);
 
 export const store = configureStore({
   reducer: {
@@ -31,7 +38,7 @@ export const store = configureStore({
     dropdown: dropdownReducer,
     snackbar: snackbarReducer,
     friend: friendReducer,
-    mail: mailReducer,
+    mail: mailPersistedReducer,
     sidebar: sidebarReducer,
   },
   middleware: getDefaultMiddleware({

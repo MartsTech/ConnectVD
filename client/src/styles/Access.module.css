@@ -32,25 +32,7 @@
   text-align: center;
 }
 
-.google {
-  display: flex;
-  border-radius: 3px;
-  border: 1px solid #0074b1;
-  cursor: pointer;
-}
-
-.google > button {
-  font-size: medium;
-  border: none;
-  outline: none;
-  width: 200px;
-  height: 40px;
-  color: #fff;
-  background-color: #0074b1;
-  cursor: pointer;
-}
-
-.google > img {
+.icon {
   object-fit: contain;
   height: 38px;
 }
@@ -80,16 +62,11 @@
   height: 50px;
   font-size: large;
   color: #fff;
-  background-color: #0074b1;
   border-radius: 5px;
 }
 
-.container > form > button:hover {
-  background-color: #0053b1;
-}
-
 .link {
-  color: #0177b7;
+  color: #3f51b5;
   cursor: pointer;
   text-decoration: none;
 }

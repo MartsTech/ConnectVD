@@ -70,15 +70,23 @@ const Register: React.FC = () => {
     <div className={styles.section}>
       <div className={styles.container}>
         <h1>Create your account</h1>
-        <div className={styles.google} onClick={signInWithGoogle}>
-          <img
-            alt="google"
-            src="https://kgo.googleusercontent.com/profile_vrt_raw_bytes_1587515358_10512.png"
-          />
-          <button>Sign in with Google</button>
-        </div>
+        <Button
+          onClick={signInWithGoogle}
+          startIcon={
+            <img
+              className={styles.icon}
+              alt="google"
+              src="https://kgo.googleusercontent.com/profile_vrt_raw_bytes_1587515358_10512.png"
+            />
+          }
+          variant="contained"
+          color="primary"
+        >
+          Sign in with Google
+        </Button>
 
         <p>or</p>
+
         <form>
           <input
             value={firstName}
@@ -104,7 +112,12 @@ const Register: React.FC = () => {
             type="password"
             placeholder="Password"
           />
-          <Button type="submit" onClick={register}>
+          <Button
+            variant="contained"
+            color="primary"
+            type="submit"
+            onClick={register}
+          >
             Register
           </Button>
         </form>
