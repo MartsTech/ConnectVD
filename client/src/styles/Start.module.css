@@ -21,7 +21,11 @@
   display: flex;
   align-items: center;
   text-align: center;
-  margin-left: 10px;
+}
+
+.menu {
+  left: 0;
+  margin: 10px;
 }
 
 .left > h1 {
@@ -149,7 +153,7 @@
   }
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 700px) {
   .canvas {
     flex-direction: column;
   }

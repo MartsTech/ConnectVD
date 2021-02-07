@@ -69,41 +69,47 @@ export const Sidebar: React.FC = () => {
       <div className={styles.friends}>
         {data?.friends.map(({ user }) => (
           <div key={user.email} className={styles.friend}>
-            {active !== user.email ? (
-              <div
-                onMouseEnter={async () => {
-                  await timeout(500);
-                  setActive(user.email);
-                  await timeout(300);
-                  setHeight("246px");
-                }}
-              >
-                <Section
-                  left={
-                    <StatusBadge status={user.status}>
-                      <Avatar src={user.photoUrl}>
-                        <span className={styles.letter}>{user.email[0]}</span>
-                      </Avatar>
-                    </StatusBadge>
-                  }
-                  title={user.displayName}
-                />
-              </div>
-            ) : (
-              <Profile
-                height={height}
-                displayName={user.displayName}
-                email={user.email}
-                photoUrl={user.photoUrl}
-                status={user.status}
-                onMouseLeave={async () => {
-                  await timeout(500);
+            <div
+              className={styles.container}
+              onClick={async () => {
+                await timeout(500);
+                setHeight("");
+                if (active === user.email) {
                   setActive("");
-                  await timeout(300);
-                  setHeight("");
-                }}
+                } else {
+                  setActive(user.email);
+                }
+                await timeout(300);
+                setHeight("246px");
+              }}
+            >
+              <Section
+                style={{ width: "100%" }}
+                left={
+                  <StatusBadge status={user.status}>
+                    <Avatar src={user.photoUrl}>
+                      <span className={styles.letter}>{user.email[0]}</span>
+                    </Avatar>
+                  </StatusBadge>
+                }
+                title={user.displayName}
               />
-            )}
+              {active === user.email && (
+                <Profile
+                  height={height}
+                  displayName={user.displayName}
+                  email={user.email}
+                  photoUrl={user.photoUrl}
+                  status={user.status}
+                  onMouseLeave={async () => {
+                    await timeout(500);
+                    setActive("");
+                    await timeout(300);
+                    setHeight("");
+                  }}
+                />
+              )}
+            </div>
           </div>
         ))}
       </div>

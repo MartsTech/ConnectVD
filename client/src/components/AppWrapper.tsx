@@ -77,7 +77,9 @@ export const AppWrapper: React.FC = ({ children }) => {
             status={snackbarContent.status}
           />
         )}
-        {children}
+        {typeof width === "number" && width < 700
+          ? !sidebar && children
+          : children}
       </div>
     </div>
   );

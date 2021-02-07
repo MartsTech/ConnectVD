@@ -2,15 +2,21 @@ import React from "react";
 import styles from "../styles/Start.module.css";
 import SearchIcon from "@material-ui/icons/Search";
 import { Link } from "react-router-dom";
-import { Button } from "@material-ui/core";
+import { Button, IconButton } from "@material-ui/core";
 import CanvasImage from "../images/stock-photo-back-view-of-female-employee-speak-talk-on-video-call-with-diverse-multiracial-colleagues-on-online-1689338029.jpg";
+import MenuIcon from "@material-ui/icons/Menu";
 
 const Start: React.FC = () => {
   return (
     <div className={styles.start}>
       <div className={styles.header}>
         <div className={styles.left}>
-          <h1>ConnectVD</h1>
+          <div className={styles.left}>
+            <IconButton className={styles.menu}>
+              <MenuIcon />
+            </IconButton>
+            <h1>ConnectVD</h1>
+          </div>
         </div>
         <div className={styles.middle}>
           <SearchIcon />

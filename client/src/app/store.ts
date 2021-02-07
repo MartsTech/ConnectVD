@@ -10,9 +10,9 @@ import controlsReducer from "../features/controlsSlice";
 import dialogReducer from "../features/dialogSlide";
 import dropdownReducer from "../features/dropdownSlice";
 import friendReducer from "../features/friendSlice";
-import snackbarReducer from "../features/snackbarSlice";
 import mailReducer from "../features/mailSlice";
 import sidebarReducer from "../features/sidebarSlice";
+import snackbarReducer from "../features/snackbarSlice";
 
 const controlsPersistConfig = {
   key: "controls",

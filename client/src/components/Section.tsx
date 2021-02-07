@@ -6,6 +6,7 @@ type SectionProps = {
   left?: any;
   right?: any;
   onClick?: any;
+  style?: React.CSSProperties;
 };
 
 export const Section: React.FC<SectionProps> = ({
@@ -13,9 +14,10 @@ export const Section: React.FC<SectionProps> = ({
   left,
   right,
   onClick,
+  style,
 }) => {
   return (
-    <div className={styles.section} onClick={onClick}>
+    <div className={styles.section} onClick={onClick} style={style}>
       <div className={styles.left}>
         {left && left}
         {title && <h4>{title}</h4>}

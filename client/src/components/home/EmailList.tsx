@@ -26,7 +26,7 @@ const EmailList: React.FC = () => {
       <div className={styles.sections}>
         <Button
           variant="contained"
-          color="secondary"
+          color="primary"
           startIcon={<AddIcon fontSize="large" />}
           onClick={() => dispatch(openSendMessage())}
         >

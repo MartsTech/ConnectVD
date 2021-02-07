@@ -3,8 +3,8 @@
   align-items: center;
   height: 40px;
   padding: 0 10px;
-  border-top-right-radius: 20px;
-  border-bottom-right-radius: 20px;
+  border-radius: 20px;
+  margin-left: 10px;
   cursor: pointer;
   color: #818181;
 }
@@ -15,8 +15,8 @@
 .active,
 .active > p,
 .active > h3 {
-  background-color: #fcecec;
-  color: #c04b37;
+  background-color: #3f51b5;
+  color: #fcecec;
   font-weight: 800 !important;
 }
 
