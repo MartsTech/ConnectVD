@@ -21,12 +21,11 @@ import { RoomResolver } from "./resolvers/room";
 import { UserResolver } from "./resolvers/user";
 import { socketPayload } from "./types";
 import { createUserLoader } from "./utils/createUserLoader";
-// import NoIntrospection from "graphql-disable-introspection";
 
 const main = async () => {
   // App Config
   const app = express();
-  const port = parseInt(process.env.PORT);
+  const port = process.env.PORT || 8000;
 
   // Middlewares
   const MongoStore = connectMongo(session);
@@ -64,7 +63,7 @@ const main = async () => {
     type: "postgres",
     url: process.env.DATABASE_URL,
     logging: true,
-    synchronize: true,
+    // synchronize: true,
     migrations: [path.join(__dirname, "./migrations/*")],
   });
   connection.runMigrations();

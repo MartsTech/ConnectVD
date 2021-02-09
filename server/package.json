@@ -4,10 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build": "tsc",
     "watch": "tsc -w",
     "dev": "nodemon dist/index.js",
     "gen-env": "npx gen-env-types .env -o src/env.d.ts -e .",
-    "migrate": "npx typeorm migration:create -n MockData"
+    "migrate": "npx typeorm migration:generate -n Initial"
   },
   "author": "Martin Velkov",
   "license": "ISC",

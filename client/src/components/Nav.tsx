@@ -17,11 +17,11 @@ import {
   useFriendRequestsQuery,
   useMeQuery,
 } from "../generated/graphql";
-import styles from "../styles/Header.module.css";
+import styles from "../styles/Nav.module.css";
 import { Dropdown } from "./dropdown/Dropdown";
 import { StatusBadge } from "./StatusBadge";
 
-export const Header: React.FC = () => {
+export const Nav: React.FC = () => {
   const [dropdown, setDropdown] = useState<boolean>(false);
   const [activeDropdown, setActiveDropdown] = useState<string>("");
 
@@ -54,7 +54,7 @@ export const Header: React.FC = () => {
   };
 
   return (
-    <div className={styles.header}>
+    <div className={styles.nav}>
       <div className={styles.left}>
         <IconButton onClick={() => handleSidebar()}>
           <MenuIcon />

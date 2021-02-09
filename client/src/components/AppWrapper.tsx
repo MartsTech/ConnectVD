@@ -14,7 +14,7 @@ import {
 } from "../generated/graphql";
 import styles from "../styles/AppWrapper.module.css";
 import { useWindowWidth } from "../utils/useWindowWidth";
-import { Header } from "./Header";
+import { Nav } from "./Nav";
 import { Sidebar } from "./Sidebar";
 import { Snackbar } from "./Snackbar";
 
@@ -31,7 +31,7 @@ export const AppWrapper: React.FC = ({ children }) => {
   const width = useWindowWidth();
 
   useEffect(() => {
-    if (typeof width === "number" && width < 650) {
+    if (typeof width === "number" && width < 700) {
       dispatch(closeSidebar());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -68,7 +68,7 @@ export const AppWrapper: React.FC = ({ children }) => {
 
   return (
     <div className={styles.app}>
-      <Header />
+      <Nav />
       <div className={styles.body}>
         {sidebar && <Sidebar />}
         {snackbar && snackbarContent && (

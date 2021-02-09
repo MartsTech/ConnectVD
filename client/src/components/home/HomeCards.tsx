@@ -7,6 +7,8 @@ import { useHistory } from "react-router";
 import { openDialog } from "../../features/dialogSlide";
 import { useCreateRoomMutation } from "../../generated/graphql";
 import styles from "../../styles/HomeCards.module.css";
+import PersonIcon from "@material-ui/icons/Person";
+import MailIcon from "@material-ui/icons/Mail";
 
 const HomeCards: React.FC = () => {
   const [, createRoom] = useCreateRoomMutation();
@@ -37,6 +39,22 @@ const HomeCards: React.FC = () => {
             </div>
           </IconButton>
           <h3>Join Meeting</h3>
+        </div>
+        <div className={styles.card} id={styles.addFriend}>
+          <IconButton>
+            <div className={styles.icon}>
+              <PersonIcon />
+            </div>
+          </IconButton>
+          <h3>Add Friend</h3>
+        </div>
+        <div className={styles.card} id={styles.sendMail}>
+          <IconButton>
+            <div className={styles.icon}>
+              <MailIcon />
+            </div>
+          </IconButton>
+          <h3>Send Mail</h3>
         </div>
       </div>
     </div>

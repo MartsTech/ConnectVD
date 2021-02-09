@@ -12,7 +12,6 @@ interface ProfileProps {
   email: string;
   displayName: string;
   status: string;
-  onMouseLeave: any;
   height: string;
 }
 
@@ -21,16 +20,11 @@ export const Profile: React.FC<ProfileProps> = ({
   displayName,
   photoUrl,
   status,
-  onMouseLeave,
   height,
 }) => {
   const dispatch = useDispatch();
   return (
-    <div
-      style={{ height }}
-      className={styles.profile}
-      onMouseLeave={onMouseLeave}
-    >
+    <div style={{ height }} className={styles.profile}>
       <div className={styles.main}>
         <StatusBadge className={styles.badge} status={status}>
           <div className={styles.avatar}>

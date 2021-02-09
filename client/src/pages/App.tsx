@@ -14,13 +14,7 @@ const App: React.FC = () => {
   return (
     <BrowserRouter>
       <Switch>
-        {!data?.me && !fetching ? (
-          <Suspense fallback={<LinearProgress />}>
-            <Route path="/" exact component={Start} />
-            <Route path="/register" component={Access} />
-            <Route path="/login" component={Access} />
-          </Suspense>
-        ) : (
+        {data?.me && !fetching && (
           <>
             <Suspense fallback={<LinearProgress />}>
               <Route path="/" exact component={Main} />
@@ -32,6 +26,13 @@ const App: React.FC = () => {
               <Route path="/room/:roomId" component={Meeting} />
             </Suspense>
           </>
+        )}
+        {!data?.me && !fetching && (
+          <Suspense fallback={<LinearProgress />}>
+            <Route path="/" exact component={Start} />
+            <Route path="/register" component={Access} />
+            <Route path="/login" component={Access} />
+          </Suspense>
         )}
       </Switch>
     </BrowserRouter>

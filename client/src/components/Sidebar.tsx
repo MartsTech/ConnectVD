@@ -101,12 +101,6 @@ export const Sidebar: React.FC = () => {
                   email={user.email}
                   photoUrl={user.photoUrl}
                   status={user.status}
-                  onMouseLeave={async () => {
-                    await timeout(500);
-                    setActive("");
-                    await timeout(300);
-                    setHeight("");
-                  }}
                 />
               )}
             </div>
