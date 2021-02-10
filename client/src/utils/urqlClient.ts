@@ -7,6 +7,7 @@ import {
   stringifyVariables,
   subscriptionExchange,
 } from "urql";
+import { __prod__ } from "../constants";
 import {
   AcceptFriendRequestMutationVariables,
   ChangeStatusMutation,
@@ -74,7 +75,9 @@ const subscriptionClient = new SubscriptionClient(
 );
 
 export const client = createClient({
-  url: "http://localhost:8000/graphql",
+  url: __prod__
+    ? process.env.REACT_APP_SERVER_KEY!
+    : "http://localhost:8000/graphql",
   fetchOptions: {
     credentials: "include",
   },

@@ -40,12 +40,12 @@ const main = async () => {
     name: COOKIE_NAME,
     cookie: {
       httpOnly: true,
-      sameSite: "lax",
+      sameSite: "none",
       secure: __prod__,
-      maxAge: 1000 * 60 * 60 * 24 * 356 * 10,
+      maxAge: 1000 * 60 * 60 * 24 * 356,
     },
     saveUninitialized: false,
-    secret: process.env.MONGO_SECRET,
+    secret: process.env.MONGO_SECRET!,
     resave: false,
   });
   app.set("proxy", 1);
@@ -63,13 +63,11 @@ const main = async () => {
     type: "postgres",
     url: process.env.DATABASE_URL,
     logging: true,
+    // ssl: { rejectUnauthorized: false },
     // synchronize: true,
     migrations: [path.join(__dirname, "./migrations/*")],
   });
   connection.runMigrations();
-  // await Room.delete({});
-  // await User.delete({});
-  // await Friend.delete({});
 
   // Socket Endpoints
   const server = http.createServer(app);
@@ -84,7 +82,6 @@ const main = async () => {
       resolvers: [RoomResolver, UserResolver, FriendResolver, EmailResolver],
       validate: false,
     }),
-    // validationRules: [NoIntrospection],
     context: ({ req, res, connection }) => ({
       req,
       res,
