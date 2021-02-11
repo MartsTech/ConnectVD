@@ -16,6 +16,12 @@
   margin-left: 6px;
 }
 
+.logo {
+  margin-left: 5px;
+  height: 40px;
+  object-fit: contain;
+}
+
 .middle {
   display: flex;
   flex: 0.7;
@@ -47,4 +53,17 @@
 
 .letter {
   text-transform: capitalize;
+}
+
+@media only screen and (max-width: 600px) {
+  .middle {
+    display: none;
+    background-color: unset;
+  }
+  .middle > svg {
+    display: none;
+  }
+  .middle > input {
+    display: none;
+  }
 }

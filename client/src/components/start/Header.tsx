@@ -4,6 +4,7 @@ import SearchIcon from "@material-ui/icons/Search";
 import React from "react";
 import { Link } from "react-router-dom";
 import styles from "../../styles/Header.module.css";
+import LogoImg from "../../images/logo.png";
 
 export const Header: React.FC = () => {
   return (
@@ -13,7 +14,7 @@ export const Header: React.FC = () => {
           <IconButton className={styles.menu}>
             <MenuIcon />
           </IconButton>
-          <h1>ConnectVD</h1>
+          <img className={styles.logo} src={LogoImg} alt="logo" />
         </div>
       </div>
       <div className={styles.middle}>

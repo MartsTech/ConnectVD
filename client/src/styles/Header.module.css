@@ -17,6 +17,12 @@
   text-align: center;
 }
 
+.logo {
+  margin-left: 10px;
+  height: 40px;
+  object-fit: contain;
+}
+
 .menu {
   left: 0;
   margin: 10px;

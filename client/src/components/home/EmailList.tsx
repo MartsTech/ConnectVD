@@ -1,21 +1,15 @@
-import React from "react";
-import { EmailRow } from "../EmailRow";
-import styles from "../../styles/EmailList.module.css";
 import { Button } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  openSendMessage,
-  selectSendMessageIsOpen,
-} from "../../features/mailSlice";
-import { SendMail } from "../SendMail";
+import React from "react";
+import { useHistory } from "react-router";
 import { useEmailsQuery } from "../../generated/graphql";
+import styles from "../../styles/EmailList.module.css";
+import { EmailRow } from "../EmailRow";
 
 const EmailList: React.FC = () => {
-  const sendMail = useSelector(selectSendMessageIsOpen);
-  const dispatch = useDispatch();
-
   const [{ data: Emails }] = useEmailsQuery({ variables: { limit: 50 } });
+
+  const history = useHistory();
 
   return (
     <div className={styles.emailList}>
@@ -28,7 +22,7 @@ const EmailList: React.FC = () => {
           variant="contained"
           color="primary"
           startIcon={<AddIcon fontSize="large" />}
-          onClick={() => dispatch(openSendMessage())}
+          onClick={() => history.replace("/sendMail")}
         >
           Compose
         </Button>
@@ -46,7 +40,6 @@ const EmailList: React.FC = () => {
           />
         ))}
       </div>
-      {sendMail && <SendMail />}
     </div>
   );
 };

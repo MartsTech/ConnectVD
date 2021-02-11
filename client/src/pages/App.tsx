@@ -20,6 +20,7 @@ const App: React.FC = () => {
               <Route path="/" exact component={Main} />
               <Route path="/messages" component={Main} />
               <Route path="/mail" component={Main} />
+              <Route path="/sendMail" component={Main} />
             </Suspense>
 
             <Suspense fallback={<LinearProgress />}>

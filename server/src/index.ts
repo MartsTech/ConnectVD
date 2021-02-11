@@ -40,7 +40,7 @@ const main = async () => {
     name: COOKIE_NAME,
     cookie: {
       httpOnly: true,
-      sameSite: "none",
+      sameSite: "lax",
       secure: __prod__,
       maxAge: 1000 * 60 * 60 * 24 * 356,
     },

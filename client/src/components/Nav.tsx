@@ -17,6 +17,7 @@ import {
   useFriendRequestsQuery,
   useMeQuery,
 } from "../generated/graphql";
+import LogoImg from "../images/logo.png";
 import styles from "../styles/Nav.module.css";
 import { Dropdown } from "./dropdown/Dropdown";
 import { StatusBadge } from "./StatusBadge";
@@ -59,6 +60,9 @@ export const Nav: React.FC = () => {
         <IconButton onClick={() => handleSidebar()}>
           <MenuIcon />
         </IconButton>
+        <Link to="/">
+          <img className={styles.logo} src={LogoImg} alt="logo" />
+        </Link>
       </div>
       <div className={styles.middle}>
         <SearchIcon />

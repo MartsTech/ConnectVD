@@ -2,13 +2,13 @@
   display: flex;
   height: 100%;
   width: 100%;
+  overflow: hidden;
 }
 
 .main {
   display: grid;
   place-items: center;
   width: 100%;
-  min-width: 375px;
 }
 
 .container {
@@ -17,5 +17,4 @@
   justify-content: space-evenly;
   align-items: center;
   width: 80%;
-  min-width: 375px;
 }

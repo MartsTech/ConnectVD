@@ -53,7 +53,7 @@ export const EmailRow: React.FC<EmailRowProps> = ({
   return (
     <div className={styles.emailRow}>
       <div className={styles.options}>
-        <Checkbox />
+        <Checkbox color="primary" />
         <IconButton onClick={() => setStar(!star)}>
           {star ? (
             <StarIcon style={{ color: "orange" }} />

@@ -49,7 +49,7 @@ const HomeCards: React.FC = () => {
           <h3>Add Friend</h3>
         </div>
         <div className={styles.card} id={styles.sendMail}>
-          <IconButton>
+          <IconButton onClick={() => history.push(`/sendMail`)}>
             <div className={styles.icon}>
               <MailIcon />
             </div>

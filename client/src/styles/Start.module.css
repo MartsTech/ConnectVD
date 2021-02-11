@@ -23,3 +23,13 @@
   display: flex;
   flex-direction: column;
 }
+
+.features {
+  position: relative;
+}
+
+@media only screen and (max-height: 800px) {
+  .features {
+    margin-top: 100px;
+  }
+}
