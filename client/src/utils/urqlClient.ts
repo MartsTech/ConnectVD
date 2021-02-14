@@ -68,7 +68,9 @@ const invalidateAllEmails = (cache: Cache) => {
 };
 
 const subscriptionClient = new SubscriptionClient(
-  "ws://localhost:8000/subscriptions",
+  __prod__
+    ? process.env.REACT_APP_WEB_SOCKET_KEY!
+    : "ws://localhost:8000/subscriptions",
   {
     reconnect: true,
   }

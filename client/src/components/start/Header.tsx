@@ -1,5 +1,4 @@
-import { Button, IconButton } from "@material-ui/core";
-import MenuIcon from "@material-ui/icons/Menu";
+import { Button } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
 import React from "react";
 import { Link } from "react-router-dom";
@@ -11,9 +10,6 @@ export const Header: React.FC = () => {
     <nav className={styles.nav}>
       <div className={styles.left}>
         <div className={styles.left}>
-          <IconButton className={styles.menu}>
-            <MenuIcon />
-          </IconButton>
           <img className={styles.logo} src={LogoImg} alt="logo" />
         </div>
       </div>
@@ -29,6 +25,6 @@ export const Header: React.FC = () => {
           <Button>Register</Button>
         </Link>
       </div>
-    </nav>
+  </nav>
   );
 };

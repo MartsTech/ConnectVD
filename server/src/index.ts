@@ -40,7 +40,7 @@ const main = async () => {
     name: COOKIE_NAME,
     cookie: {
       httpOnly: true,
-      sameSite: "lax",
+      sameSite: __prod__ ? "none" : "lax",
       secure: __prod__,
       maxAge: 1000 * 60 * 60 * 24 * 356,
     },
@@ -64,7 +64,6 @@ const main = async () => {
     url: process.env.DATABASE_URL,
     logging: true,
     // ssl: { rejectUnauthorized: false },
-    // synchronize: true,
     migrations: [path.join(__dirname, "./migrations/*")],
   });
   connection.runMigrations();
