@@ -8,27 +8,40 @@
   margin-bottom: auto;
   background-color: #18181b;
   width: 100%;
+  height: 75px;
 }
 
-.left,
+.left {
+  height: 100%;
+}
+
 .center,
 .right {
   display: flex;
+  margin: 10px 30px;
+}
+
+.details {
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  height: 100%;
+  text-align: center;
 }
 
 .button {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  padding: 8px 10px;
-  cursor: pointer;
+  border: 1px solid #343434;
+  color: white;
+  border-radius: 50%;
+  height: 55px;
+  width: 55px;
+  margin: 0 0.5rem;
+  transition: all 0.25s linear;
 }
 
+.details:hover,
 .button:hover {
   background-color: #343434;
-  border-radius: 5px;
 }
 
 .micOff > svg,

@@ -28,6 +28,7 @@
 .footer {
   display: flex;
   height: 4rem;
+  margin-bottom: 80px;
 }
 
 .footer > form {

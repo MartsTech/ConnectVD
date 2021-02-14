@@ -13,6 +13,7 @@ import friendReducer from "../features/friendSlice";
 import mailReducer from "../features/mailSlice";
 import sidebarReducer from "../features/sidebarSlice";
 import snackbarReducer from "../features/snackbarSlice";
+import meetingReducer from "../features/meetingSlice";
 
 const controlsPersistConfig = {
   key: "controls",
@@ -40,6 +41,7 @@ export const store = configureStore({
     friend: friendReducer,
     mail: mailPersistedReducer,
     sidebar: sidebarReducer,
+    meeting: meetingReducer,
   },
   middleware: getDefaultMiddleware({
     serializableCheck: false,
