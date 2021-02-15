@@ -9,6 +9,7 @@
   background-color: #18181b;
   width: 100%;
   height: 75px;
+  z-index: 10;
 }
 
 .left {
@@ -52,4 +53,14 @@
 #leave {
   color: red;
   text-transform: none;
+}
+
+@media only screen and (max-width: 550px) {
+  .left {
+    display: none;
+  }
+  .center,
+  .right {
+    margin: 0;
+  }
 }

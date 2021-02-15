@@ -1,8 +1,15 @@
 .chat {
   width: 25%;
+  min-width: 300px;
+  max-width: 400px;
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  position: absolute;
+  z-index: 5;
+  right: 0;
+  background-color: #18181b;
 }
 
 .header > h2 {
@@ -48,4 +55,10 @@
 
 .footer > form > button {
   display: none;
+}
+
+@media only screen and (max-width: 500px) {
+  .chat {
+    min-width: 100%;
+  }
 }
