@@ -4,7 +4,7 @@ import VideoCallIcon from "@material-ui/icons/VideoCall";
 import React from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
-import { openDialog } from "../../features/dialogSlide";
+import { openDialog } from "../../features/dialogSlice";
 import { useCreateRoomMutation } from "../../generated/graphql";
 import styles from "../../styles/HomeCards.module.css";
 import PersonIcon from "@material-ui/icons/Person";

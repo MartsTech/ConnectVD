@@ -24,7 +24,7 @@ export class User extends BaseEntity {
   displayName!: string;
 
   @Field()
-  @Column({ nullable: true })
+  @Column()
   photoUrl: string;
 
   @Field()

@@ -4,7 +4,7 @@ import React from "react";
 import { useHistory } from "react-router";
 import { useEmailsQuery } from "../../generated/graphql";
 import styles from "../../styles/EmailList.module.css";
-import { EmailRow } from "../EmailRow";
+import { EmailRow } from "./EmailRow";
 
 const EmailList: React.FC = () => {
   const [{ data: Emails }] = useEmailsQuery({ variables: { limit: 50 } });

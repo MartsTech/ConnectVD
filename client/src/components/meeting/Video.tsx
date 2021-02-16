@@ -1,7 +1,9 @@
 import { useEffect, useRef } from "react";
+import styles from "../../styles/Video.module.css";
 
 interface videoProps {
   peer: RTCPeerConnection;
+  state: boolean;
 }
 
 export const Video: React.FC<videoProps> = ({ peer }) => {
@@ -16,5 +18,9 @@ export const Video: React.FC<videoProps> = ({ peer }) => {
     videoRef.current.srcObject = e.streams[0];
   };
 
-  return <video autoPlay playsInline ref={videoRef} />;
+  return (
+    <div className={styles.video}>
+      <video autoPlay playsInline ref={videoRef} />
+    </div>
+  );
 };

@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useRouteMatch } from "react-router";
 import io from "socket.io-client";
+import { __prod__ } from "../../constants";
 import {
   selectAudio,
   selectLeave,
@@ -11,12 +12,15 @@ import {
   setScreen,
 } from "../../features/controlsSlice";
 import { useJoinRoomMutation } from "../../generated/graphql";
-import { socketPayload } from "../../types";
 import styles from "../../styles/Room.module.css";
-import { Video } from "../Video";
+import { socketPayload } from "../../types";
+import { Video } from "./Video";
 
 export const Room: React.FC = () => {
   const [peers, setPeers] = useState<any[]>([]);
+  const [usersVideoStatus, setUsersVideoStatus] = useState<
+    { id: string; state: boolean }[]
+  >([]);
 
   const userStream = useRef<MediaStream>();
   const userVideo = useRef<any>();
@@ -25,7 +29,7 @@ export const Room: React.FC = () => {
   const senders = useRef<any[]>([]);
 
   const history = useHistory();
-  const match: any = useRouteMatch();
+  const match: { params: { roomId: string } } = useRouteMatch();
 
   const dispatch = useDispatch();
 
@@ -34,7 +38,7 @@ export const Room: React.FC = () => {
   const screen: boolean = useSelector(selectScreen);
   const leave: boolean = useSelector(selectLeave);
 
-  const roomId: string = match.params.roomId;
+  const { roomId } = match.params;
 
   const [, joinRoom] = useJoinRoomMutation();
 
@@ -53,7 +57,9 @@ export const Room: React.FC = () => {
 
   useEffect(() => {
     getUserStream();
-    socketRef.current = io.connect("/");
+    socketRef.current = io(
+      __prod__ ? process.env.REACT_APP_SERVER_URL! : "http://localhost:8000"
+    );
     socketRef.current.emit("get socketId");
     socketRef.current.on("send socketId", async (id: string) => {
       const { data } = await joinRoom({
@@ -65,6 +71,7 @@ export const Room: React.FC = () => {
         alert(data.joinRoom.error);
         return;
       }
+
       const peers: Array<{ id: string; peer: RTCPeerConnection }> = [];
       data?.joinRoom.users!.forEach((socketId) => {
         if (socketId !== id) {
@@ -82,6 +89,14 @@ export const Room: React.FC = () => {
       peersRef.current = peers;
       setPeers(peers);
     });
+
+    socketRef.current.on(
+      "change video",
+      (payload: { id: string; state: boolean }) => {
+        const users = usersVideoStatus.filter((user) => user.id !== payload.id);
+        setUsersVideoStatus([...users, payload]);
+      }
+    );
 
     socketRef.current.on("offer", handleOffer);
     socketRef.current.on("answer", handleAnswer);
@@ -162,23 +177,14 @@ export const Room: React.FC = () => {
 
   const toggleAudio = (state: boolean) => {
     if (userStream.current) {
-      const audioTrack = (userStream.current.getAudioTracks()[0].enabled = state);
-      senders.current.forEach((sender) => {
-        if (sender.track.kind === "audio") {
-          sender.replaceTrack(audioTrack).catch(() => {});
-        }
-      });
+      userStream.current.getAudioTracks()[0].enabled = state;
     }
   };
 
   const toggleVideo = (state: boolean) => {
     if (userStream.current) {
-      const videoTrack = (userStream.current.getVideoTracks()[0].enabled = state);
-      senders.current.forEach((sender) => {
-        if (sender.track.kind === "video") {
-          sender.replaceTrack(videoTrack).catch(() => {});
-        }
-      });
+      userStream.current.getVideoTracks()[0].enabled = state;
+      socketRef.current?.emit("toggle video", state);
     }
   };
 
@@ -278,8 +284,15 @@ export const Room: React.FC = () => {
   return (
     <div className={styles.videos}>
       <video ref={userVideo} autoPlay playsInline muted />
-      {peers.map((peerObj) => {
-        return <Video key={peerObj.id} peer={peerObj.peer} />;
+      {peers.map((peerObj: { id: string; peer: RTCPeerConnection }) => {
+        const user = usersVideoStatus.find((user) => user.id === peerObj.id);
+        return (
+          <Video
+            key={peerObj.id}
+            peer={peerObj.peer}
+            state={user ? user.state : true}
+          />
+        );
       })}
     </div>
   );

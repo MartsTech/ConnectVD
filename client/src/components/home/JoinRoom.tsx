@@ -11,9 +11,9 @@ import React, { useState } from "react";
 import Draggable from "react-draggable";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
-import { setAudio, setVideo } from "../features/controlsSlice";
-import { closeDialog } from "../features/dialogSlide";
-import styles from "../styles/JoinRoom.module.css";
+import { setAudio, setVideo } from "../../features/controlsSlice";
+import { closeDialog } from "../../features/dialogSlice";
+import styles from "../../styles/JoinRoom.module.css";
 
 const PaperComponent: React.FC = (props: PaperProps) => {
   return (

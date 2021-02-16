@@ -28,6 +28,7 @@ const Login: React.FC = () => {
               id: user.uid,
               email: user.email!,
               displayName: user.displayName!,
+              photoUrl: "null",
             },
           });
         }

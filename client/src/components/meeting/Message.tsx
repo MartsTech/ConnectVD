@@ -2,7 +2,7 @@ import { Avatar } from "@material-ui/core";
 import firebase from "firebase";
 import React, { forwardRef } from "react";
 import * as timeago from "timeago.js";
-import styles from "../styles/Message.module.css";
+import styles from "../../styles/Message.module.css";
 
 type messageProps = {
   contents: firebase.firestore.DocumentData;

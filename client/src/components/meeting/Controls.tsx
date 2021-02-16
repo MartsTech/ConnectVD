@@ -69,9 +69,7 @@ export const Controls: React.FC = () => {
           className={styles.button}
           onClick={leaveRoom}
         >
-          <h3>
-            <CallEndIcon />
-          </h3>
+          <CallEndIcon />
         </IconButton>
         <IconButton
           onClick={() => dispatch(setVideo({ video: !video }))}

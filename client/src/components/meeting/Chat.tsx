@@ -4,7 +4,7 @@ import FlipMove from "react-flip-move";
 import { useRouteMatch } from "react-router";
 import db from "../../firebase";
 import { useMeQuery } from "../../generated/graphql";
-import { Message } from "../Message";
+import { Message } from "./Message";
 import styles from "../../styles/Chat.module.css";
 
 export const Chat: React.FC = () => {

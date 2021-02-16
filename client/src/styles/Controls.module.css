@@ -32,7 +32,6 @@
 
 .button {
   border: 1px solid #343434;
-  color: white;
   border-radius: 50%;
   height: 55px;
   width: 55px;
@@ -40,9 +39,18 @@
   transition: all 0.25s linear;
 }
 
+.button > span > svg {
+  color: white;
+}
+
 .details:hover,
 .button:hover {
   background-color: #343434;
+}
+
+.micOn > svg,
+.videoOn > svg {
+  color: white;
 }
 
 .micOff > svg,
@@ -50,8 +58,8 @@
   color: red;
 }
 
-#leave {
-  color: red;
+#leave > span > svg {
+  color: red !important;
   text-transform: none;
 }
 

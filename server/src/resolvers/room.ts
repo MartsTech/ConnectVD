@@ -77,12 +77,12 @@ export class RoomResolver {
     if (!room) {
       return { error: "Room doesn't exist." };
     }
-    const user = await User.findOne({
-      where: { id: req.session.userId, roomId },
-    });
-    if (user) {
-      return { error: "User already in room." };
-    }
+    // const user = await User.findOne({
+    //   where: { id: req.session.userId, roomId },
+    // });
+    // if (user) {
+    //   return { error: "User already in room." };
+    // }
     await User.update({ id: req.session.userId }, { socketId, roomId });
     const users = await User.find({ where: { roomId } });
     const socketIds = users.map((user) => {

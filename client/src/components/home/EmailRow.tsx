@@ -5,8 +5,8 @@ import StarIcon from "@material-ui/icons/Star";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { selectMail } from "../features/mailSlice";
-import styles from "../styles/EmailRow.module.css";
+import { selectMail } from "../../features/mailSlice";
+import styles from "../../styles/EmailRow.module.css";
 
 interface EmailRowProps {
   id: string;

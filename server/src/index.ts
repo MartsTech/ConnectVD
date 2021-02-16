@@ -71,9 +71,14 @@ const main = async () => {
   // Socket Endpoints
   const server = http.createServer(app);
   // @ts-ignore
-  const io: Server = socket(server, {
-    cors: false,
-  });
+  const ServerOptions: ServerOptions = {
+    cors: {
+      origin: process.env.CORS_ORIGIN,
+      methods: ["GET", "POST"],
+    },
+  };
+  //@ts-ignore
+  const io: Server = socket(server, ServerOptions);
 
   // Graphql Config
   const apolloServer = new ApolloServer({
@@ -116,6 +121,10 @@ const main = async () => {
 
     socket.on("ice-candidate", (payload: socketPayload) => {
       socket.to(payload.target).emit("ice-candidate", payload);
+    });
+
+    socket.on("toggle video", (state: boolean) => {
+      socket.broadcast.emit("change video", { id: socket.id, state });
     });
 
     socket.on("disconnect", async () => {

@@ -1,12 +1,12 @@
 import { LinearProgress } from "@material-ui/core";
 import React, { lazy, Suspense } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-import { useMeQuery } from "../generated/graphql";
+import { useMeQuery } from "./generated/graphql";
 
-const Start = lazy(() => import("./Start"));
-const Access = lazy(() => import("./Access"));
-const Main = lazy(() => import("./Home"));
-const Meeting = lazy(() => import("./Meeting"));
+const Start = lazy(() => import("./pages/Start"));
+const Access = lazy(() => import("./pages/Access"));
+const Main = lazy(() => import("./pages/Home"));
+const Meeting = lazy(() => import("./pages/Meeting"));
 
 const App: React.FC = () => {
   const [{ data, fetching }] = useMeQuery();
