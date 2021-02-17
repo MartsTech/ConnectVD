@@ -28,8 +28,14 @@
   position: relative;
 }
 
-@media only screen and (max-height: 800px) {
+@media only screen and (max-width: 550px) {
   .features {
-    margin-top: 130px;
+    margin-top: 150px !important;
+  }
+}
+
+@media only screen and (max-width: 380px) {
+  .features {
+    margin-top: 200px !important;
   }
 }

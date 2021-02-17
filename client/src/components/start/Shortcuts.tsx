@@ -27,22 +27,7 @@ export const Shortcuts: React.FC = () => {
           </Link>
           <h3>Meeting</h3>
         </div>
-        <div className={styles.container}>
-          <Link
-            activeClass="active"
-            to="friends"
-            spy={true}
-            smooth={true}
-            duration={1000}
-          >
-            <IconButton>
-              <div className={styles.icon}>
-                <PeopleAltIcon />
-              </div>
-            </IconButton>
-          </Link>
-          <h3>Friends</h3>
-        </div>
+
         <div className={styles.container}>
           <Link
             activeClass="active"
@@ -58,6 +43,22 @@ export const Shortcuts: React.FC = () => {
             </IconButton>
           </Link>
           <h3>Mail</h3>
+        </div>
+        <div className={styles.container}>
+          <Link
+            activeClass="active"
+            to="friends"
+            spy={true}
+            smooth={true}
+            duration={1000}
+          >
+            <IconButton>
+              <div className={styles.icon}>
+                <PeopleAltIcon />
+              </div>
+            </IconButton>
+          </Link>
+          <h3>Friends</h3>
         </div>
         <div className={styles.container}>
           <Link

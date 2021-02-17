@@ -4,10 +4,10 @@ import { Header } from "../components/start/Header";
 import { Canvas } from "../components/start/Canvas";
 import { Shortcuts } from "../components/start/Shortcuts";
 import { Feature } from "../components/start/Feature";
-import MeetingImg from "../images/stock-vector-worker-using-computer-for-collective-virtual-meeting-and-group-video-conference-man-at-desktop-1661363914.jpg";
-import MailImg from "../images/stock-vector-email-and-messaging-email-marketing-campaign-1381873973.jpg";
-import NotificationsImg from "../images/stock-vector-notifications-on-calendar-schedule-for-alarm-friendly-reminder-for-software-notification-message-1560839906.jpg";
-import FriendsImg from "../images/stock-vector-concept-of-referral-marketing-refer-a-friend-loyalty-program-promotion-method-group-of-people-or-1373185598.jpg";
+import MeetingImg from "../images/meeting.jpg";
+import MailImg from "../images/mail.jpg";
+import NotificationsImg from "../images/notifications.jpg";
+import FriendsImg from "../images/friends.jpg";
 import { Footer } from "../components/start/Footer";
 
 const Start: React.FC = () => {
@@ -28,15 +28,16 @@ const Start: React.FC = () => {
           rightImg={<img src={MeetingImg} alt="meeting" />}
         />
         <Feature
-          title="Friends"
-          desc="Easily find your friends and send them friend requests. Notify your friends about your availability by changing your status."
-          leftImg={<img src={FriendsImg} alt="friends" />}
-        />
-        <Feature
           title="Mail"
           desc="Exchange quick mails with other users via our mail system. Send and receive mails in real time with close to no delay."
-          rightImg={<img src={MailImg} alt="mail" />}
+          leftImg={<img src={MailImg} alt="mail" />}
         />
+        <Feature
+          title="Friends"
+          desc="Easily find your friends and send them friend requests. Notify your friends about your availability by changing your status."
+          rightImg={<img src={FriendsImg} alt="friends" />}
+        />
+
         <Feature
           title="Notifications"
           desc="Receive push notifications for important events and requests. Responde to them with a click of a button."

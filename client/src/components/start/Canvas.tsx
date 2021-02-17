@@ -1,7 +1,7 @@
+import { Button } from "@material-ui/core";
 import React from "react";
 import { Link } from "react-router-dom";
-import { Button } from "@material-ui/core";
-import CanvasImage from "../../images/stock-photo-back-view-of-female-employee-speak-talk-on-video-call-with-diverse-multiracial-colleagues-on-online-1689338029.jpg";
+import CanvasImage from "../../images/canvas.jpg";
 import styles from "../../styles/Canvas.module.css";
 
 export const Canvas: React.FC = () => {
