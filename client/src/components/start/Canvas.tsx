@@ -10,7 +10,7 @@ export const Canvas: React.FC = () => {
       <div className={styles.description}>
         <div className={styles.text}>
           <h1>ConnectVD</h1>
-          <p>More ways to stay connect.</p>
+          <p>More ways to stay connected.</p>
         </div>
         <div className={styles.buttons}>
           <Link to="/register" className={styles.link}>

@@ -73,7 +73,7 @@ export class RoomResolver {
   ): Promise<JoinRoomRes> {
     const room = await Room.findOne({ id: roomId });
     if (!room) {
-      return { error: "Room doesn't exist." };
+      await Room.create({ id: uid }).save();
     }
     await User.update({ id: uid }, { socketId, roomId });
     const users = await User.find({ where: { roomId } });
