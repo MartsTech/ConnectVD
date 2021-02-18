@@ -12,6 +12,7 @@ import {
   openSidebar,
   selectSidebar,
 } from "../features/sidebarSlice";
+import { selectUser } from "../features/userSlice";
 import {
   useEmailsQuery,
   useFriendRequestsQuery,
@@ -28,11 +29,16 @@ export const Nav: React.FC = () => {
 
   const openedSidebar = useSelector(selectSidebar);
 
+  const user = useSelector(selectUser);
   const dispatch = useDispatch();
 
-  const [{ data }] = useMeQuery();
-  const [{ data: Requests }] = useFriendRequestsQuery();
-  const [{ data: Emails }] = useEmailsQuery({ variables: { limit: 50 } });
+  const [{ data }] = useMeQuery({ variables: { uid: user!.uid } });
+  const [{ data: Requests }] = useFriendRequestsQuery({
+    variables: { uid: user!.uid },
+  });
+  const [{ data: Emails }] = useEmailsQuery({
+    variables: { uid: user!.uid, limit: 50 },
+  });
 
   const activateMenu = (menu: "main" | "notifications") => {
     if (menu === activeDropdown) {

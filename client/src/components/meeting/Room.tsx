@@ -11,6 +11,7 @@ import {
   setLeave,
   setScreen,
 } from "../../features/controlsSlice";
+import { selectUser } from "../../features/userSlice";
 import { useJoinRoomMutation } from "../../generated/graphql";
 import styles from "../../styles/Room.module.css";
 import { socketPayload } from "../../types";
@@ -33,10 +34,11 @@ export const Room: React.FC = () => {
 
   const dispatch = useDispatch();
 
-  const audio: boolean = useSelector(selectAudio);
-  const video: boolean = useSelector(selectVideo);
-  const screen: boolean = useSelector(selectScreen);
-  const leave: boolean = useSelector(selectLeave);
+  const user = useSelector(selectUser);
+  const audio = useSelector(selectAudio);
+  const video = useSelector(selectVideo);
+  const screen = useSelector(selectScreen);
+  const leave = useSelector(selectLeave);
 
   const { roomId } = match.params;
 
@@ -63,6 +65,7 @@ export const Room: React.FC = () => {
     socketRef.current.emit("get socketId");
     socketRef.current.on("send socketId", async (id: string) => {
       const { data } = await joinRoom({
+        uid: user!.uid,
         input: { roomId, socketId: id },
       });
       if (data?.joinRoom.error) {

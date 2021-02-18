@@ -2,9 +2,10 @@ import { Button, IconButton } from "@material-ui/core";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { openSnackbar, setSnackbarContent } from "../../features/snackbarSlice";
+import { selectUser } from "../../features/userSlice";
 import { useSendEmailMutation } from "../../generated/graphql";
 import styles from "../../styles/SendMail.module.css";
 
@@ -15,6 +16,7 @@ type MailData = {
 };
 
 const SendMail: React.FC = () => {
+  const user = useSelector(selectUser);
   const dispatch = useDispatch();
 
   const [, sendEmail] = useSendEmailMutation();
@@ -24,7 +26,7 @@ const SendMail: React.FC = () => {
   const history = useHistory();
 
   const onSubmit = async (options: MailData) => {
-    const email = await sendEmail({ options });
+    const email = await sendEmail({ uid: user!.uid, options });
     if (email.data?.sendEmail.error) {
       setError("to", { message: email.data.sendEmail.error.message });
     } else if (email.data?.sendEmail.email) {

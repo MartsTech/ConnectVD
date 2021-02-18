@@ -3,12 +3,14 @@ import {
   Args,
   ArgsType,
   Ctx,
+  Field,
   FieldResolver,
   Mutation,
   Publisher,
   PubSub,
   Query,
   Resolver,
+  ResolverFilterData,
   Root,
   Subscription,
 } from "type-graphql";
@@ -20,6 +22,7 @@ import { RequestResponse } from "./RequestResponse";
 
 @ArgsType()
 class FriendSubArgs {
+  @Field()
   uid: string;
 }
 
@@ -45,7 +48,7 @@ export class FriendResolver {
 
   @Subscription(() => Friend, {
     topics: "FRIEND_REQUESTS",
-    filter: ({ payload, args }) => {
+    filter: ({ payload, args }: ResolverFilterData<Friend, FriendSubArgs>) => {
       return payload.userId === args.uid && payload.status === "pending";
     },
   })
@@ -59,7 +62,7 @@ export class FriendResolver {
 
   @Subscription(() => Friend, {
     topics: "FRIENDS",
-    filter: ({ payload, args }) => {
+    filter: ({ payload, args }: ResolverFilterData<Friend, FriendSubArgs>) => {
       return payload.userId === args.uid && payload.status === "accepted";
     },
   })

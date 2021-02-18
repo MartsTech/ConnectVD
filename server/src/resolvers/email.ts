@@ -11,6 +11,7 @@ import {
   PubSub,
   Query,
   Resolver,
+  ResolverFilterData,
   Root,
   Subscription,
 } from "type-graphql";
@@ -88,7 +89,7 @@ export class EmailResolver {
 
   @Subscription(() => Email, {
     topics: "EMAILS",
-    filter: ({ payload, args }) => {
+    filter: ({ payload, args }: ResolverFilterData<Email, NewEmailArgs>) => {
       return payload.receiverId === args.uid;
     },
   })

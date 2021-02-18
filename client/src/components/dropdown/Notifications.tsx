@@ -9,6 +9,7 @@ import {
   setMenuHeight,
 } from "../../features/dropdownSlice";
 import { setFriendEmail } from "../../features/friendSlice";
+import { selectUser } from "../../features/userSlice";
 import { useFriendRequestsQuery } from "../../generated/graphql";
 import styles from "../../styles/Dropdown.module.css";
 import { Section } from "../Section";
@@ -16,9 +17,12 @@ import { Section } from "../Section";
 export const Notifications: React.FC = () => {
   const activeMenu = useSelector(selectActiveMenu);
 
+  const user = useSelector(selectUser);
   const dispatch = useDispatch();
 
-  const [{ data }] = useFriendRequestsQuery();
+  const [{ data }] = useFriendRequestsQuery({
+    variables: { uid: user!.uid },
+  });
 
   const calcHeight = (el: any) => {
     const menuHeight = el.offsetHeight;

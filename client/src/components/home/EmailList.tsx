@@ -1,13 +1,19 @@
 import { Button } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import React from "react";
+import { useSelector } from "react-redux";
 import { useHistory } from "react-router";
+import { selectUser } from "../../features/userSlice";
 import { useEmailsQuery } from "../../generated/graphql";
 import styles from "../../styles/EmailList.module.css";
 import { EmailRow } from "./EmailRow";
 
 const EmailList: React.FC = () => {
-  const [{ data: Emails }] = useEmailsQuery({ variables: { limit: 50 } });
+  const user = useSelector(selectUser);
+
+  const [{ data: Emails }] = useEmailsQuery({
+    variables: { uid: user!.uid, limit: 50 },
+  });
 
   const history = useHistory();
 

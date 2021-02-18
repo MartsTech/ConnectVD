@@ -24,9 +24,9 @@ import styles from "../../styles/Controls.module.css";
 
 export const Controls: React.FC = () => {
   const details = useSelector(selectDetails);
-  const audio: boolean = useSelector(selectAudio);
-  const video: boolean = useSelector(selectVideo);
-  const chat: boolean = useSelector(selectChat);
+  const audio = useSelector(selectAudio);
+  const video = useSelector(selectVideo);
+  const chat = useSelector(selectChat);
 
   const history = useHistory();
 

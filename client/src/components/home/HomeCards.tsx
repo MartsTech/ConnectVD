@@ -2,15 +2,18 @@ import { IconButton } from "@material-ui/core";
 import AddBoxIcon from "@material-ui/icons/AddBox";
 import VideoCallIcon from "@material-ui/icons/VideoCall";
 import React from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import { openDialog } from "../../features/dialogSlice";
 import { useCreateRoomMutation } from "../../generated/graphql";
 import styles from "../../styles/HomeCards.module.css";
 import PersonIcon from "@material-ui/icons/Person";
 import MailIcon from "@material-ui/icons/Mail";
+import { selectUser } from "../../features/userSlice";
 
 const HomeCards: React.FC = () => {
+  const user = useSelector(selectUser);
+
   const [, createRoom] = useCreateRoomMutation();
 
   const history = useHistory();
@@ -18,7 +21,7 @@ const HomeCards: React.FC = () => {
   const dispatch = useDispatch();
 
   const create = async () => {
-    const { data } = await createRoom();
+    const { data } = await createRoom({ uid: user!.uid });
     history.push(`/room/${data?.createRoom}`);
   };
   return (

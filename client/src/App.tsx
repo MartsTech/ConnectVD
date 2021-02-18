@@ -37,7 +37,7 @@ const App: React.FC = () => {
   return (
     <BrowserRouter>
       <Switch>
-        {!user && !fetching && (
+        {user && !fetching && (
           <>
             <Suspense fallback={<LinearProgress />}>
               <Route path="/" exact component={Main} />
@@ -51,7 +51,7 @@ const App: React.FC = () => {
             </Suspense>
           </>
         )}
-        {user && !fetching && (
+        {!user && !fetching && (
           <Suspense fallback={<LinearProgress />}>
             <Route path="/" exact component={Start} />
             <Route path="/register" component={Access} />

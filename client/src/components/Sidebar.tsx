@@ -2,8 +2,9 @@ import { Avatar } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import PersonIcon from "@material-ui/icons/Person";
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { openSnackbar, setSnackbarContent } from "../features/snackbarSlice";
+import { selectUser } from "../features/userSlice";
 import {
   useCreateFriendRequestMutation,
   useFriendsQuery,
@@ -19,9 +20,12 @@ export const Sidebar: React.FC = () => {
   const [active, setActive] = useState<string>("");
   const [height, setHeight] = useState<string>("");
 
+  const user = useSelector(selectUser);
   const dispatch = useDispatch();
 
-  const [{ data }] = useFriendsQuery();
+  const [{ data }] = useFriendsQuery({
+    variables: { uid: user!.uid },
+  });
   const [, createFriendRequest] = useCreateFriendRequestMutation();
 
   const submitEmail = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -30,6 +34,7 @@ export const Sidebar: React.FC = () => {
       return;
     }
     const response = await createFriendRequest({
+      uid: user!.uid,
       email,
     });
     if (response.data?.createFriendRequest) {

@@ -2,11 +2,12 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { closeSidebar, selectSidebar } from "../features/sidebarSlice";
 import {
+  openSnackbar,
   selectSnackbar,
   selectSnackbarContent,
   setSnackbarContent,
-  openSnackbar,
 } from "../features/snackbarSlice";
+import { selectUser } from "../features/userSlice";
 import {
   useNewEmailSubscription,
   useNewFriendRequstSubscription,
@@ -19,14 +20,21 @@ import { Sidebar } from "./Sidebar";
 import { Snackbar } from "./Snackbar";
 
 export const AppWrapper: React.FC = ({ children }) => {
+  const user = useSelector(selectUser);
   const snackbar = useSelector(selectSnackbar);
   const snackbarContent = useSelector(selectSnackbarContent);
   const sidebar = useSelector(selectSidebar);
   const dispatch = useDispatch();
 
-  const [{ data: NewFriendReq }] = useNewFriendRequstSubscription();
-  const [{ data: NewFriend }] = useNewFriendSubscription();
-  const [{ data: NewEmail }] = useNewEmailSubscription();
+  const [{ data: NewFriendReq }] = useNewFriendRequstSubscription({
+    variables: { uid: user!.uid },
+  });
+  const [{ data: NewFriend }] = useNewFriendSubscription({
+    variables: { uid: user!.uid },
+  });
+  const [{ data: NewEmail }] = useNewEmailSubscription({
+    variables: { uid: user!.uid },
+  });
 
   const width = useWindowWidth();
 

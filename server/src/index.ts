@@ -69,7 +69,8 @@ const main = async () => {
       userLoader: createUserLoader(),
     }),
     subscriptions: {
-      path: "/subscriptions"
+      path: "/subscriptions",
+    },
   });
   apolloServer.applyMiddleware({ app, path: "/graphql", cors: false });
   apolloServer.installSubscriptionHandlers(server);

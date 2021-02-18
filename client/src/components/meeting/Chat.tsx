@@ -1,11 +1,13 @@
 import firebase from "firebase";
 import React, { useEffect, useState } from "react";
 import FlipMove from "react-flip-move";
+import { useSelector } from "react-redux";
 import { useRouteMatch } from "react-router";
+import { selectUser } from "../../features/userSlice";
 import { db } from "../../firebase";
 import { useMeQuery } from "../../generated/graphql";
-import { Message } from "./Message";
 import styles from "../../styles/Chat.module.css";
+import { Message } from "./Message";
 
 export const Chat: React.FC = () => {
   const [input, setInput] = useState<string>("");
@@ -13,7 +15,11 @@ export const Chat: React.FC = () => {
     Array<{ id: string; data: firebase.firestore.DocumentData }>
   >([]);
 
-  const [{ data }] = useMeQuery();
+  const user = useSelector(selectUser);
+
+  const [{ data }] = useMeQuery({
+    variables: { uid: user!.uid },
+  });
 
   const match: any = useRouteMatch();
 

@@ -30,11 +30,24 @@ export type Query = {
 export type QueryEmailsArgs = {
   cursor?: Maybe<Scalars["String"]>;
   limit: Scalars["Int"];
+  uid: Scalars["String"];
+};
+
+export type QueryFriendsArgs = {
+  uid: Scalars["String"];
+};
+
+export type QueryFriendRequestsArgs = {
+  uid: Scalars["String"];
 };
 
 export type QueryRoomsArgs = {
   cursor?: Maybe<Scalars["String"]>;
   limit: Scalars["Int"];
+};
+
+export type QueryMeArgs = {
+  uid: Scalars["String"];
 };
 
 export type PaginatedEmails = {
@@ -83,28 +96,36 @@ export type Mutation = {
   createRoom: Scalars["String"];
   joinRoom: JoinRoomRes;
   signIn: User;
-  signOut: Scalars["Boolean"];
   changeStatus?: Maybe<User>;
 };
 
 export type MutationSendEmailArgs = {
   options: EmailContent;
+  uid: Scalars["String"];
 };
 
 export type MutationCreateFriendRequestArgs = {
   email: Scalars["String"];
+  uid: Scalars["String"];
 };
 
 export type MutationAcceptFriendRequestArgs = {
   email: Scalars["String"];
+  uid: Scalars["String"];
 };
 
 export type MutationDeclineFriendRequestArgs = {
   email: Scalars["String"];
+  uid: Scalars["String"];
+};
+
+export type MutationCreateRoomArgs = {
+  uid: Scalars["String"];
 };
 
 export type MutationJoinRoomArgs = {
   input: JoinRoomInput;
+  uid: Scalars["String"];
 };
 
 export type MutationSignInArgs = {
@@ -113,6 +134,7 @@ export type MutationSignInArgs = {
 
 export type MutationChangeStatusArgs = {
   status: Scalars["String"];
+  uid: Scalars["String"];
 };
 
 export type SendEmailResonse = {
@@ -158,6 +180,18 @@ export type Subscription = {
   newFriend: Friend;
 };
 
+export type SubscriptionNewEmailArgs = {
+  uid: Scalars["String"];
+};
+
+export type SubscriptionNewFriendRequstArgs = {
+  uid: Scalars["String"];
+};
+
+export type SubscriptionNewFriendArgs = {
+  uid: Scalars["String"];
+};
+
 export type RegularEmailResponseFragment = { __typename?: "Email" } & Pick<
   Email,
   "id" | "from" | "to" | "subject" | "message" | "createdAt"
@@ -174,6 +208,7 @@ export type RegularUserResponseFragment = { __typename?: "User" } & Pick<
 >;
 
 export type AcceptFriendRequestMutationVariables = Exact<{
+  uid: Scalars["String"];
   email: Scalars["String"];
 }>;
 
@@ -183,6 +218,7 @@ export type AcceptFriendRequestMutation = { __typename?: "Mutation" } & Pick<
 >;
 
 export type ChangeStatusMutationVariables = Exact<{
+  uid: Scalars["String"];
   status: Scalars["String"];
 }>;
 
@@ -191,6 +227,7 @@ export type ChangeStatusMutation = { __typename?: "Mutation" } & {
 };
 
 export type CreateFriendRequestMutationVariables = Exact<{
+  uid: Scalars["String"];
   email: Scalars["String"];
 }>;
 
@@ -201,7 +238,9 @@ export type CreateFriendRequestMutation = { __typename?: "Mutation" } & {
   >;
 };
 
-export type CreateRoomMutationVariables = Exact<{ [key: string]: never }>;
+export type CreateRoomMutationVariables = Exact<{
+  uid: Scalars["String"];
+}>;
 
 export type CreateRoomMutation = { __typename?: "Mutation" } & Pick<
   Mutation,
@@ -209,6 +248,7 @@ export type CreateRoomMutation = { __typename?: "Mutation" } & Pick<
 >;
 
 export type DeclineFriendRequestMutationVariables = Exact<{
+  uid: Scalars["String"];
   email: Scalars["String"];
 }>;
 
@@ -218,6 +258,7 @@ export type DeclineFriendRequestMutation = { __typename?: "Mutation" } & Pick<
 >;
 
 export type JoinRoomMutationVariables = Exact<{
+  uid: Scalars["String"];
   input: JoinRoomInput;
 }>;
 
@@ -229,6 +270,7 @@ export type JoinRoomMutation = { __typename?: "Mutation" } & {
 };
 
 export type SendEmailMutationVariables = Exact<{
+  uid: Scalars["String"];
   options: EmailContent;
 }>;
 
@@ -252,14 +294,8 @@ export type SignInMutation = { __typename?: "Mutation" } & {
   signIn: { __typename?: "User" } & RegularUserResponseFragment;
 };
 
-export type SignOutMutationVariables = Exact<{ [key: string]: never }>;
-
-export type SignOutMutation = { __typename?: "Mutation" } & Pick<
-  Mutation,
-  "signOut"
->;
-
 export type EmailsQueryVariables = Exact<{
+  uid: Scalars["String"];
   limit: Scalars["Int"];
   cursor?: Maybe<Scalars["String"]>;
 }>;
@@ -273,7 +309,9 @@ export type EmailsQuery = { __typename?: "Query" } & {
     };
 };
 
-export type FriendRequestsQueryVariables = Exact<{ [key: string]: never }>;
+export type FriendRequestsQueryVariables = Exact<{
+  uid: Scalars["String"];
+}>;
 
 export type FriendRequestsQuery = { __typename?: "Query" } & {
   friendRequests: Array<
@@ -281,32 +319,40 @@ export type FriendRequestsQuery = { __typename?: "Query" } & {
   >;
 };
 
-export type FriendsQueryVariables = Exact<{ [key: string]: never }>;
+export type FriendsQueryVariables = Exact<{
+  uid: Scalars["String"];
+}>;
 
 export type FriendsQuery = { __typename?: "Query" } & {
   friends: Array<{ __typename?: "Friend" } & RegularFriendResponseFragment>;
 };
 
-export type MeQueryVariables = Exact<{ [key: string]: never }>;
+export type MeQueryVariables = Exact<{
+  uid: Scalars["String"];
+}>;
 
 export type MeQuery = { __typename?: "Query" } & {
   me?: Maybe<{ __typename?: "User" } & RegularUserResponseFragment>;
 };
 
-export type NewEmailSubscriptionVariables = Exact<{ [key: string]: never }>;
+export type NewEmailSubscriptionVariables = Exact<{
+  uid: Scalars["String"];
+}>;
 
 export type NewEmailSubscription = { __typename?: "Subscription" } & {
   newEmail: { __typename?: "Email" } & RegularEmailResponseFragment;
 };
 
-export type NewFriendSubscriptionVariables = Exact<{ [key: string]: never }>;
+export type NewFriendSubscriptionVariables = Exact<{
+  uid: Scalars["String"];
+}>;
 
 export type NewFriendSubscription = { __typename?: "Subscription" } & {
   newFriend: { __typename?: "Friend" } & RegularFriendResponseFragment;
 };
 
 export type NewFriendRequstSubscriptionVariables = Exact<{
-  [key: string]: never;
+  uid: Scalars["String"];
 }>;
 
 export type NewFriendRequstSubscription = { __typename?: "Subscription" } & {
@@ -342,8 +388,8 @@ export const RegularFriendResponseFragmentDoc = gql`
   ${RegularUserResponseFragmentDoc}
 `;
 export const AcceptFriendRequestDocument = gql`
-  mutation AcceptFriendRequest($email: String!) {
-    acceptFriendRequest(email: $email)
+  mutation AcceptFriendRequest($uid: String!, $email: String!) {
+    acceptFriendRequest(uid: $uid, email: $email)
   }
 `;
 
@@ -354,8 +400,8 @@ export function useAcceptFriendRequestMutation() {
   >(AcceptFriendRequestDocument);
 }
 export const ChangeStatusDocument = gql`
-  mutation ChangeStatus($status: String!) {
-    changeStatus(status: $status) {
+  mutation ChangeStatus($uid: String!, $status: String!) {
+    changeStatus(uid: $uid, status: $status) {
       ...RegularUserResponse
     }
   }
@@ -368,8 +414,8 @@ export function useChangeStatusMutation() {
   );
 }
 export const CreateFriendRequestDocument = gql`
-  mutation CreateFriendRequest($email: String!) {
-    createFriendRequest(email: $email) {
+  mutation CreateFriendRequest($uid: String!, $email: String!) {
+    createFriendRequest(uid: $uid, email: $email) {
       message
       status
     }
@@ -383,8 +429,8 @@ export function useCreateFriendRequestMutation() {
   >(CreateFriendRequestDocument);
 }
 export const CreateRoomDocument = gql`
-  mutation CreateRoom {
-    createRoom
+  mutation CreateRoom($uid: String!) {
+    createRoom(uid: $uid)
   }
 `;
 
@@ -394,8 +440,8 @@ export function useCreateRoomMutation() {
   );
 }
 export const DeclineFriendRequestDocument = gql`
-  mutation DeclineFriendRequest($email: String!) {
-    declineFriendRequest(email: $email)
+  mutation DeclineFriendRequest($uid: String!, $email: String!) {
+    declineFriendRequest(uid: $uid, email: $email)
   }
 `;
 
@@ -406,8 +452,8 @@ export function useDeclineFriendRequestMutation() {
   >(DeclineFriendRequestDocument);
 }
 export const JoinRoomDocument = gql`
-  mutation JoinRoom($input: JoinRoomInput!) {
-    joinRoom(input: $input) {
+  mutation JoinRoom($uid: String!, $input: JoinRoomInput!) {
+    joinRoom(uid: $uid, input: $input) {
       users
       error
     }
@@ -420,8 +466,8 @@ export function useJoinRoomMutation() {
   );
 }
 export const SendEmailDocument = gql`
-  mutation SendEmail($options: EmailContent!) {
-    sendEmail(options: $options) {
+  mutation SendEmail($uid: String!, $options: EmailContent!) {
+    sendEmail(uid: $uid, options: $options) {
       email {
         ...RegularEmailResponse
       }
@@ -453,20 +499,9 @@ export function useSignInMutation() {
     SignInDocument
   );
 }
-export const SignOutDocument = gql`
-  mutation SignOut {
-    signOut
-  }
-`;
-
-export function useSignOutMutation() {
-  return Urql.useMutation<SignOutMutation, SignOutMutationVariables>(
-    SignOutDocument
-  );
-}
 export const EmailsDocument = gql`
-  query Emails($limit: Int!, $cursor: String) {
-    emails(limit: $limit, cursor: $cursor) {
+  query Emails($uid: String!, $limit: Int!, $cursor: String) {
+    emails(uid: $uid, limit: $limit, cursor: $cursor) {
       hasMore
       emails {
         ...RegularEmailResponse
@@ -482,8 +517,8 @@ export function useEmailsQuery(
   return Urql.useQuery<EmailsQuery>({ query: EmailsDocument, ...options });
 }
 export const FriendRequestsDocument = gql`
-  query FriendRequests {
-    friendRequests {
+  query FriendRequests($uid: String!) {
+    friendRequests(uid: $uid) {
       ...RegularFriendResponse
     }
   }
@@ -499,8 +534,8 @@ export function useFriendRequestsQuery(
   });
 }
 export const FriendsDocument = gql`
-  query Friends {
-    friends {
+  query Friends($uid: String!) {
+    friends(uid: $uid) {
       ...RegularFriendResponse
     }
   }
@@ -513,8 +548,8 @@ export function useFriendsQuery(
   return Urql.useQuery<FriendsQuery>({ query: FriendsDocument, ...options });
 }
 export const MeDocument = gql`
-  query Me {
-    me {
+  query Me($uid: String!) {
+    me(uid: $uid) {
       ...RegularUserResponse
     }
   }
@@ -527,8 +562,8 @@ export function useMeQuery(
   return Urql.useQuery<MeQuery>({ query: MeDocument, ...options });
 }
 export const NewEmailDocument = gql`
-  subscription NewEmail {
-    newEmail {
+  subscription NewEmail($uid: String!) {
+    newEmail(uid: $uid) {
       ...RegularEmailResponse
     }
   }
@@ -549,8 +584,8 @@ export function useNewEmailSubscription<TData = NewEmailSubscription>(
   >({ query: NewEmailDocument, ...options }, handler);
 }
 export const NewFriendDocument = gql`
-  subscription NewFriend {
-    newFriend {
+  subscription NewFriend($uid: String!) {
+    newFriend(uid: $uid) {
       ...RegularFriendResponse
     }
   }
@@ -571,8 +606,8 @@ export function useNewFriendSubscription<TData = NewFriendSubscription>(
   >({ query: NewFriendDocument, ...options }, handler);
 }
 export const NewFriendRequstDocument = gql`
-  subscription NewFriendRequst {
-    newFriendRequst {
+  subscription NewFriendRequst($uid: String!) {
+    newFriendRequst(uid: $uid) {
       ...RegularFriendResponse
     }
   }
