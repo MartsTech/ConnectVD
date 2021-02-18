@@ -11,10 +11,12 @@ import { __prod__ } from "../constants";
 import {
   AcceptFriendRequestMutationVariables,
   ChangeStatusMutation,
+  ChangeStatusMutationVariables,
   DeclineFriendRequestMutationVariables,
   MeDocument,
   MeQuery,
   SignInMutation,
+  SignInMutationVariables,
 } from "../generated/graphql";
 import { betterUpdateQuery } from "./betterUpdateQuery";
 
@@ -93,20 +95,28 @@ export const client = createClient({
       },
       updates: {
         Mutation: {
-          signIn: (_result, _, cache, __) => {
+          signIn: (_result, args, cache, _) => {
             betterUpdateQuery<SignInMutation, MeQuery>(
               cache,
-              { query: MeDocument },
+              {
+                query: MeDocument,
+                variables: {
+                  uid: (args as SignInMutationVariables).options.id,
+                },
+              },
               _result,
               (result, _) => ({
                 me: result.signIn,
               })
             );
           },
-          changeStatus: (_result, _, cache, __) => {
+          changeStatus: (_result, args, cache, _) => {
             betterUpdateQuery<ChangeStatusMutation, MeQuery>(
               cache,
-              { query: MeDocument },
+              {
+                query: MeDocument,
+                variables: { uid: (args as ChangeStatusMutationVariables).uid },
+              },
               _result,
               (result, __) => ({
                 me: result.changeStatus,

@@ -25,7 +25,7 @@ const Login: React.FC = () => {
         if (user) {
           signIn({
             options: {
-              id: user.uid,
+              id: user.uid!,
               email: user.email!,
               displayName: user.displayName!,
               photoUrl: "null",
@@ -46,7 +46,7 @@ const Login: React.FC = () => {
         if (user) {
           signIn({
             options: {
-              id: user.uid,
+              id: user.uid!,
               email: user.email!,
               displayName: user.displayName!,
               photoUrl: user.photoURL!,

@@ -16,9 +16,6 @@ export class SignInOptionsInput {
 export class UserResolver {
   @Query(() => User, { nullable: true })
   async me(@Arg("uid") uid: string): Promise<User | undefined> {
-    if (!uid) {
-      return undefined;
-    }
     return User.findOne({ where: { id: uid } });
   }
   @Mutation(() => User)
