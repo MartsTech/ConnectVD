@@ -1,0 +1,79 @@
+.canvas {
+  flex: 0.8;
+  background-color: whitesmoke;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.description {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.text {
+  margin-bottom: 20px;
+}
+
+.text > h1 {
+  font-weight: 600;
+  font-size: 46px;
+  margin-bottom: 10px;
+}
+
+.text > p {
+  font-weight: 400;
+  font-size: 30px;
+}
+
+.buttons {
+  display: flex;
+}
+
+.buttons > a > button > span {
+  min-width: 100px;
+}
+
+.button {
+  margin: 5px;
+}
+
+.canvasImage {
+  width: 50%;
+  height: 100%;
+  margin-right: 1rem;
+}
+
+.canvasImage > img {
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
+}
+
+.link {
+  text-decoration: none;
+}
+
+@media only screen and (max-width: 700px) {
+  .canvas {
+    flex-direction: column;
+  }
+  .description {
+    padding-top: 20px;
+    width: 100%;
+  }
+  .canvasImage {
+    margin-top: 20px;
+    width: 100%;
+  }
+  .canvasImage > img {
+    max-height: 350px;
+  }
+  .buttons {
+    flex-direction: column;
+  }
+}

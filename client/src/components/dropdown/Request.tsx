@@ -8,6 +8,7 @@ import {
   setMenuHeight,
 } from "../../features/dropdownSlice";
 import { selectFriendEmail } from "../../features/friendSlice";
+import { selectUser } from "../../features/userSlice";
 import {
   useAcceptFriendRequestMutation,
   useDeclineFriendRequestMutation,
@@ -18,6 +19,7 @@ import { Section } from "../Section";
 export const Request: React.FC = () => {
   const activeMenu = useSelector(selectActiveMenu);
 
+  const user = useSelector(selectUser);
   const email = useSelector(selectFriendEmail);
 
   const dispatch = useDispatch();
@@ -46,6 +48,7 @@ export const Request: React.FC = () => {
                 <Button
                   onClick={async () => {
                     await acceptRequest({
+                      uid: user!.uid,
                       email: email!,
                     });
                     dispatch(openMenu("notifications"));
@@ -58,6 +61,7 @@ export const Request: React.FC = () => {
                 <Button
                   onClick={async () => {
                     await declineRequest({
+                      uid: user!.uid,
                       email: email!,
                     });
                     dispatch(openMenu("notifications"));

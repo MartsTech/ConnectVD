@@ -2,11 +2,12 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { closeSidebar, selectSidebar } from "../features/sidebarSlice";
 import {
+  openSnackbar,
   selectSnackbar,
   selectSnackbarContent,
   setSnackbarContent,
-  openSnackbar,
 } from "../features/snackbarSlice";
+import { selectUser } from "../features/userSlice";
 import {
   useNewEmailSubscription,
   useNewFriendRequstSubscription,
@@ -14,24 +15,31 @@ import {
 } from "../generated/graphql";
 import styles from "../styles/AppWrapper.module.css";
 import { useWindowWidth } from "../utils/useWindowWidth";
-import { Header } from "./Header";
+import { Nav } from "./Nav";
 import { Sidebar } from "./Sidebar";
 import { Snackbar } from "./Snackbar";
 
 export const AppWrapper: React.FC = ({ children }) => {
+  const user = useSelector(selectUser);
   const snackbar = useSelector(selectSnackbar);
   const snackbarContent = useSelector(selectSnackbarContent);
   const sidebar = useSelector(selectSidebar);
   const dispatch = useDispatch();
 
-  const [{ data: NewFriendReq }] = useNewFriendRequstSubscription();
-  const [{ data: NewFriend }] = useNewFriendSubscription();
-  const [{ data: NewEmail }] = useNewEmailSubscription();
+  const [{ data: NewFriendReq }] = useNewFriendRequstSubscription({
+    variables: { uid: user!.uid },
+  });
+  const [{ data: NewFriend }] = useNewFriendSubscription({
+    variables: { uid: user!.uid },
+  });
+  const [{ data: NewEmail }] = useNewEmailSubscription({
+    variables: { uid: user!.uid },
+  });
 
   const width = useWindowWidth();
 
   useEffect(() => {
-    if (typeof width === "number" && width < 650) {
+    if (typeof width === "number" && width < 700) {
       dispatch(closeSidebar());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -68,7 +76,7 @@ export const AppWrapper: React.FC = ({ children }) => {
 
   return (
     <div className={styles.app}>
-      <Header />
+      <Nav />
       <div className={styles.body}>
         {sidebar && <Sidebar />}
         {snackbar && snackbarContent && (
@@ -77,7 +85,9 @@ export const AppWrapper: React.FC = ({ children }) => {
             status={snackbarContent.status}
           />
         )}
-        {children}
+        {typeof width === "number" && width < 700
+          ? !sidebar && children
+          : children}
       </div>
     </div>
   );

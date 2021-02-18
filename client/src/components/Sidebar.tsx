@@ -2,8 +2,9 @@ import { Avatar } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import PersonIcon from "@material-ui/icons/Person";
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { openSnackbar, setSnackbarContent } from "../features/snackbarSlice";
+import { selectUser } from "../features/userSlice";
 import {
   useCreateFriendRequestMutation,
   useFriendsQuery,
@@ -19,9 +20,12 @@ export const Sidebar: React.FC = () => {
   const [active, setActive] = useState<string>("");
   const [height, setHeight] = useState<string>("");
 
+  const user = useSelector(selectUser);
   const dispatch = useDispatch();
 
-  const [{ data }] = useFriendsQuery();
+  const [{ data }] = useFriendsQuery({
+    variables: { uid: user!.uid },
+  });
   const [, createFriendRequest] = useCreateFriendRequestMutation();
 
   const submitEmail = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -30,6 +34,7 @@ export const Sidebar: React.FC = () => {
       return;
     }
     const response = await createFriendRequest({
+      uid: user!.uid,
       email,
     });
     if (response.data?.createFriendRequest) {
@@ -69,41 +74,41 @@ export const Sidebar: React.FC = () => {
       <div className={styles.friends}>
         {data?.friends.map(({ user }) => (
           <div key={user.email} className={styles.friend}>
-            {active !== user.email ? (
-              <div
-                onMouseEnter={async () => {
-                  await timeout(500);
-                  setActive(user.email);
-                  await timeout(300);
-                  setHeight("246px");
-                }}
-              >
-                <Section
-                  left={
-                    <StatusBadge status={user.status}>
-                      <Avatar src={user.photoUrl}>
-                        <span className={styles.letter}>{user.email[0]}</span>
-                      </Avatar>
-                    </StatusBadge>
-                  }
-                  title={user.displayName}
-                />
-              </div>
-            ) : (
-              <Profile
-                height={height}
-                displayName={user.displayName}
-                email={user.email}
-                photoUrl={user.photoUrl}
-                status={user.status}
-                onMouseLeave={async () => {
-                  await timeout(500);
+            <div
+              className={styles.container}
+              onClick={async () => {
+                await timeout(500);
+                setHeight("");
+                if (active === user.email) {
                   setActive("");
-                  await timeout(300);
-                  setHeight("");
-                }}
+                } else {
+                  setActive(user.email);
+                }
+                await timeout(300);
+                setHeight("246px");
+              }}
+            >
+              <Section
+                style={{ width: "100%" }}
+                left={
+                  <StatusBadge status={user.status}>
+                    <Avatar src={user.photoUrl}>
+                      <span className={styles.letter}>{user.email[0]}</span>
+                    </Avatar>
+                  </StatusBadge>
+                }
+                title={user.displayName}
               />
-            )}
+              {active === user.email && (
+                <Profile
+                  height={height}
+                  displayName={user.displayName}
+                  email={user.email}
+                  photoUrl={user.photoUrl}
+                  status={user.status}
+                />
+              )}
+            </div>
           </div>
         ))}
       </div>

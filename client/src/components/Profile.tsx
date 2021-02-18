@@ -1,18 +1,16 @@
 import { Avatar } from "@material-ui/core";
+import MailIcon from "@material-ui/icons/Mail";
 import React from "react";
+import { useHistory } from "react-router";
 import styles from "../styles/Profile.module.css";
 import { Section } from "./Section";
 import { StatusBadge } from "./StatusBadge";
-import MailIcon from "@material-ui/icons/Mail";
-import { openSendMessage } from "../features/mailSlice";
-import { useDispatch } from "react-redux";
 
 interface ProfileProps {
   photoUrl: string;
   email: string;
   displayName: string;
   status: string;
-  onMouseLeave: any;
   height: string;
 }
 
@@ -21,16 +19,12 @@ export const Profile: React.FC<ProfileProps> = ({
   displayName,
   photoUrl,
   status,
-  onMouseLeave,
   height,
 }) => {
-  const dispatch = useDispatch();
+  const history = useHistory();
+
   return (
-    <div
-      style={{ height }}
-      className={styles.profile}
-      onMouseLeave={onMouseLeave}
-    >
+    <div style={{ height }} className={styles.profile}>
       <div className={styles.main}>
         <StatusBadge className={styles.badge} status={status}>
           <div className={styles.avatar}>
@@ -47,7 +41,7 @@ export const Profile: React.FC<ProfileProps> = ({
         <Section
           title="Contact user"
           left={<MailIcon />}
-          onClick={() => dispatch(openSendMessage())}
+          onClick={() => history.push("/sendMail")}
         />
       </div>
     </div>

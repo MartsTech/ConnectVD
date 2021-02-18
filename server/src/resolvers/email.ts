@@ -1,6 +1,7 @@
 import {
   Arg,
-  Ctx,
+  Args,
+  ArgsType,
   Field,
   InputType,
   Int,
@@ -10,12 +11,13 @@ import {
   PubSub,
   Query,
   Resolver,
+  ResolverFilterData,
   Root,
   Subscription,
 } from "type-graphql";
 import { getConnection } from "typeorm";
 import { Email } from "../entities/Email";
-import { MyContext, NotifyError, Users } from "../types";
+import { NotifyError, Users } from "../types";
 import { validateRequest } from "../utils/validateRequest";
 import { RequestResponse } from "./RequestResponse";
 
@@ -45,18 +47,24 @@ class PaginatedEmails {
   hasMore: boolean;
 }
 
+@ArgsType()
+class NewEmailArgs {
+  @Field()
+  uid: string;
+}
+
 @Resolver(Email)
 export class EmailResolver {
   @Query(() => PaginatedEmails)
   async emails(
-    @Ctx() { req }: MyContext,
+    @Arg("uid") uid: string,
     @Arg("limit", () => Int) limit: number,
     @Arg("cursor", () => String, { nullable: true }) cursor?: string
   ): Promise<PaginatedEmails> {
     const realLimit = Math.min(50, limit);
     const realLimitPlusOne = realLimit + 1;
 
-    const replacements: any[] = [realLimit, req.session.userId];
+    const replacements: any[] = [realLimit, uid];
 
     if (cursor) {
       replacements.push(new Date(parseInt(cursor)));
@@ -81,25 +89,25 @@ export class EmailResolver {
 
   @Subscription(() => Email, {
     topics: "EMAILS",
-    filter: ({ payload, context }) => {
-      return payload.receiverId === context.connection.context.req;
+    filter: ({ payload, args }: ResolverFilterData<Email, NewEmailArgs>) => {
+      return payload.receiverId === args.uid;
     },
   })
   newEmail(
     @Root() email: Email,
     // @ts-ignore
-    @Ctx() context: any
+    @Args() { uid }: NewEmailArgs
   ): Email {
     return email;
   }
 
   @Mutation(() => SendEmailResonse)
   async sendEmail(
-    @Ctx() { req }: MyContext,
+    @Arg("uid") uid: string,
     @Arg("options") options: EmailContent,
     @PubSub("EMAILS") notifyAboutNewEmail: Publisher<Email>
   ): Promise<SendEmailResonse> {
-    const request = await validateRequest(req.session.userId, options.to);
+    const request = await validateRequest(uid, options.to);
     if ((request as NotifyError).message && (request as NotifyError).status) {
       const error = request as RequestResponse;
       return { error };
@@ -107,7 +115,7 @@ export class EmailResolver {
     const { sender, receiver } = request as Users;
 
     const email = await Email.create({
-      senderId: req.session.userId,
+      senderId: uid,
       receiverId: receiver.id,
       from: sender.email,
       ...options,

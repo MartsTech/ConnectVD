@@ -7,6 +7,7 @@ import {
   selectActiveMenu,
   setMenuHeight,
 } from "../../features/dropdownSlice";
+import { selectUser } from "../../features/userSlice";
 import { useChangeStatusMutation } from "../../generated/graphql";
 import styles from "../../styles/Dropdown.module.css";
 import { Section } from "../Section";
@@ -15,12 +16,14 @@ import { StatusBadge } from "../StatusBadge";
 export const Status: React.FC = () => {
   const activeMenu = useSelector(selectActiveMenu);
 
+  const user = useSelector(selectUser);
   const dispatch = useDispatch();
 
   const [, changeStatus] = useChangeStatusMutation();
 
   const setNewStatus = async (status: string) => {
     await changeStatus({
+      uid: user!.uid,
       status,
     });
     dispatch(openMenu("main"));

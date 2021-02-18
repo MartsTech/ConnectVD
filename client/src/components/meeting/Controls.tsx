@@ -1,4 +1,5 @@
-import { Button } from "@material-ui/core";
+import { IconButton } from "@material-ui/core";
+import CallEndIcon from "@material-ui/icons/CallEnd";
 import ChatBubbleIcon from "@material-ui/icons/ChatBubble";
 import MicIcon from "@material-ui/icons/Mic";
 import MicOffIcon from "@material-ui/icons/MicOff";
@@ -18,12 +19,14 @@ import {
   setScreen,
   setVideo,
 } from "../../features/controlsSlice";
+import { selectDetails, setDetails } from "../../features/meetingSlice";
 import styles from "../../styles/Controls.module.css";
 
 export const Controls: React.FC = () => {
-  const audio: boolean = useSelector(selectAudio);
-  const video: boolean = useSelector(selectVideo);
-  const chat: boolean = useSelector(selectChat);
+  const details = useSelector(selectDetails);
+  const audio = useSelector(selectAudio);
+  const video = useSelector(selectVideo);
+  const chat = useSelector(selectChat);
 
   const history = useHistory();
 
@@ -38,6 +41,14 @@ export const Controls: React.FC = () => {
     <div className={styles.controls}>
       <div className={styles.left}>
         <div
+          className={styles.details}
+          onClick={() => dispatch(setDetails(!details))}
+        >
+          <h3>Meeting details</h3>
+        </div>
+      </div>
+      <div className={styles.center}>
+        <IconButton
           onClick={() => {
             dispatch(setAudio({ audio: !audio }));
           }}
@@ -45,59 +56,53 @@ export const Controls: React.FC = () => {
         >
           {audio ? (
             <div className={styles.micOn}>
-              <MicIcon fontSize="large" />
+              <MicIcon />
             </div>
           ) : (
             <div className={styles.micOff}>
-              <MicOffIcon fontSize="large" />
+              <MicOffIcon />
             </div>
           )}
-          {audio ? <h3>Mute</h3> : <h3>Unmute</h3>}
-        </div>
-        <div
+        </IconButton>
+        <IconButton
+          id={styles.leave}
+          className={styles.button}
+          onClick={leaveRoom}
+        >
+          <CallEndIcon />
+        </IconButton>
+        <IconButton
           onClick={() => dispatch(setVideo({ video: !video }))}
           className={styles.button}
         >
           {video ? (
             <div className={styles.videoOn}>
-              <VideocamIcon fontSize="large" />
+              <VideocamIcon />
             </div>
           ) : (
             <div className={styles.videoOff}>
-              <VideocamOffIcon fontSize="large" />
+              <VideocamOffIcon />
             </div>
           )}
-          {video ? <h3>Stop Video</h3> : <h3>Play Video</h3>}
-        </div>
-      </div>
-      <div className={styles.center}>
-        <div className={styles.shareScreen}>
-          <div
-            onClick={() => {
-              dispatch(setScreen({ screen: true }));
-            }}
-            className={styles.button}
-          >
-            <ScreenShareIcon fontSize="large" />
-            <h3>Share Screen</h3>
-          </div>
-        </div>
-        <div className={styles.chat}>
-          <div
-            onClick={() => {
-              dispatch(setChat({ chat: !chat }));
-            }}
-            className={styles.button}
-          >
-            <ChatBubbleIcon fontSize="large" />
-            <h3>Chat</h3>
-          </div>
-        </div>
+        </IconButton>
       </div>
       <div className={styles.right}>
-        <Button className={styles.button} onClick={leaveRoom}>
-          <h3 id={styles.leave}>Leave Meeting</h3>
-        </Button>
+        <IconButton
+          onClick={() => {
+            dispatch(setScreen({ screen: true }));
+          }}
+          className={styles.button}
+        >
+          <ScreenShareIcon />
+        </IconButton>
+        <IconButton
+          onClick={() => {
+            dispatch(setChat({ chat: !chat }));
+          }}
+          className={styles.button}
+        >
+          <ChatBubbleIcon />
+        </IconButton>
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
-query Emails($limit: Int!, $cursor: String) {
-  emails(limit: $limit, cursor: $cursor) {
+query Emails($uid: String!, $limit: Int!, $cursor: String) {
+  emails(uid: $uid, limit: $limit, cursor: $cursor) {
     hasMore
     emails {
       ...RegularEmailResponse

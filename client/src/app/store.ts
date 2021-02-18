@@ -7,12 +7,14 @@ import {
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import controlsReducer from "../features/controlsSlice";
-import dialogReducer from "../features/dialogSlide";
+import dialogReducer from "../features/dialogSlice";
 import dropdownReducer from "../features/dropdownSlice";
 import friendReducer from "../features/friendSlice";
-import snackbarReducer from "../features/snackbarSlice";
 import mailReducer from "../features/mailSlice";
+import meetingReducer from "../features/meetingSlice";
 import sidebarReducer from "../features/sidebarSlice";
+import snackbarReducer from "../features/snackbarSlice";
+import userReducer from "../features/userSlice";
 
 const controlsPersistConfig = {
   key: "controls",
@@ -40,6 +42,8 @@ export const store = configureStore({
     friend: friendReducer,
     mail: mailPersistedReducer,
     sidebar: sidebarReducer,
+    meeting: meetingReducer,
+    user: userReducer,
   },
   middleware: getDefaultMiddleware({
     serializableCheck: false,

@@ -5,163 +5,37 @@
   flex-direction: column;
 }
 
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid whitesmoke;
-  position: sticky;
-  z-index: 999;
-  top: 0;
-  background-color: white;
-  width: 100%;
-}
-
-.left {
-  display: flex;
-  align-items: center;
-  text-align: center;
-  margin-left: 10px;
-}
-
-.left > h1 {
-  font-family: "Google Sans Display", Roboto, Arial, sans-serif;
-  font-size: 1.3rem;
-  font-weight: 400;
-}
-
-.middle {
-  display: flex;
-  flex: 0.7;
-  align-items: center;
-  background-color: whitesmoke;
-  padding: 10px;
-  border-radius: 5px;
-}
-
-.middle > svg {
-  color: gray;
-}
-
-.middle > input {
-  border: none;
-  width: 100%;
-  padding: 10px;
-  outline: none;
-  font-size: medium;
-  background-color: transparent;
-}
-
-.right {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding-right: 6px;
-}
-
-.link {
-  text-decoration: none;
-}
-
 .message {
-  /* background-color: #f50057; */
   background-color: #3f51b5;
   color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   padding: 10px;
   text-align: center;
+  margin-top: 70px;
 }
 
 .message > p {
   font-weight: 600;
-  font-size: 15px;
+  font-size: 1rem;
 }
 
-.canvas {
-  height: fit-content;
-  min-height: 350px;
-  max-height: 550px;
-  width: 100%;
-  background-color: whitesmoke;
-  display: flex;
-}
-
-.description {
-  width: 50%;
+.front {
+  height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
 }
 
-.text {
-  margin-bottom: 20px;
+.features {
+  position: relative;
 }
 
-.text > h1 {
-  font-weight: 600;
-  font-size: 46px;
-  margin-bottom: 10px;
-}
-
-.text > p {
-  font-weight: 400;
-  font-size: 30px;
-}
-
-.buttons {
-  display: flex;
-}
-
-.buttons > a > button > span {
-  min-width: 100px;
-}
-
-.button {
-  margin: 10px;
-}
-
-.canvasImage {
-  width: 50%;
-  height: 100%;
-  margin-right: 20px;
-}
-
-.canvasImage > img {
-  object-fit: contain;
-  height: 100%;
-  width: 100%;
-}
-
-@media only screen and (max-width: 450px) {
-  .middle {
-    height: 30px;
-    background-color: unset;
-  }
-  .middle > svg {
-    display: none;
-  }
-  .middle > input {
-    display: none;
+@media only screen and (max-width: 550px) {
+  .features {
+    margin-top: 78px !important;
   }
 }
 
-@media only screen and (max-width: 600px) {
-  .canvas {
-    flex-direction: column;
-  }
-  .description {
-    margin-top: 20px;
-    width: 100%;
-  }
-  .canvasImage {
-    margin-top: 20px;
-    width: 100%;
-  }
-  .buttons {
-    flex-direction: column;
+@media only screen and (max-width: 380px) {
+  .features {
+    margin-top: 128px !important;
   }
 }

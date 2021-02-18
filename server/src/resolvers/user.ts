@@ -1,17 +1,6 @@
-import {
-  Arg,
-  Ctx,
-  Field,
-  InputType,
-  Mutation,
-  Query,
-  Resolver,
-} from "type-graphql";
+import { Arg, Field, InputType, Mutation, Query, Resolver } from "type-graphql";
 import { getConnection } from "typeorm";
-import { COOKIE_NAME } from "../constants";
 import { User } from "../entities/User";
-import { MyContext } from "../types";
-
 @InputType()
 export class SignInOptionsInput {
   @Field()
@@ -26,41 +15,21 @@ export class SignInOptionsInput {
 @Resolver(User)
 export class UserResolver {
   @Query(() => User, { nullable: true })
-  async me(@Ctx() { req }: MyContext): Promise<User | undefined> {
-    if (!req.session.userId) {
-      return undefined;
-    }
-    return User.findOne({ where: { id: req.session.userId } });
+  async me(@Arg("uid") uid: string): Promise<User | undefined> {
+    return User.findOne({ where: { id: uid } });
   }
   @Mutation(() => User)
-  async signIn(
-    @Arg("options") options: SignInOptionsInput,
-    @Ctx() { req }: MyContext
-  ): Promise<User> {
+  async signIn(@Arg("options") options: SignInOptionsInput): Promise<User> {
     const exists = await User.findOne({ where: { id: options.id } });
     if (!exists) {
-      req.session.userId = options.id;
       return User.create({ ...options }).save();
     }
-    req.session.userId = options.id;
     return exists;
-  }
-  @Mutation(() => Boolean)
-  async signOut(@Ctx() { req, res }: MyContext): Promise<Boolean> {
-    return new Promise((resolve) => {
-      req.session.destroy((err) => {
-        res.clearCookie(COOKIE_NAME);
-        if (err) {
-          return resolve(false);
-        }
-        return resolve(true);
-      });
-    });
   }
   @Mutation(() => User, { nullable: true })
   async changeStatus(
-    @Arg("status") status: string,
-    @Ctx() { req }: MyContext
+    @Arg("uid") uid: string,
+    @Arg("status") status: string
   ): Promise<User | undefined> {
     const options = ["available", "away", "busy"];
     if (!options.includes(status)) {
@@ -72,7 +41,7 @@ export class UserResolver {
       .set({
         status: status as any,
       })
-      .where("id = :id", { id: req.session.userId })
+      .where("id = :id", { id: uid })
       .returning("*")
       .execute();
     return user.raw[0];

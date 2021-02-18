@@ -7,20 +7,16 @@ import {
   stringifyVariables,
   subscriptionExchange,
 } from "urql";
+import { __prod__ } from "../constants";
 import {
   AcceptFriendRequestMutationVariables,
   ChangeStatusMutation,
+  ChangeStatusMutationVariables,
   DeclineFriendRequestMutationVariables,
-  FriendRequestsDocument,
-  FriendRequestsQuery,
-  FriendsDocument,
-  FriendsQuery,
   MeDocument,
   MeQuery,
-  NewFriendRequstSubscription,
-  NewFriendSubscription,
   SignInMutation,
-  SignOutMutation,
+  SignInMutationVariables,
 } from "../generated/graphql";
 import { betterUpdateQuery } from "./betterUpdateQuery";
 
@@ -58,23 +54,30 @@ const cursorPagination = (): Resolver => {
   };
 };
 
-const invalidateAllEmails = (cache: Cache) => {
+const invalidateAllFields = (
+  fields: "friendRequests" | "friends" | "emails",
+  cache: Cache
+) => {
   const allFields = cache.inspectFields("Query");
-  const fieldInfos = allFields.filter((info) => info.fieldName === "emails");
+  const fieldInfos = allFields.filter((info) => info.fieldName === fields);
   fieldInfos.forEach((field) => {
-    cache.invalidate("Query", "emails", field.arguments || {});
+    cache.invalidate("Query", fields, field.arguments || {});
   });
 };
 
 const subscriptionClient = new SubscriptionClient(
-  "ws://localhost:8000/subscriptions",
+  __prod__
+    ? process.env.REACT_APP_WEB_SOCKET_KEY!
+    : "ws://localhost:8000/subscriptions",
   {
     reconnect: true,
   }
 );
 
 export const client = createClient({
-  url: "http://localhost:8000/graphql",
+  url: __prod__
+    ? process.env.REACT_APP_SERVER_KEY!
+    : "http://localhost:8000/graphql",
   fetchOptions: {
     credentials: "include",
   },
@@ -92,30 +95,28 @@ export const client = createClient({
       },
       updates: {
         Mutation: {
-          signIn: (_result, _, cache, __) => {
+          signIn: (_result, args, cache, _) => {
             betterUpdateQuery<SignInMutation, MeQuery>(
               cache,
-              { query: MeDocument },
+              {
+                query: MeDocument,
+                variables: {
+                  uid: (args as SignInMutationVariables).options.id,
+                },
+              },
               _result,
               (result, _) => ({
                 me: result.signIn,
               })
             );
           },
-          signOut: (_result, _, cache, __) => {
-            betterUpdateQuery<SignOutMutation, MeQuery>(
-              cache,
-              { query: MeDocument },
-              _result,
-              (_, __) => ({
-                me: null,
-              })
-            );
-          },
-          changeStatus: (_result, _, cache, __) => {
+          changeStatus: (_result, args, cache, _) => {
             betterUpdateQuery<ChangeStatusMutation, MeQuery>(
               cache,
-              { query: MeDocument },
+              {
+                query: MeDocument,
+                variables: { uid: (args as ChangeStatusMutationVariables).uid },
+              },
               _result,
               (result, __) => ({
                 me: result.changeStatus,
@@ -135,35 +136,18 @@ export const client = createClient({
             });
           },
           sendEmail: (_, __, cache, ___) => {
-            invalidateAllEmails(cache);
+            invalidateAllFields("emails", cache);
           },
         },
         Subscription: {
-          newFriendRequst: (_result, _, cache, __) => {
-            betterUpdateQuery<NewFriendRequstSubscription, FriendRequestsQuery>(
-              cache,
-              { query: FriendRequestsDocument },
-              _result,
-              (result, query) => ({
-                friendRequests: [
-                  ...(query.friendRequests as any),
-                  result.newFriendRequst as any,
-                ],
-              })
-            );
+          newFriendRequst: (_, __, cache, ___) => {
+            invalidateAllFields("friendRequests", cache);
           },
-          newFriend: (_result, _, cache, __) => {
-            betterUpdateQuery<NewFriendSubscription, FriendsQuery>(
-              cache,
-              { query: FriendsDocument },
-              _result,
-              (result, query) => ({
-                friends: [...(query.friends as any), result.newFriend as any],
-              })
-            );
+          newFriend: (_, __, cache, ___) => {
+            invalidateAllFields("friends", cache);
           },
           newEmail: (_, __, cache, ___) => {
-            invalidateAllEmails(cache);
+            invalidateAllFields("emails", cache);
           },
         },
       },

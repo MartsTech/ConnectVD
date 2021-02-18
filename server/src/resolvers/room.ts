@@ -1,6 +1,5 @@
 import {
   Arg,
-  Ctx,
   Field,
   InputType,
   Int,
@@ -8,14 +7,11 @@ import {
   ObjectType,
   Query,
   Resolver,
-  UseMiddleware,
 } from "type-graphql";
 import { getConnection } from "typeorm";
 import { v4 as uuid } from "uuid";
 import { Room } from "../entities/Room";
 import { User } from "../entities/User";
-import { isAuth } from "../middlewares/isAuth";
-import { MyContext } from "../types";
 
 @ObjectType()
 class JoinRoomRes {
@@ -61,29 +57,25 @@ export class RoomResolver {
     return rooms;
   }
   @Mutation(() => String)
-  @UseMiddleware(isAuth)
-  async createRoom(): Promise<string> {
+  async createRoom(@Arg("uid") uid: string): Promise<string> {
+    const user = await User.findOne({ where: { id: uid } });
+    if (!user) {
+      throw new Error("not authenticated");
+    }
     const id = uuid();
     await Room.create({ id }).save();
     return id;
   }
   @Mutation(() => JoinRoomRes)
-  @UseMiddleware(isAuth)
   async joinRoom(
-    @Arg("input") { roomId, socketId }: JoinRoomInput,
-    @Ctx() { req }: MyContext
+    @Arg("uid") uid: string,
+    @Arg("input") { roomId, socketId }: JoinRoomInput
   ): Promise<JoinRoomRes> {
     const room = await Room.findOne({ id: roomId });
     if (!room) {
-      return { error: "Room doesn't exist." };
+      await Room.create({ id: uid }).save();
     }
-    const user = await User.findOne({
-      where: { id: req.session.userId, roomId },
-    });
-    if (user) {
-      return { error: "User already in room." };
-    }
-    await User.update({ id: req.session.userId }, { socketId, roomId });
+    await User.update({ id: uid }, { socketId, roomId });
     const users = await User.find({ where: { roomId } });
     const socketIds = users.map((user) => {
       return user.socketId;

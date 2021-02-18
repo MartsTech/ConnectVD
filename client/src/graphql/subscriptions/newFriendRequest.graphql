@@ -1,5 +1,5 @@
-subscription NewFriendRequst {
-  newFriendRequst {
+subscription NewFriendRequst($uid: String!) {
+  newFriendRequst(uid: $uid) {
     ...RegularFriendResponse
   }
 }

@@ -1,16 +1,13 @@
 import { ApolloServer } from "apollo-server-express";
-import connectMongo from "connect-mongo";
 import cors from "cors";
 import "dotenv-safe/config";
 import express from "express";
-import session from "express-session";
 import http from "http";
 import path from "path";
 import "reflect-metadata";
 import socket, { Server, Socket } from "socket.io";
 import { buildSchema } from "type-graphql";
 import { createConnection } from "typeorm";
-import { COOKIE_NAME, __prod__ } from "./constants";
 import { Email } from "./entities/Email";
 import { Friend } from "./entities/Friend";
 import { Room } from "./entities/Room";
@@ -21,34 +18,13 @@ import { RoomResolver } from "./resolvers/room";
 import { UserResolver } from "./resolvers/user";
 import { socketPayload } from "./types";
 import { createUserLoader } from "./utils/createUserLoader";
-// import NoIntrospection from "graphql-disable-introspection";
 
 const main = async () => {
   // App Config
   const app = express();
-  const port = parseInt(process.env.PORT);
+  const port = process.env.PORT || 8000;
 
   // Middlewares
-  const MongoStore = connectMongo(session);
-  const sessionMiddleware = session({
-    store: new MongoStore({
-      url: process.env.MONGO_URL,
-      mongoOptions: {
-        useUnifiedTopology: true,
-        useNewUrlParser: true,
-      },
-    }),
-    name: COOKIE_NAME,
-    cookie: {
-      httpOnly: true,
-      sameSite: "lax",
-      secure: __prod__,
-      maxAge: 1000 * 60 * 60 * 24 * 356 * 10,
-    },
-    saveUninitialized: false,
-    secret: process.env.MONGO_SECRET,
-    resave: false,
-  });
   app.set("proxy", 1);
   app.use(
     cors({
@@ -56,7 +32,6 @@ const main = async () => {
       credentials: true,
     })
   );
-  app.use(sessionMiddleware);
 
   // DB Config
   const connection = await createConnection({
@@ -64,20 +39,22 @@ const main = async () => {
     type: "postgres",
     url: process.env.DATABASE_URL,
     logging: true,
-    synchronize: true,
+    // ssl: { rejectUnauthorized: false },
     migrations: [path.join(__dirname, "./migrations/*")],
   });
   connection.runMigrations();
-  // await Room.delete({});
-  // await User.delete({});
-  // await Friend.delete({});
 
   // Socket Endpoints
   const server = http.createServer(app);
   // @ts-ignore
-  const io: Server = socket(server, {
-    cors: false,
-  });
+  const ServerOptions: ServerOptions = {
+    cors: {
+      origin: process.env.CORS_ORIGIN,
+      methods: ["GET", "POST"],
+    },
+  };
+  //@ts-ignore
+  const io: Server = socket(server, ServerOptions);
 
   // Graphql Config
   const apolloServer = new ApolloServer({
@@ -85,7 +62,6 @@ const main = async () => {
       resolvers: [RoomResolver, UserResolver, FriendResolver, EmailResolver],
       validate: false,
     }),
-    // validationRules: [NoIntrospection],
     context: ({ req, res, connection }) => ({
       req,
       res,
@@ -94,13 +70,6 @@ const main = async () => {
     }),
     subscriptions: {
       path: "/subscriptions",
-      onConnect: (_, ws: any) => {
-        return new Promise((res) =>
-          sessionMiddleware(ws.upgradeReq, {} as any, () => {
-            res({ req: ws.upgradeReq.session.userId });
-          })
-        );
-      },
     },
   });
   apolloServer.applyMiddleware({ app, path: "/graphql", cors: false });
@@ -121,6 +90,10 @@ const main = async () => {
 
     socket.on("ice-candidate", (payload: socketPayload) => {
       socket.to(payload.target).emit("ice-candidate", payload);
+    });
+
+    socket.on("toggle video", (state: boolean) => {
+      socket.broadcast.emit("change video", { id: socket.id, state });
     });
 
     socket.on("disconnect", async () => {
