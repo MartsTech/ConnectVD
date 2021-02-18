@@ -1,7 +1,9 @@
 import { LinearProgress } from "@material-ui/core";
-import React, { lazy, Suspense } from "react";
+import React, { lazy, Suspense, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-import { useMeQuery } from "./generated/graphql";
+import { login, logout, selectUser } from "./features/userSlice";
+import { auth } from "./firebase";
 
 const Start = lazy(() => import("./pages/Start"));
 const Access = lazy(() => import("./pages/Access"));
@@ -9,12 +11,33 @@ const Main = lazy(() => import("./pages/Home"));
 const Meeting = lazy(() => import("./pages/Meeting"));
 
 const App: React.FC = () => {
-  const [{ data, fetching }] = useMeQuery();
+  const [fetching, setFetching] = useState<boolean>(true);
+
+  const user = useSelector(selectUser);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((userAuth) => {
+      if (userAuth) {
+        dispatch(
+          login({
+            uid: userAuth.uid,
+            email: userAuth.email!,
+          })
+        );
+      } else {
+        dispatch(logout());
+      }
+      setFetching(false);
+    });
+
+    return unsubscribe;
+  }, [dispatch]);
 
   return (
     <BrowserRouter>
       <Switch>
-        {data?.me && !fetching && (
+        {!user && !fetching && (
           <>
             <Suspense fallback={<LinearProgress />}>
               <Route path="/" exact component={Main} />
@@ -28,13 +51,14 @@ const App: React.FC = () => {
             </Suspense>
           </>
         )}
-        {!data?.me && !fetching && (
+        {user && !fetching && (
           <Suspense fallback={<LinearProgress />}>
             <Route path="/" exact component={Start} />
             <Route path="/register" component={Access} />
             <Route path="/login" component={Access} />
           </Suspense>
         )}
+        {fetching && <Suspense fallback={<LinearProgress />} />}
       </Switch>
     </BrowserRouter>
   );

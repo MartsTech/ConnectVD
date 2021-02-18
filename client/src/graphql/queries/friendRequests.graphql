@@ -1,5 +1,5 @@
-query FriendRequests {
-  friendRequests {
+query FriendRequests($uid: String!) {
+  friendRequests(uid: $uid) {
     ...RegularFriendResponse
   }
 }

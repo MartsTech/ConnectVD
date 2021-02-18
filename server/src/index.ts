@@ -1,16 +1,13 @@
 import { ApolloServer } from "apollo-server-express";
-import connectMongo from "connect-mongo";
 import cors from "cors";
 import "dotenv-safe/config";
 import express from "express";
-import session from "express-session";
 import http from "http";
 import path from "path";
 import "reflect-metadata";
 import socket, { Server, Socket } from "socket.io";
 import { buildSchema } from "type-graphql";
 import { createConnection } from "typeorm";
-import { COOKIE_NAME, __prod__ } from "./constants";
 import { Email } from "./entities/Email";
 import { Friend } from "./entities/Friend";
 import { Room } from "./entities/Room";
@@ -28,26 +25,6 @@ const main = async () => {
   const port = process.env.PORT || 8000;
 
   // Middlewares
-  const MongoStore = connectMongo(session);
-  const sessionMiddleware = session({
-    store: new MongoStore({
-      url: process.env.MONGO_URL,
-      mongoOptions: {
-        useUnifiedTopology: true,
-        useNewUrlParser: true,
-      },
-    }),
-    name: COOKIE_NAME,
-    cookie: {
-      httpOnly: true,
-      sameSite: __prod__ ? "none" : "lax",
-      secure: __prod__,
-      maxAge: 1000 * 60 * 60 * 24 * 356,
-    },
-    saveUninitialized: false,
-    secret: process.env.MONGO_SECRET!,
-    resave: false,
-  });
   app.set("proxy", 1);
   app.use(
     cors({
@@ -55,7 +32,6 @@ const main = async () => {
       credentials: true,
     })
   );
-  app.use(sessionMiddleware);
 
   // DB Config
   const connection = await createConnection({
@@ -93,15 +69,7 @@ const main = async () => {
       userLoader: createUserLoader(),
     }),
     subscriptions: {
-      path: "/subscriptions",
-      onConnect: (_, ws: any) => {
-        return new Promise((res) =>
-          sessionMiddleware(ws.upgradeReq, {} as any, () => {
-            res({ req: ws.upgradeReq.session.userId });
-          })
-        );
-      },
-    },
+      path: "/subscriptions"
   });
   apolloServer.applyMiddleware({ app, path: "/graphql", cors: false });
   apolloServer.installSubscriptionHandlers(server);

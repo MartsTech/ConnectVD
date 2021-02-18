@@ -30,12 +30,12 @@
 
 @media only screen and (max-width: 550px) {
   .features {
-    margin-top: 150px !important;
+    margin-top: 78px !important;
   }
 }
 
 @media only screen and (max-width: 380px) {
   .features {
-    margin-top: 200px !important;
+    margin-top: 128px !important;
   }
 }

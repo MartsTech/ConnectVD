@@ -1,5 +1,5 @@
-mutation JoinRoom($input: JoinRoomInput!) {
-  joinRoom(input: $input) {
+mutation JoinRoom($uid: String!, $input: JoinRoomInput!) {
+  joinRoom(uid: $uid, input: $input) {
     users
     error
   }

@@ -14,6 +14,7 @@ import mailReducer from "../features/mailSlice";
 import meetingReducer from "../features/meetingSlice";
 import sidebarReducer from "../features/sidebarSlice";
 import snackbarReducer from "../features/snackbarSlice";
+import userReducer from "../features/userSlice";
 
 const controlsPersistConfig = {
   key: "controls",
@@ -42,6 +43,7 @@ export const store = configureStore({
     mail: mailPersistedReducer,
     sidebar: sidebarReducer,
     meeting: meetingReducer,
+    user: userReducer,
   },
   middleware: getDefaultMiddleware({
     serializableCheck: false,
