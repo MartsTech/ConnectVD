@@ -1,0 +1,3 @@
+mutation DeclineInvite($uid: String!, $email: String!) {
+  declineInvite(uid: $uid, email: $email)
+}

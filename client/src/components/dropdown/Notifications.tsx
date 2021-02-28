@@ -8,9 +8,12 @@ import {
   selectActiveMenu,
   setMenuHeight,
 } from "../../features/dropdownSlice";
-import { setFriendEmail } from "../../features/friendSlice";
+import { setFriendEmail, setRequestType } from "../../features/friendSlice";
 import { selectUser } from "../../features/userSlice";
-import { useFriendRequestsQuery } from "../../generated/graphql";
+import {
+  useFriendRequestsQuery,
+  useInvitesQuery,
+} from "../../generated/graphql";
 import styles from "../../styles/Dropdown.module.css";
 import { Section } from "../Section";
 
@@ -20,7 +23,10 @@ export const Notifications: React.FC = () => {
   const user = useSelector(selectUser);
   const dispatch = useDispatch();
 
-  const [{ data }] = useFriendRequestsQuery({
+  const [{ data: FriendRequests }] = useFriendRequestsQuery({
+    variables: { uid: user!.uid },
+  });
+  const [{ data: Invites }] = useInvitesQuery({
     variables: { uid: user!.uid },
   });
 
@@ -28,6 +34,39 @@ export const Notifications: React.FC = () => {
     const menuHeight = el.offsetHeight;
     dispatch(setMenuHeight(menuHeight));
   };
+
+  const notification = (
+    request: any,
+    message: string,
+    type: "request" | "invite"
+  ) => (
+    <Section
+      key={request.user.email}
+      left={
+        <>
+          <Avatar src={request.user.photoUrl}>
+            <span className={styles.letter}>{request.user.email[0]}</span>
+          </Avatar>
+          <div className={styles.message}>
+            <p>
+              <span className={styles.sender}>{request.user.displayName}</span>{" "}
+              {message}
+            </p>
+            <small>
+              {timeago.format(
+                new Date(parseInt(request.createdAt)).toLocaleString()
+              )}
+            </small>
+          </div>
+        </>
+      }
+      onClick={() => {
+        dispatch(setFriendEmail(request.user.email));
+        dispatch(setRequestType(type));
+        dispatch(openMenu("request"));
+      }}
+    />
+  );
 
   return (
     <CSSTransition
@@ -40,37 +79,12 @@ export const Notifications: React.FC = () => {
       <div className={styles.menu}>
         <h3>Notifications</h3>
         <div className={styles.items}>
-          {data?.friendRequests.map((request) => (
-            <Section
-              key={request.user.email}
-              left={
-                <>
-                  <Avatar src={request.user.photoUrl}>
-                    <span className={styles.letter}>
-                      {request.user.email[0]}
-                    </span>
-                  </Avatar>
-                  <div className={styles.message}>
-                    <p>
-                      <span className={styles.sender}>
-                        {request.user.displayName}
-                      </span>{" "}
-                      sent you a friend request.
-                    </p>
-                    <small>
-                      {timeago.format(
-                        new Date(parseInt(request.createdAt)).toLocaleString()
-                      )}
-                    </small>
-                  </div>
-                </>
-              }
-              onClick={() => {
-                dispatch(setFriendEmail(request.user.email));
-                dispatch(openMenu("request"));
-              }}
-            />
-          ))}
+          {FriendRequests?.friendRequests.map((request) =>
+            notification(request, "sent you a friend request.", "request")
+          )}
+          {Invites?.invites.map((request) =>
+            notification(request, "sent you an invite.", "invite")
+          )}
         </div>
       </div>
     </CSSTransition>

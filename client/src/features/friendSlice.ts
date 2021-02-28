@@ -3,10 +3,12 @@ import { RootState } from "../app/store";
 
 interface FriendState {
   email: string | null;
+  type: "request" | "invite" | null;
 }
 
 const initialState: FriendState = {
   email: null,
+  type: null,
 };
 
 export const friendSlice = createSlice({
@@ -16,11 +18,15 @@ export const friendSlice = createSlice({
     setFriendEmail: (state, action) => {
       state.email = action.payload;
     },
+    setRequestType: (state, action: { payload: "request" | "invite" }) => {
+      state.type = action.payload;
+    },
   },
 });
 
-export const { setFriendEmail } = friendSlice.actions;
+export const { setFriendEmail, setRequestType } = friendSlice.actions;
 
 export const selectFriendEmail = (state: RootState) => state.friend.email;
+export const selectRequestType = (state: RootState) => state.friend.type;
 
 export default friendSlice.reducer;

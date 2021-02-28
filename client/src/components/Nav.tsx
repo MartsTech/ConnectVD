@@ -16,6 +16,7 @@ import { selectUser } from "../features/userSlice";
 import {
   useEmailsQuery,
   useFriendRequestsQuery,
+  useInvitesQuery,
   useMeQuery,
 } from "../generated/graphql";
 import LogoImg from "../images/logo.png";
@@ -34,6 +35,9 @@ export const Nav: React.FC = () => {
 
   const [{ data }] = useMeQuery({ variables: { uid: user!.uid } });
   const [{ data: Requests }] = useFriendRequestsQuery({
+    variables: { uid: user!.uid },
+  });
+  const [{ data: Invites }] = useInvitesQuery({
     variables: { uid: user!.uid },
   });
   const [{ data: Emails }] = useEmailsQuery({
@@ -88,7 +92,10 @@ export const Nav: React.FC = () => {
 
         <IconButton onClick={() => activateMenu("notifications")}>
           <Badge
-            badgeContent={Requests?.friendRequests.length}
+            badgeContent={
+              (Requests?.friendRequests.length || 0) +
+              (Invites?.invites.length || 0)
+            }
             color="secondary"
           >
             <NotificationsIcon />

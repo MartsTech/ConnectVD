@@ -12,6 +12,7 @@ import {
   useNewEmailSubscription,
   useNewFriendRequstSubscription,
   useNewFriendSubscription,
+  useNewInviteSubscription,
 } from "../generated/graphql";
 import styles from "../styles/AppWrapper.module.css";
 import { useWindowWidth } from "../utils/useWindowWidth";
@@ -27,6 +28,9 @@ export const AppWrapper: React.FC = ({ children }) => {
   const dispatch = useDispatch();
 
   const [{ data: NewFriendReq }] = useNewFriendRequstSubscription({
+    variables: { uid: user!.uid },
+  });
+  const [{ data: NewInvite }] = useNewInviteSubscription({
     variables: { uid: user!.uid },
   });
   const [{ data: NewFriend }] = useNewFriendSubscription({
@@ -57,6 +61,19 @@ export const AppWrapper: React.FC = ({ children }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [NewFriendReq]);
+
+  useEffect(() => {
+    if (typeof NewInvite?.newInvite !== "undefined") {
+      dispatch(
+        setSnackbarContent({
+          message: "New Invite.",
+          status: "info",
+        })
+      );
+      dispatch(openSnackbar());
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [NewInvite]);
 
   useEffect(() => {
     if (typeof NewFriend?.newFriend !== "undefined") {

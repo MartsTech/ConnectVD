@@ -1,3 +1,4 @@
+import { User } from "../entities/User";
 import {
   Arg,
   Args,
@@ -6,6 +7,7 @@ import {
   Field,
   FieldResolver,
   Mutation,
+  ObjectType,
   Publisher,
   PubSub,
   Query,
@@ -24,6 +26,14 @@ import { RequestResponse } from "./RequestResponse";
 class FriendSubArgs {
   @Field()
   uid: string;
+}
+
+@ObjectType()
+class InviteResponse {
+  @Field(() => RequestResponse, { nullable: true })
+  error?: RequestResponse;
+  @Field(() => String, { nullable: true })
+  roomId?: string;
 }
 
 @Resolver(Friend)
@@ -45,11 +55,17 @@ export class FriendResolver {
       where: { userId: uid, status: "pending" },
     });
   }
+  @Query(() => [Friend])
+  invites(@Arg("uid") uid: string): Promise<Friend[]> {
+    return Friend.find({
+      where: { userId: uid, status: "invite" },
+    });
+  }
 
   @Subscription(() => Friend, {
     topics: "FRIEND_REQUESTS",
     filter: ({ payload, args }: ResolverFilterData<Friend, FriendSubArgs>) => {
-      return payload.userId === args.uid && payload.status === "pending";
+      return payload.userId === args.uid && payload.status !== "accepted";
     },
   })
   newFriendRequst(
@@ -67,6 +83,20 @@ export class FriendResolver {
     },
   })
   newFriend(
+    @Root() request: Friend,
+    // @ts-ignore
+    @Args() { uid }: FriendSubArgs
+  ): Friend {
+    return request;
+  }
+
+  @Subscription(() => Friend, {
+    topics: "INVITES",
+    filter: ({ payload, args }: ResolverFilterData<Friend, FriendSubArgs>) => {
+      return payload.userId === args.uid && payload.status === "invite";
+    },
+  })
+  newInvite(
     @Root() request: Friend,
     // @ts-ignore
     @Args() { uid }: FriendSubArgs
@@ -145,6 +175,82 @@ export class FriendResolver {
     await Friend.delete({
       userId: uid,
       friendId: receiver.id,
+      status: "pending",
+    });
+    return true;
+  }
+  @Mutation(() => RequestResponse)
+  async inviteFriend(
+    @Arg("uid") uid: string,
+    @Arg("email") email: string,
+    @PubSub("INVITES") notifyAboutNewInvite: Publisher<Friend>
+  ): Promise<RequestResponse> {
+    const request = await validateRequest(uid, email);
+    if ((request as NotifyError).message && (request as NotifyError).status) {
+      return request as NotifyError;
+    }
+    const { sender, receiver } = request as Users;
+    const exists = await Friend.findOne({
+      userId: receiver.id,
+      friendId: uid,
+      id: sender.email,
+      status: "invite",
+    });
+    if (exists) {
+      return { message: "You have already sent an invite.", status: "warning" };
+    }
+    const invite = await Friend.create({
+      userId: receiver.id,
+      friendId: uid,
+      id: sender.email,
+      status: "invite",
+    }).save();
+
+    await notifyAboutNewInvite(invite);
+
+    return { message: "Invite successfully sent.", status: "success" };
+  }
+  @Mutation(() => InviteResponse)
+  async acceptInvite(
+    @Arg("uid") uid: string,
+    @Arg("email") email: string
+  ): Promise<InviteResponse> {
+    const request = await validateRequest(uid, email);
+    if ((request as NotifyError).message && (request as NotifyError).status) {
+      return { error: request as NotifyError };
+    }
+    const { receiver } = request as Users;
+    await Friend.delete({
+      userId: uid,
+      friendId: receiver.id,
+      status: "invite",
+    });
+    const inviter = await User.findOne({ where: { id: receiver.id } });
+    const roomId = inviter?.roomId;
+    if (roomId === "") {
+      return {
+        error: {
+          message: "Your inviter is no longer in a meeting.",
+          status: "error",
+        },
+      };
+    }
+    return { roomId };
+  }
+  @Mutation(() => Boolean)
+  async declineInvite(
+    @Arg("uid") uid: string,
+    @Arg("email") email: string
+  ): Promise<boolean> {
+    const request = await validateRequest(uid, email);
+    if ((request as NotifyError).message && (request as NotifyError).status) {
+      return false;
+    }
+    const { receiver } = request as Users;
+    await Friend.delete({
+      userId: uid,
+      friendId: receiver.id,
+      status: "invite",
     });
     return true;
   }
