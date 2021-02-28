@@ -11,6 +11,14 @@
   border-radius: 10px;
 }
 
+.icon {
+  object-fit: contain;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
 .header {
   margin-top: 10px;
   width: 100%;
@@ -20,8 +28,9 @@
 }
 
 .section {
-  flex: 0.5;
+  flex: 1;
   display: flex;
+  align-items: center;
   justify-content: space-evenly;
 }
 
@@ -30,7 +39,20 @@
   width: 85px;
   display: flex;
   justify-content: space-between;
+}
+
+.link:hover {
+  cursor: pointer;
+}
+
+.active {
   border-bottom: 3px solid #3f51b5;
+}
+
+.invite {
+  display: grid;
+  place-items: center;
+  margin-bottom: 40px;
 }
 
 .body {
@@ -39,6 +61,10 @@
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+}
+
+.info {
+  margin-left: 20px;
 }
 
 .copyId {
@@ -56,10 +82,4 @@
 .copyId:hover {
   cursor: pointer;
   background-color: whitesmoke;
-}
-
-.body > h5,
-.body > p,
-.copyId > svg {
-  margin-left: 10px;
 }

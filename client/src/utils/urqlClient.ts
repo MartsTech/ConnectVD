@@ -55,7 +55,7 @@ const cursorPagination = (): Resolver => {
 };
 
 const invalidateAllFields = (
-  fields: "friendRequests" | "friends" | "emails",
+  fields: "friendRequests" | "friends" | "emails" | "invites",
   cache: Cache
 ) => {
   const allFields = cache.inspectFields("Query");
@@ -129,7 +129,19 @@ export const client = createClient({
               id: (args as AcceptFriendRequestMutationVariables).email,
             });
           },
+          acceptInvite: (_, args, cache, __) => {
+            cache.invalidate({
+              __typename: "Friend",
+              id: (args as AcceptFriendRequestMutationVariables).email,
+            });
+          },
           declineFriendRequest: (_, args, cache, __) => {
+            cache.invalidate({
+              __typename: "Friend",
+              id: (args as DeclineFriendRequestMutationVariables).email,
+            });
+          },
+          declineInvite: (_, args, cache, __) => {
             cache.invalidate({
               __typename: "Friend",
               id: (args as DeclineFriendRequestMutationVariables).email,
@@ -148,6 +160,9 @@ export const client = createClient({
           },
           newEmail: (_, __, cache, ___) => {
             invalidateAllFields("emails", cache);
+          },
+          newInvite: (_, __, cache, ___) => {
+            invalidateAllFields("invites", cache);
           },
         },
       },
