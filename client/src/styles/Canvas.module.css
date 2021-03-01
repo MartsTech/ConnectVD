@@ -1,9 +1,10 @@
 .canvas {
-  flex: 0.8;
+  flex: 0.9;
   background-color: whitesmoke;
   display: flex;
   align-items: center;
   justify-content: center;
+  min-height: 70%;
 }
 
 .description {
@@ -72,8 +73,12 @@
   }
   .canvasImage > img {
     max-height: 350px;
+    margin-bottom: 15px;
   }
   .buttons {
     flex-direction: column;
+  }
+  .text > h1 {
+    margin-top: 100px;
   }
 }

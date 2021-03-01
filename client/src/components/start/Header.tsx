@@ -19,12 +19,16 @@ export const Header: React.FC = () => {
       </div>
       <div className={styles.right}>
         <Link to="/login" className={styles.link}>
-          <Button>Login</Button>
+          <Button variant="contained" color="primary" disableElevation>
+            Login
+          </Button>
         </Link>
         <Link to="/register" className={styles.link}>
-          <Button>Register</Button>
+          <Button variant="outlined" disableElevation>
+            Register
+          </Button>
         </Link>
       </div>
-  </nav>
+    </nav>
   );
 };

@@ -17,10 +17,9 @@ const Start: React.FC = () => {
       <div className={styles.message}>
         <p>We have developed resources to help you stay connect.</p>
       </div>
-      <div className={styles.front}>
-        <Canvas />
-        <Shortcuts />
-      </div>
+      <Canvas />
+      <Shortcuts />
+
       <div className={styles.features}>
         <Feature
           title="Meeting"

@@ -65,17 +65,11 @@
 
 .link {
   text-decoration: none;
+  margin-right: 5px;
 }
 
 @media only screen and (max-width: 450px) {
   .middle {
-    height: 30px;
-    background-color: unset;
-  }
-  .middle > svg {
-    display: none;
-  }
-  .middle > input {
     display: none;
   }
 }
