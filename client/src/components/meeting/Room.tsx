@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouteMatch } from "react-router";
 import io from "socket.io-client";
-// import { __prod__ } from "../../constants";
 import {
   selectAudio,
   selectLeave,
@@ -49,11 +48,11 @@ export const Room: React.FC = () => {
       {
         urls: "stun:stun.stunprotocol.org",
       },
-      // {
-      //   urls: "turn:numb.viagenie.ca",
-      //   credential: "muazkh",
-      //   username: "webrtc@live.com",
-      // },
+      {
+        urls: "turn:numb.viagenie.ca",
+        credential: "muazkh",
+        username: "webrtc@live.com",
+      },
     ],
   };
 
@@ -85,15 +84,13 @@ export const Room: React.FC = () => {
   }, [leave]);
 
   const main = () => {
-    if (window.performance) {
-      if (performance.navigation.type === 1) {
-        socketRef.current?.disconnect();
-      }
-    }
+    // if (window.performance) {
+    //   if (performance.navigation.type === 1) {
+    //     socketRef.current?.disconnect();
+    //   }
+    // }
     getUserStream();
-    // socketRef.current = io(
-    //   __prod__ ? process.env.REACT_APP_SERVER_URL! : "http://localhost:8000/"
-    // );
+    // socketRef.current = io(process.env.REACT_APP_SERVER_URL!);
     socketRef.current = io.connect("/");
     socketRef.current.emit("get socketId");
     socketRef.current.on("send socketId", async (id: string) => {

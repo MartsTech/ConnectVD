@@ -17,6 +17,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "../../features/userSlice";
 import { setSnackbarContent, openSnackbar } from "../../features/snackbarSlice";
+import { Avatar } from "@material-ui/core";
 
 export const Details: React.FC = () => {
   const [info, setInfo] = useState<boolean>(true);
@@ -99,17 +100,22 @@ export const Details: React.FC = () => {
               getOptionLabel={(option) => option.user.email}
               renderOption={(option) => (
                 <React.Fragment>
-                  <img
-                    className={styles.icon}
-                    src={option.user.photoUrl}
-                    alt={option.user.displayName}
-                  />
+                  <Avatar className={styles.icon} src={option.user.photoUrl}>
+                    <span className={styles.letter}>
+                      {option.user.email[0]}
+                    </span>
+                  </Avatar>
                   {option.user.email}
                 </React.Fragment>
               )}
               style={{ width: 300 }}
               renderInput={(params) => (
-                <form onSubmit={(e) => inviteFriend(params, e)}>
+                <form
+                  onSubmit={(e) => {
+                    inviteFriend(params, e);
+                    setInfo(true);
+                  }}
+                >
                   <TextField
                     {...params}
                     label="Select Friend"

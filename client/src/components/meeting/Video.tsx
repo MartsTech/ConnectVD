@@ -20,6 +20,7 @@ export const Video: React.FC<videoProps> = ({ peer, state, email }) => {
   const [{ data }] = useFriendsQuery({ variables: { uid: user!.uid } });
 
   const friend = data?.friends.find((friend) => friend.id === email);
+
   useEffect(() => {
     peer.ontrack = handleTrackEvent;
     // eslint-disable-next-line
@@ -37,6 +38,7 @@ export const Video: React.FC<videoProps> = ({ peer, state, email }) => {
         })}
       >
         <Avatar src={friend?.user.photoUrl} />
+        <h4>{friend?.user.displayName}</h4>
       </div>
       <video autoPlay playsInline ref={videoRef} />
     </div>

@@ -128,6 +128,7 @@ export const client = createClient({
               __typename: "Friend",
               id: (args as AcceptFriendRequestMutationVariables).email,
             });
+            invalidateAllFields("friends", cache);
           },
           acceptInvite: (_, args, cache, __) => {
             cache.invalidate({
