@@ -27,3 +27,12 @@
 .list {
   padding-bottom: 20%;
 }
+
+@media only screen and (max-width: 400px) {
+  .emailList {
+    padding-left: 0px;
+  }
+  .sections {
+    padding-left: 30px;
+  }
+}

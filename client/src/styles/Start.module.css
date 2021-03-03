@@ -19,23 +19,6 @@
 }
 
 .front {
-  height: 100vh;
   display: flex;
   flex-direction: column;
-}
-
-.features {
-  position: relative;
-}
-
-@media only screen and (max-width: 550px) {
-  .features {
-    margin-top: 78px !important;
-  }
-}
-
-@media only screen and (max-width: 380px) {
-  .features {
-    margin-top: 128px !important;
-  }
 }

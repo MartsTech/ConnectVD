@@ -11,70 +11,73 @@ export const Shortcuts: React.FC = () => {
   return (
     <section className={styles.shortcuts}>
       <div className={styles.icons}>
-        <div className={styles.container}>
-          <Link
-            activeClass="active"
-            to="meeting"
-            spy={true}
-            smooth={true}
-            duration={1000}
-          >
-            <IconButton>
-              <div className={styles.icon}>
-                <VideoCallIcon />
-              </div>
-            </IconButton>
-          </Link>
-          <h3>Meeting</h3>
+        <div className={styles.top}>
+          <div className={styles.container}>
+            <Link
+              activeClass="active"
+              to="meeting"
+              spy={true}
+              smooth={true}
+              duration={1000}
+            >
+              <IconButton>
+                <div className={styles.icon}>
+                  <VideoCallIcon />
+                </div>
+              </IconButton>
+            </Link>
+            <h3>Meeting</h3>
+          </div>
+          <div className={styles.container}>
+            <Link
+              activeClass="active"
+              to="mail"
+              spy={true}
+              smooth={true}
+              duration={1000}
+            >
+              <IconButton>
+                <div className={styles.icon}>
+                  <EmailIcon />
+                </div>
+              </IconButton>
+            </Link>
+            <h3>Mail</h3>
+          </div>
         </div>
-
-        <div className={styles.container}>
-          <Link
-            activeClass="active"
-            to="mail"
-            spy={true}
-            smooth={true}
-            duration={1000}
-          >
-            <IconButton>
-              <div className={styles.icon}>
-                <EmailIcon />
-              </div>
-            </IconButton>
-          </Link>
-          <h3>Mail</h3>
-        </div>
-        <div className={styles.container}>
-          <Link
-            activeClass="active"
-            to="friends"
-            spy={true}
-            smooth={true}
-            duration={1000}
-          >
-            <IconButton>
-              <div className={styles.icon}>
-                <PeopleAltIcon />
-              </div>
-            </IconButton>
-          </Link>
-          <h3>Friends</h3>
-        </div>
-        <div className={styles.container}>
-          <Link
-            activeClass="active"
-            to="notifications"
-            spy={true}
-            smooth={true}
-            duration={1000}
-          >
-            <IconButton>
-              <div className={styles.icon}>
-                <NotificationsIcon />
-              </div>
-            </IconButton>
-          </Link>
-          <h3>Notification</h3>
+        <div className={styles.bottom}>
+          <div className={styles.container}>
+            <Link
+              activeClass="active"
+              to="friends"
+              spy={true}
+              smooth={true}
+              duration={1000}
+            >
+              <IconButton>
+                <div className={styles.icon}>
+                  <PeopleAltIcon />
+                </div>
+              </IconButton>
+            </Link>
+            <h3>Friends</h3>
+          </div>
+          <div className={styles.container}>
+            <Link
+              activeClass="active"
+              to="notifications"
+              spy={true}
+              smooth={true}
+              duration={1000}
+            >
+              <IconButton>
+                <div className={styles.icon}>
+                  <NotificationsIcon />
+                </div>
+              </IconButton>
+            </Link>
+            <h3>Notification</h3>
+          </div>
         </div>
       </div>
     </section>

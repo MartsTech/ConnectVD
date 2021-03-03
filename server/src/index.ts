@@ -39,7 +39,7 @@ const main = async () => {
     type: "postgres",
     url: process.env.DATABASE_URL,
     logging: true,
-    ssl: { rejectUnauthorized: false },
+    // ssl: { rejectUnauthorized: false },
     migrations: [path.join(__dirname, "./migrations/*")],
   });
   connection.runMigrations();

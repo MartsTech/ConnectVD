@@ -6,12 +6,18 @@
 }
 
 .cards {
-  width: 350px;
+  width: 400px;
   height: 400px;
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
+  flex-direction: column;
+  justify-content: space-between;
   margin-bottom: 50px;
+}
+
+.top,
+.bottom {
+  display: flex;
+  justify-content: space-between;
 }
 
 .card {
@@ -47,4 +53,12 @@
 
 #sendMail {
   background-color: #3f51b5;
+}
+
+@media only screen and (max-width: 399px) {
+  .cards {
+    max-width: 350px;
+    width: 100%;
+    height: 350px;
+  }
 }

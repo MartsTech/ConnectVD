@@ -1,6 +1,9 @@
 mutation JoinRoom($uid: String!, $input: JoinRoomInput!) {
   joinRoom(uid: $uid, input: $input) {
-    users
     error
+    users {
+      socketId
+      email
+    }
   }
 }

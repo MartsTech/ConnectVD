@@ -111,3 +111,9 @@
 .options > button {
   margin-left: 10px;
 }
+
+@media only screen and (max-width: 350px) {
+  .dropdown {
+    right: 10px;
+  }
+}

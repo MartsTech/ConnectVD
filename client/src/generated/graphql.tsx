@@ -186,8 +186,14 @@ export type InviteResponse = {
 
 export type JoinRoomRes = {
   __typename?: "JoinRoomRes";
-  users?: Maybe<Array<Scalars["String"]>>;
+  users?: Maybe<Array<UserInfo>>;
   error?: Maybe<Scalars["String"]>;
+};
+
+export type UserInfo = {
+  __typename?: "UserInfo";
+  socketId: Scalars["String"];
+  email: Scalars["String"];
 };
 
 export type JoinRoomInput = {
@@ -338,10 +344,13 @@ export type JoinRoomMutationVariables = Exact<{
 }>;
 
 export type JoinRoomMutation = { __typename?: "Mutation" } & {
-  joinRoom: { __typename?: "JoinRoomRes" } & Pick<
-    JoinRoomRes,
-    "users" | "error"
-  >;
+  joinRoom: { __typename?: "JoinRoomRes" } & Pick<JoinRoomRes, "error"> & {
+      users?: Maybe<
+        Array<
+          { __typename?: "UserInfo" } & Pick<UserInfo, "socketId" | "email">
+        >
+      >;
+    };
 };
 
 export type SendEmailMutationVariables = Exact<{
@@ -588,8 +597,11 @@ export function useInviteFriendMutation() {
 export const JoinRoomDocument = gql`
   mutation JoinRoom($uid: String!, $input: JoinRoomInput!) {
     joinRoom(uid: $uid, input: $input) {
-      users
       error
+      users {
+        socketId
+        email
+      }
     }
   }
 `;
