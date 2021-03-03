@@ -14,9 +14,17 @@ import { Room } from "../entities/Room";
 import { User } from "../entities/User";
 
 @ObjectType()
+class UserInfo {
+  @Field()
+  socketId: string;
+  @Field()
+  email: string;
+}
+
+@ObjectType()
 class JoinRoomRes {
-  @Field(() => [String], { nullable: true })
-  users?: string[];
+  @Field(() => [UserInfo], { nullable: true })
+  users?: UserInfo[];
   @Field(() => String, { nullable: true })
   error?: string;
 }
@@ -77,9 +85,9 @@ export class RoomResolver {
     }
     await User.update({ id: uid }, { socketId, roomId });
     const users = await User.find({ where: { roomId } });
-    const socketIds = users.map((user) => {
-      return user.socketId;
+    const usersInfo = users.map((user) => {
+      return { socketId: user.socketId, email: user.email };
     });
-    return { users: socketIds };
+    return { users: usersInfo };
   }
 }

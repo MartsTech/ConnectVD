@@ -1,6 +1,13 @@
 export type socketPayload = {
   target: string;
   caller: string;
-  sdp: RTCSessionDescription | undefined;
-  candidate: RTCIceCandidate | undefined;
+  email: string;
+  sdp?: RTCSessionDescription;
+  candidate?: RTCIceCandidate;
+};
+
+export type peerContext = {
+  id: string;
+  email: string;
+  peer: RTCPeerConnection;
 };
