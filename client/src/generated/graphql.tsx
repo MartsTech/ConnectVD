@@ -101,6 +101,7 @@ export type Mutation = {
   inviteFriend: RequestResponse;
   acceptInvite: InviteResponse;
   declineInvite: Scalars["Boolean"];
+  unfriend: Scalars["Boolean"];
   createRoom: Scalars["String"];
   joinRoom: JoinRoomRes;
   signIn: User;
@@ -138,6 +139,11 @@ export type MutationAcceptInviteArgs = {
 };
 
 export type MutationDeclineInviteArgs = {
+  email: Scalars["String"];
+  uid: Scalars["String"];
+};
+
+export type MutationUnfriendArgs = {
   email: Scalars["String"];
   uid: Scalars["String"];
 };
@@ -377,6 +383,16 @@ export type SignInMutationVariables = Exact<{
 export type SignInMutation = { __typename?: "Mutation" } & {
   signIn: { __typename?: "User" } & RegularUserResponseFragment;
 };
+
+export type UnfriendMutationVariables = Exact<{
+  uid: Scalars["String"];
+  email: Scalars["String"];
+}>;
+
+export type UnfriendMutation = { __typename?: "Mutation" } & Pick<
+  Mutation,
+  "unfriend"
+>;
 
 export type EmailsQueryVariables = Exact<{
   uid: Scalars["String"];
@@ -643,6 +659,17 @@ export const SignInDocument = gql`
 export function useSignInMutation() {
   return Urql.useMutation<SignInMutation, SignInMutationVariables>(
     SignInDocument
+  );
+}
+export const UnfriendDocument = gql`
+  mutation Unfriend($uid: String!, $email: String!) {
+    unfriend(uid: $uid, email: $email)
+  }
+`;
+
+export function useUnfriendMutation() {
+  return Urql.useMutation<UnfriendMutation, UnfriendMutationVariables>(
+    UnfriendDocument
   );
 }
 export const EmailsDocument = gql`

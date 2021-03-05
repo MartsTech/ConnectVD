@@ -123,12 +123,8 @@ export const client = createClient({
               })
             );
           },
-          acceptFriendRequest: (_, args, cache, __) => {
-            cache.invalidate({
-              __typename: "Friend",
-              id: (args as AcceptFriendRequestMutationVariables).email,
-            });
-            invalidateAllFields("friends", cache);
+          acceptFriendRequest: (_, __, cache, ___) => {
+            invalidateAllFields("friendRequests", cache);
           },
           acceptInvite: (_, args, cache, __) => {
             cache.invalidate({
@@ -150,6 +146,12 @@ export const client = createClient({
           },
           sendEmail: (_, __, cache, ___) => {
             invalidateAllFields("emails", cache);
+          },
+          unfriend: (_, args, cache, __) => {
+            cache.invalidate({
+              __typename: "Friend",
+              id: (args as DeclineFriendRequestMutationVariables).email,
+            });
           },
         },
         Subscription: {

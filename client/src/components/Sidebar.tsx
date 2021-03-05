@@ -85,7 +85,7 @@ export const Sidebar: React.FC = () => {
                   setActive(user.email);
                 }
                 await timeout(300);
-                setHeight("246px");
+                setHeight("320px");
               }}
             >
               <Section
