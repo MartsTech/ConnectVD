@@ -60,12 +60,30 @@
 }
 
 .sendMail > form > input,
-.sendMail > form > textarea {
+.sendMail > form > textarea,
+.emailField > input {
   height: 30px;
   padding: 10px;
   border: none;
   border: 2px solid whitesmoke;
   outline: none;
+}
+
+.emailField > input {
+  width: calc(100% - 24px);
+}
+
+.option {
+  display: flex;
+  align-items: center;
+}
+
+.icon {
+  object-fit: contain;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
 }
 
 .message {

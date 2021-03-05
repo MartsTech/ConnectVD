@@ -9,7 +9,8 @@
   align-items: center;
   background-color: whitesmoke;
   padding: 5px;
-  width: 200px;
+  min-width: 200px;
+  width: 80%;
   border-radius: 8px;
   margin: 15px;
   margin-left: auto;
@@ -19,6 +20,10 @@
 
 .addFriend > svg {
   color: gray;
+}
+
+.addFriend > svg :hover {
+  cursor: pointer;
 }
 
 .addFriend > input {

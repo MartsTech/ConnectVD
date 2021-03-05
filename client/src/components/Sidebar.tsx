@@ -28,7 +28,7 @@ export const Sidebar: React.FC = () => {
   });
   const [, createFriendRequest] = useCreateFriendRequestMutation();
 
-  const submitEmail = async (e: React.FormEvent<HTMLFormElement>) => {
+  const submitEmail = async (e: any) => {
     e.preventDefault();
     if (email === "") {
       return;
@@ -56,7 +56,7 @@ export const Sidebar: React.FC = () => {
   return (
     <div className={styles.sidebar}>
       <form onSubmit={submitEmail} className={styles.addFriend}>
-        <AddIcon />
+        <AddIcon onClick={submitEmail} />
         <input
           type="email"
           value={email}

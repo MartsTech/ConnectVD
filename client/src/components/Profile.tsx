@@ -1,7 +1,9 @@
 import { Avatar } from "@material-ui/core";
 import MailIcon from "@material-ui/icons/Mail";
 import React from "react";
+import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
+import { setFriendEmail } from "../features/friendSlice";
 import styles from "../styles/Profile.module.css";
 import { Section } from "./Section";
 import { StatusBadge } from "./StatusBadge";
@@ -21,6 +23,8 @@ export const Profile: React.FC<ProfileProps> = ({
   status,
   height,
 }) => {
+  const dispatch = useDispatch();
+
   const history = useHistory();
 
   return (
@@ -41,7 +45,10 @@ export const Profile: React.FC<ProfileProps> = ({
         <Section
           title="Contact user"
           left={<MailIcon />}
-          onClick={() => history.push("/sendMail")}
+          onClick={() => {
+            history.push("/sendMail");
+            dispatch(setFriendEmail(email));
+          }}
         />
       </div>
     </div>
