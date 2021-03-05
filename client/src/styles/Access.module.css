@@ -95,7 +95,12 @@
   .container {
     width: 320px;
   }
-
+  body {
+    background: whitesmoke;
+  }
+  .container > form {
+    padding: 30px 0px;
+  }
   .container > form > button {
     width: 100%;
   }

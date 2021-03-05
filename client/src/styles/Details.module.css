@@ -83,3 +83,11 @@
   cursor: pointer;
   background-color: whitesmoke;
 }
+
+@media only screen and (max-width: 400px) {
+  .details {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%);
+  }
+}

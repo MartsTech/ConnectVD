@@ -11,11 +11,15 @@ import {
   setScreen,
 } from "../../features/controlsSlice";
 import { selectUser } from "../../features/userSlice";
-import { useJoinRoomMutation } from "../../generated/graphql";
+import { useJoinRoomMutation, useMeQuery } from "../../generated/graphql";
 import styles from "../../styles/Room.module.css";
 import { socketPayload } from "../../types";
 import { Video } from "./Video";
 import { peerContext } from "../../types";
+import { Avatar } from "@material-ui/core";
+import clsx from "clsx";
+import videoStyles from "../../styles/Video.module.css";
+import { usePalette } from "react-palette";
 
 export const Room: React.FC = () => {
   const [peers, setPeers] = useState<peerContext[]>([]);
@@ -42,6 +46,9 @@ export const Room: React.FC = () => {
   const { roomId } = match.params;
 
   const [, joinRoom] = useJoinRoomMutation();
+  const [{ data: MeData }] = useMeQuery({ variables: { uid: user!.uid } });
+
+  const { data: BgData } = usePalette(MeData?.me?.photoUrl || "");
 
   const iceConfiguration = {
     iceServers: [
@@ -301,7 +308,20 @@ export const Room: React.FC = () => {
 
   return (
     <div className={styles.videos}>
-      <video ref={userVideo} autoPlay playsInline muted />
+      <div className={videoStyles.video}>
+        {BgData && (
+          <div
+            style={{ background: BgData.darkVibrant }}
+            className={clsx(videoStyles.cover, {
+              [videoStyles.videoOff]: video,
+            })}
+          >
+            <Avatar src={MeData?.me?.photoUrl} />
+            <h4>{MeData?.me?.displayName}</h4>
+          </div>
+        )}
+        <video ref={userVideo} autoPlay playsInline muted />
+      </div>
       {peers.map((peerObj: peerContext) => {
         const user = usersVideoStatus.find((user) => user.id === peerObj.id);
         return (
