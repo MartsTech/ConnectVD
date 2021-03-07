@@ -97,8 +97,8 @@ export const Room: React.FC = () => {
     //   }
     // }
     getUserStream();
-    // socketRef.current = io(process.env.REACT_APP_SERVER_URL!);
-    socketRef.current = io.connect("/");
+    socketRef.current = io(process.env.REACT_APP_SERVER_URL!);
+    // socketRef.current = io.connect("/");
     socketRef.current.emit("get socketId");
     socketRef.current.on("send socketId", async (id: string) => {
       const { data } = await joinRoom({

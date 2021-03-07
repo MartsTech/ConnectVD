@@ -55,22 +55,25 @@ export const Sidebar: React.FC = () => {
 
   return (
     <div className={styles.sidebar}>
-      <form onSubmit={submitEmail} className={styles.addFriend}>
-        <AddIcon onClick={submitEmail} />
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Add Friend"
-        />
-      </form>
+      <div className={styles.header}>
+        <form onSubmit={submitEmail} className={styles.addFriend}>
+          <AddIcon onClick={submitEmail} />
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Add Friend"
+          />
+        </form>
 
-      <SidebarOption
-        LeftIcon={PersonIcon}
-        title="Friends"
-        selected={true}
-        number={data?.friends.length || 0}
-      />
+        <SidebarOption
+          LeftIcon={PersonIcon}
+          title="Friends"
+          selected={true}
+          number={data?.friends.length || 0}
+        />
+      </div>
+
       <div className={styles.friends}>
         {data?.friends.map(({ user }) => (
           <div key={user.email} className={styles.friend}>
