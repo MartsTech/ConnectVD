@@ -1,12 +1,14 @@
-import { Button, IconButton } from "@material-ui/core";
+import { Avatar, Button, IconButton } from "@material-ui/core";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
-import React from "react";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
+import { selectFriendEmail } from "../../features/friendSlice";
 import { openSnackbar, setSnackbarContent } from "../../features/snackbarSlice";
 import { selectUser } from "../../features/userSlice";
-import { useSendEmailMutation } from "../../generated/graphql";
+import { useFriendsQuery, useSendEmailMutation } from "../../generated/graphql";
 import styles from "../../styles/SendMail.module.css";
 
 type MailData = {
@@ -16,16 +18,30 @@ type MailData = {
 };
 
 const SendMail: React.FC = () => {
+  const email = useSelector(selectFriendEmail);
+
+  const [to, setTo] = useState<string>(email || "");
+
   const user = useSelector(selectUser);
   const dispatch = useDispatch();
 
   const [, sendEmail] = useSendEmailMutation();
+  const [{ data }] = useFriendsQuery({ variables: { uid: user!.uid } });
 
   const { register, handleSubmit, errors, setError } = useForm<MailData>();
 
   const history = useHistory();
 
-  const onSubmit = async (options: MailData) => {
+  const onSubmit = async (input: MailData) => {
+    if (to === "") {
+      setError("to", { message: "Please enter an email" });
+      return;
+    }
+    const options: MailData = {
+      to,
+      subject: input.subject,
+      message: input.message,
+    };
     const email = await sendEmail({ uid: user!.uid, options });
     if (email.data?.sendEmail.error) {
       setError("to", { message: email.data.sendEmail.error.message });
@@ -71,14 +87,39 @@ const SendMail: React.FC = () => {
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)}>
-          <input
-            name="to"
-            placeholder="To"
-            type="email"
-            ref={register({ required: true })}
-          />
-          {errors.to && errors.to.type === "required" && (
-            <div className={styles.error}>Please enter an email</div>
+          {data && (
+            <Autocomplete
+              options={data!.friends}
+              getOptionLabel={(option) => option.user.email}
+              renderOption={(option) => (
+                <React.Fragment>
+                  <div
+                    className={styles.option}
+                    onClick={() => {
+                      setTo(option.id);
+                    }}
+                  >
+                    <Avatar className={styles.icon} src={option.user.photoUrl}>
+                      <span className={styles.letter}>
+                        {option.user.email[0]}
+                      </span>
+                    </Avatar>
+                    <p>{option.user.email}</p>
+                  </div>
+                </React.Fragment>
+              )}
+              renderInput={(params) => (
+                <div className={styles.emailField} ref={params.InputProps.ref}>
+                  <input
+                    name="to"
+                    placeholder="To"
+                    type="email"
+                    {...params.inputProps}
+                    value={to}
+                  />
+                </div>
+              )}
+            />
           )}
           {errors.to && (
             <div className={styles.error}>{errors.to?.message}</div>

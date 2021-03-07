@@ -10,6 +10,7 @@ import styles from "../../styles/HomeCards.module.css";
 import PersonIcon from "@material-ui/icons/Person";
 import MailIcon from "@material-ui/icons/Mail";
 import { selectUser } from "../../features/userSlice";
+import { openSidebar, selectSidebar } from "../../features/sidebarSlice";
 
 const HomeCards: React.FC = () => {
   const user = useSelector(selectUser);
@@ -19,11 +20,19 @@ const HomeCards: React.FC = () => {
   const history = useHistory();
 
   const dispatch = useDispatch();
+  const sidebar = useSelector(selectSidebar);
 
   const create = async () => {
     const { data } = await createRoom({ uid: user!.uid });
     history.push(`/room/${data?.createRoom}`);
   };
+
+  const addFriend = () => {
+    if (!sidebar) {
+      dispatch(openSidebar());
+    }
+  };
+
   return (
     <div className={styles.homeCards}>
       <div className={styles.cards}>
@@ -47,7 +56,7 @@ const HomeCards: React.FC = () => {
         </div>
         <div className={styles.bottom}>
           <div className={styles.card} id={styles.addFriend}>
-            <IconButton>
+            <IconButton onClick={() => addFriend()}>
               <div className={styles.icon}>
                 <PersonIcon />
               </div>

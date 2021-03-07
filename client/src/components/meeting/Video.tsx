@@ -5,6 +5,7 @@ import { useFriendsQuery } from "../../generated/graphql";
 import { Avatar } from "@material-ui/core";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../features/userSlice";
+import { usePalette } from "react-palette";
 
 interface videoProps {
   peer: RTCPeerConnection;
@@ -20,6 +21,9 @@ export const Video: React.FC<videoProps> = ({ peer, state, email }) => {
   const [{ data }] = useFriendsQuery({ variables: { uid: user!.uid } });
 
   const friend = data?.friends.find((friend) => friend.id === email);
+
+  const { data: BgData } = usePalette(friend?.user.photoUrl || "");
+
   useEffect(() => {
     peer.ontrack = handleTrackEvent;
     // eslint-disable-next-line
@@ -31,13 +35,18 @@ export const Video: React.FC<videoProps> = ({ peer, state, email }) => {
 
   return (
     <div className={styles.video}>
-      <div
-        className={clsx(styles.cover, {
-          [styles.videoOff]: state,
-        })}
-      >
-        <Avatar src={friend?.user.photoUrl} />
-      </div>
+      {BgData && (
+        <div
+          style={{ background: BgData.darkVibrant }}
+          className={clsx(styles.cover, {
+            [styles.videoOff]: state,
+          })}
+        >
+          <Avatar src={friend?.user.photoUrl} />
+          <h4>{friend?.user.displayName}</h4>
+        </div>
+      )}
+      <div></div>
       <video autoPlay playsInline ref={videoRef} />
     </div>
   );

@@ -28,7 +28,7 @@ export const Sidebar: React.FC = () => {
   });
   const [, createFriendRequest] = useCreateFriendRequestMutation();
 
-  const submitEmail = async (e: React.FormEvent<HTMLFormElement>) => {
+  const submitEmail = async (e: any) => {
     e.preventDefault();
     if (email === "") {
       return;
@@ -55,22 +55,25 @@ export const Sidebar: React.FC = () => {
 
   return (
     <div className={styles.sidebar}>
-      <form onSubmit={submitEmail} className={styles.addFriend}>
-        <AddIcon />
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Add Friend"
-        />
-      </form>
+      <div className={styles.header}>
+        <form onSubmit={submitEmail} className={styles.addFriend}>
+          <AddIcon onClick={submitEmail} />
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Add Friend"
+          />
+        </form>
 
-      <SidebarOption
-        LeftIcon={PersonIcon}
-        title="Friends"
-        selected={true}
-        number={data?.friends.length || 0}
-      />
+        <SidebarOption
+          LeftIcon={PersonIcon}
+          title="Friends"
+          selected={true}
+          number={data?.friends.length || 0}
+        />
+      </div>
+
       <div className={styles.friends}>
         {data?.friends.map(({ user }) => (
           <div key={user.email} className={styles.friend}>
@@ -85,7 +88,7 @@ export const Sidebar: React.FC = () => {
                   setActive(user.email);
                 }
                 await timeout(300);
-                setHeight("246px");
+                setHeight("320px");
               }}
             >
               <Section

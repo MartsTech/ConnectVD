@@ -18,13 +18,13 @@ export class Friend extends BaseEntity {
   @PrimaryColumn()
   friendId!: string;
 
+  @PrimaryColumn({ default: "pending" })
+  status!: "pending" | "accepted" | "invite";
+
   @Field()
   @Column()
   //email
   id!: string;
-
-  @Column({ default: "pending" })
-  status!: "pending" | "accepted" | "invite";
 
   @Field()
   @ManyToOne(() => User, (user) => user.friends)

@@ -29,14 +29,31 @@
   margin-top: 10px;
 }
 
+.info {
+  margin-top: 10px;
+  color: white;
+}
+
+.title > h1 {
+  text-transform: capitalize;
+  font-weight: 600;
+  font-size: 1.8rem;
+  line-height: 3rem;
+}
+
+.slogan > h3 {
+  font-weight: 500;
+}
+
 .socials {
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-top: 10px;
 }
 
 .social {
-  margin: 0 20px;
+  margin: 0 10px;
   margin-top: 10px;
 }
 
@@ -46,4 +63,15 @@
 
 .social > a > svg :hover {
   color: #3f51b5;
+}
+
+.copyright > p {
+  margin-top: 30px;
+  font-size: 1rem;
+  word-spacing: 2px;
+  text-transform: capitalize;
+}
+
+.copyright > p > span {
+  color: gray;
 }

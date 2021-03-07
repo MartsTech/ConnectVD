@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouteMatch } from "react-router";
 import io from "socket.io-client";
-// import { __prod__ } from "../../constants";
 import {
   selectAudio,
   selectLeave,
@@ -12,11 +11,15 @@ import {
   setScreen,
 } from "../../features/controlsSlice";
 import { selectUser } from "../../features/userSlice";
-import { useJoinRoomMutation } from "../../generated/graphql";
+import { useJoinRoomMutation, useMeQuery } from "../../generated/graphql";
 import styles from "../../styles/Room.module.css";
 import { socketPayload } from "../../types";
 import { Video } from "./Video";
 import { peerContext } from "../../types";
+import { Avatar } from "@material-ui/core";
+import clsx from "clsx";
+import videoStyles from "../../styles/Video.module.css";
+import { usePalette } from "react-palette";
 
 export const Room: React.FC = () => {
   const [peers, setPeers] = useState<peerContext[]>([]);
@@ -43,17 +46,20 @@ export const Room: React.FC = () => {
   const { roomId } = match.params;
 
   const [, joinRoom] = useJoinRoomMutation();
+  const [{ data: MeData }] = useMeQuery({ variables: { uid: user!.uid } });
+
+  const { data: BgData } = usePalette(MeData?.me?.photoUrl || "");
 
   const iceConfiguration = {
     iceServers: [
       {
         urls: "stun:stun.stunprotocol.org",
       },
-      // {
-      //   urls: "turn:numb.viagenie.ca",
-      //   credential: "muazkh",
-      //   username: "webrtc@live.com",
-      // },
+      {
+        urls: "turn:numb.viagenie.ca",
+        credential: "muazkh",
+        username: "webrtc@live.com",
+      },
     ],
   };
 
@@ -85,16 +91,14 @@ export const Room: React.FC = () => {
   }, [leave]);
 
   const main = () => {
-    if (window.performance) {
-      if (performance.navigation.type === 1) {
-        socketRef.current?.disconnect();
-      }
-    }
+    // if (window.performance) {
+    //   if (performance.navigation.type === 1) {
+    //     socketRef.current?.disconnect();
+    //   }
+    // }
     getUserStream();
-    // socketRef.current = io(
-    //   __prod__ ? process.env.REACT_APP_SERVER_URL! : "http://localhost:8000/"
-    // );
-    socketRef.current = io.connect("/");
+    socketRef.current = io(process.env.REACT_APP_SERVER_URL!);
+    // socketRef.current = io.connect("/");
     socketRef.current.emit("get socketId");
     socketRef.current.on("send socketId", async (id: string) => {
       const { data } = await joinRoom({
@@ -304,7 +308,20 @@ export const Room: React.FC = () => {
 
   return (
     <div className={styles.videos}>
-      <video ref={userVideo} autoPlay playsInline muted />
+      <div className={videoStyles.video}>
+        {BgData && (
+          <div
+            style={{ background: BgData.darkVibrant }}
+            className={clsx(videoStyles.cover, {
+              [videoStyles.videoOff]: video,
+            })}
+          >
+            <Avatar src={MeData?.me?.photoUrl} />
+            <h4>{MeData?.me?.displayName}</h4>
+          </div>
+        )}
+        <video ref={userVideo} autoPlay playsInline muted />
+      </div>
       {peers.map((peerObj: peerContext) => {
         const user = usersVideoStatus.find((user) => user.id === peerObj.id);
         return (

@@ -68,8 +68,16 @@
   margin-right: 5px;
 }
 
-@media only screen and (max-width: 450px) {
+@media only screen and (max-width: 550px) {
   .middle {
     display: none;
+  }
+}
+
+@media only screen and (max-width: 450px) {
+  .logo {
+    margin-left: 0px;
+    margin-right: 2px;
+    height: 40px;
   }
 }

@@ -54,7 +54,20 @@ export const Footer: React.FC = () => {
           </div>
         </Link>
       </div>
-      <div className={styles.socials}>{socials}</div>
+      <div className={styles.info}>
+        <div className={styles.title}>
+          <h1>ConnectVD</h1>
+        </div>
+        <div className={styles.slogan}>
+          <h3>More ways to stay connected</h3>
+        </div>
+        <div className={styles.socials}>{socials}</div>
+        <div className={styles.copyright}>
+          <p>
+            Copyright &copy;2021 ConnectVD. Made by <span>Martin</span>
+          </p>
+        </div>
+      </div>
     </footer>
   );
 };
