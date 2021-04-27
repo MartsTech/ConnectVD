@@ -1,3 +1,0 @@
-mutation Unfriend($uid: String!, $email: String!) {
-  unfriend(uid: $uid, email: $email)
-}

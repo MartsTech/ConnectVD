@@ -1,5 +1,0 @@
-subscription NewEmail($uid: String!) {
-  newEmail(uid: $uid) {
-    ...RegularEmailResponse
-  }
-}

@@ -1,3 +1,0 @@
-mutation CreateRoom($uid: String!) {
-  createRoom(uid: $uid)
-}

@@ -1,7 +1,0 @@
-fragment RegularFriendResponse on Friend {
-  id
-  user {
-    ...RegularUserResponse
-  }
-  createdAt
-}

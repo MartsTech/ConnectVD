@@ -1,6 +1,0 @@
-mutation CreateFriendRequest($uid: String!, $email: String!) {
-  createFriendRequest(uid: $uid, email: $email) {
-    message
-    status
-  }
-}

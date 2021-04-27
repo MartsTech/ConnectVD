@@ -1,3 +1,0 @@
-mutation AcceptFriendRequest($uid: String!, $email: String!) {
-  acceptFriendRequest(uid: $uid, email: $email)
-}
