@@ -10,7 +10,10 @@ const Header: React.FC<HeaderProps> = ({}) => {
   const [search, setSearch] = useState("");
 
   return (
-    <div className="flex items-center justify-between py-4 md:px-4">
+    <div
+      className="flex items-center justify-between py-4 md:px-4 
+    bg-white sticky top-0 z-50"
+    >
       <Logo />
       <SearchBar value={search} setValue={setSearch} />
       <div className="flex space-x-1 last:mr-1">

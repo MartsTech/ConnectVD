@@ -15,7 +15,7 @@ const ButtonLink: React.FC<ButtonLinkProps> = ({
   return (
     <Link href={href}>
       <Button
-        className="h-9 sm:h-10 px-1 sm:px-3 md:px-6"
+        className="h-9 sm:h-10 px-2 md:px-6"
         disableElevation
         variant={outlined ? "outlined" : "contained"}
         color="primary"

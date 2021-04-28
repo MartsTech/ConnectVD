@@ -24,6 +24,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ value, setValue }) => {
       <ClearIcon
         className="h-7 text-gray-500 cursor-pointer transition duration-100 transform 
     hover:scale-125 sm:mr-3"
+        onClick={() => setValue("")}
       />
       <button hidden type="submit">
         Search
