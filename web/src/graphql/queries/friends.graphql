@@ -1,0 +1,5 @@
+query Friends($uid: String!) {
+  friends(uid: $uid) {
+    ...RegularFriendResponse
+  }
+}

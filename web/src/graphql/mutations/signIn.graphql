@@ -1,0 +1,5 @@
+mutation SignIn($options: SignInOptionsInput!) {
+  signIn(options: $options) {
+    ...RegularUserResponse
+  }
+}

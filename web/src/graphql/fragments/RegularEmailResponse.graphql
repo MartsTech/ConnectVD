@@ -1,0 +1,8 @@
+fragment RegularEmailResponse on Email {
+  id
+  from
+  to
+  subject
+  message
+  createdAt
+}

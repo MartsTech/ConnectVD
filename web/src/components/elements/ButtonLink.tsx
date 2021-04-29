@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Button from "@material-ui/core/Button";
 
 interface ButtonLinkProps {
   title: string;
@@ -14,14 +13,12 @@ const ButtonLink: React.FC<ButtonLinkProps> = ({
 }) => {
   return (
     <Link href={href}>
-      <Button
-        className="h-9 sm:h-10 px-2 md:px-6"
-        disableElevation
-        variant={outlined ? "outlined" : "contained"}
-        color="primary"
+      <button
+        className={`h-9 sm:h-10 px-2 md:px-6 rounded-lg focus:outline-none
+        ${outlined ? "border border-gray-400" : "bg-[#3f51b5] text-white"} `}
       >
         {title}
-      </Button>
+      </button>
     </Link>
   );
 };

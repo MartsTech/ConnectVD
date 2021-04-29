@@ -1,0 +1,5 @@
+mutation ChangeStatus($uid: String!, $status: String!) {
+  changeStatus(uid: $uid, status: $status) {
+    ...RegularUserResponse
+  }
+}

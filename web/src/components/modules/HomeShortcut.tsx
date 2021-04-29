@@ -8,7 +8,7 @@ interface HomeShortcutProps {
 
 const HomeShortcut: React.FC<HomeShortcutProps> = ({ title, Icon }) => {
   return (
-    <div className="flex flex-col items-center space-y-2">
+    <div className="text-white flex flex-col items-center space-y-3">
       <Link
         activeClass="active"
         to={title}
@@ -16,16 +16,14 @@ const HomeShortcut: React.FC<HomeShortcutProps> = ({ title, Icon }) => {
         smooth={true}
         duration={1000}
       >
-        <div className="bg-[#3f51b5] p-6 rounded-full opacity-90 hover:opacity-100">
-          <Icon
-            className="text-white text-5xl transition duration-100 transform 
-    hover:scale-110"
-          />
+        <div
+          className="bg-[#3f51b5] rounded-full h-24 w-24 opacity-90 hover:opacity-100
+        flex items-center justify-center"
+        >
+          <Icon className="h-12 w-12" />
         </div>
       </Link>
-      <h3 className="capitalize text-white text-xl font-medium pb-1">
-        {title}
-      </h3>
+      <h3 className="capitalize text-xl font-medium pb-1">{title}</h3>
     </div>
   );
 };

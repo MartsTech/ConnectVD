@@ -1,0 +1,6 @@
+mutation InviteFriend($uid: String!, $email: String!) {
+  inviteFriend(uid: $uid, email: $email) {
+    message
+    status
+  }
+}

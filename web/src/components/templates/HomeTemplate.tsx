@@ -15,7 +15,7 @@ const HomeTemplate: React.FC<HomeTemplateProps> = ({}) => {
         id="top"
         className="w-full p-2 bg-[#3f51b5] text-white text-center font-medium"
       >
-        <p>We have developed resources to help you stay connect.</p>
+        We have developed resources to help you stay connect.
       </div>
       <Canvas />
       <div className="grid grid-cols-2 sm:grid-cols-4 w-full bg-[#2b2b2b] py-2">

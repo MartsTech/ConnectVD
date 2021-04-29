@@ -9,7 +9,7 @@ interface HomeFeatureProps {
 const HomeFeature: React.FC<HomeFeatureProps> = ({ title, desc, reverse }) => {
   return (
     <div
-      className={`flex flex-col justify-evenly items-center ${
+      className={`flex flex-col justify-evenly items-center py-5 shadow-lg ${
         reverse ? "md:flex-row-reverse" : "md:flex-row"
       }`}
       id={title}

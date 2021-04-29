@@ -13,8 +13,8 @@ const Footer: React.FC<FooterProps> = ({}) => {
         <h1 className="text-3xl font-semibold">{appInfo.title}</h1>
         <h3 className="text-lg font-medium">{appInfo.slogan}</h3>
         <div className="flex space-x-4">
-          {socialData.map(({ name, url, Icon }) => (
-            <Social key={name} url={url} Icon={Icon} />
+          {socialData.map(({ name, url, src }) => (
+            <Social key={name} url={url} src={src} />
           ))}
         </div>
         <p className="tracking-wide">

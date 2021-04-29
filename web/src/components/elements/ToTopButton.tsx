@@ -1,5 +1,5 @@
+import { ArrowUpIcon } from "@heroicons/react/solid";
 import { Link } from "react-scroll";
-import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 
 interface ToTopButtonProps {}
 
@@ -19,7 +19,7 @@ const ToTopButton: React.FC<ToTopButtonProps> = ({}) => {
         smooth={true}
         duration={1000}
       >
-        <ArrowUpwardIcon fontSize="large" />
+        <ArrowUpIcon className="h-7 w-7" />
       </Link>
     </div>
   );

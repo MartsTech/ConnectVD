@@ -1,15 +1,15 @@
-import { IconType } from "@type/IconType";
+import Image from "next/image";
 
 interface SocialProps {
   url: string;
-  Icon: IconType;
+  src: string;
 }
 
-const Social: React.FC<SocialProps> = ({ url, Icon }) => {
+const Social: React.FC<SocialProps> = ({ url, src }) => {
   return (
     <div className="transition duration-100 transform hover:scale-110">
       <a href={url}>
-        <Icon className="text-4xl" />
+        <Image src={src} height={40} width={40} />
       </a>
     </div>
   );

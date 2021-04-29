@@ -1,0 +1,11 @@
+mutation SendEmail($uid: String!, $options: EmailContent!) {
+  sendEmail(uid: $uid, options: $options) {
+    email {
+      ...RegularEmailResponse
+    }
+    error {
+      message
+      status
+    }
+  }
+}

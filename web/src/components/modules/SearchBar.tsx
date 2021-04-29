@@ -1,6 +1,6 @@
-import SearchIcon from "@material-ui/icons/Search";
-import ClearIcon from "@material-ui/icons/Clear";
 import { Dispatch, SetStateAction } from "react";
+import { XIcon } from "@heroicons/react/solid";
+import { SearchIcon } from "@heroicons/react/outline";
 
 interface SearchBarProps {
   value: string;
@@ -21,7 +21,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ value, setValue }) => {
         placeholder="Search"
         className="flex-grow w-full focus:outline-none bg-transparent ml-2 text-lg"
       />
-      <ClearIcon
+      <XIcon
         className="h-7 text-gray-500 cursor-pointer transition duration-100 transform 
     hover:scale-125 sm:mr-3"
         onClick={() => setValue("")}
