@@ -1,10 +1,12 @@
 import Image from "next/image";
+import Badge from "./Badge";
 
 interface AvatarProps {
   src?: string;
   height?: number;
   width?: number;
   className?: string;
+  status?: string;
 }
 
 const Avatar: React.FC<AvatarProps> = ({
@@ -13,6 +15,7 @@ const Avatar: React.FC<AvatarProps> = ({
   width = 40,
   className = "h-[40px] w-[40px]",
   children = "U",
+  status = "available",
 }) => {
   if (typeof src === "undefined") {
     return (
@@ -26,13 +29,16 @@ const Avatar: React.FC<AvatarProps> = ({
   }
 
   return (
-    <Image
-      className="rounded-full"
-      objectFit="contain"
-      src={src}
-      height={height as number}
-      width={width as number}
-    />
+    <div className="relative">
+      <Image
+        className="rounded-full"
+        objectFit="contain"
+        src={src}
+        height={height as number}
+        width={width as number}
+      />
+      <Badge status={status as any} />
+    </div>
   );
 };
 

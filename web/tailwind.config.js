@@ -8,11 +8,16 @@ module.exports = {
   ],
   darkMode: false,
   theme: {
+    extend: {
+      maxHeight: {
+        header: "calc(100vh - 88px)",
+      },
+    },
     screens: {
       xs: "475px",
       ...defaultTheme.screens,
     },
   },
   variants: {},
-  plugins: [],
+  plugins: [require("tailwind-scrollbar-hide")],
 };

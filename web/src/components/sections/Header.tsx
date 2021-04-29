@@ -1,6 +1,6 @@
 import Logo from "@element/Logo";
 import HeaderOptions from "@module/HeaderOptions";
-import SearchBar from "@module/SearchBar";
+import SearchBar from "@element/SearchBar";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
