@@ -1,25 +1,26 @@
-import ButtonLink from "@element/ButtonLink";
 import Logo from "@element/Logo";
+import HeaderOptions from "@module/HeaderOptions";
 import SearchBar from "@module/SearchBar";
-
+import { useRouter } from "next/router";
 import { useState } from "react";
 
-interface HeaderProps {}
+interface HeaderProps {
+  home: string;
+}
 
-const Header: React.FC<HeaderProps> = ({}) => {
+const Header: React.FC<HeaderProps> = ({ home }) => {
   const [search, setSearch] = useState("");
+
+  const router = useRouter();
 
   return (
     <div
       className="flex items-center justify-between py-4 md:px-4 
     bg-white sticky top-0 z-50"
     >
-      <Logo />
+      <Logo onClick={() => router.push(home)} />
       <SearchBar value={search} setValue={setSearch} />
-      <div className="flex space-x-1 last:mr-1">
-        <ButtonLink title="Login" href="login" />
-        <ButtonLink title="Register" href="register" outlined />
-      </div>
+      <HeaderOptions home={home} />
     </div>
   );
 };

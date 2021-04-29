@@ -1,24 +1,25 @@
+import Button from "@element/Button";
 import appInfo from "@service/appInfo";
 import DashTemplate from "@template/DashTemplate";
 import { createUrqlClient } from "@util/createUrqlClient";
 import { useIsAuth } from "@util/useIsAuth";
+import { auth } from "firebaseConfig";
+import DefaultWrapper from "layouts/DefaultWrapper";
 import { withUrqlClient } from "next-urql";
 import Head from "next/head";
-import Button from "@element/Button";
-import { auth } from "firebaseConfig";
 
 const Dash = () => {
   useIsAuth();
 
   return (
-    <div>
+    <DefaultWrapper>
       <Head>
-        <title>{appInfo.title}</title>
+        <title>Dashboard | {appInfo.title}</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Button title="Sign Out" onClick={() => auth.signOut()} />
       <DashTemplate />
-    </div>
+      {/* <Button title="Sign Out" onClick={() => auth.signOut()} /> */}
+    </DefaultWrapper>
   );
 };
 

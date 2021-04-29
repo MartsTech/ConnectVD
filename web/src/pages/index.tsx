@@ -1,6 +1,8 @@
 import appInfo from "@service/appInfo";
 import HomeTemplate from "@template/HomeTemplate";
+import { createUrqlClient } from "@util/createUrqlClient";
 import { useIsNotAuth } from "@util/useIsNotAuth";
+import { withUrqlClient } from "next-urql";
 import Head from "next/head";
 
 const Home = () => {
@@ -17,4 +19,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default withUrqlClient(createUrqlClient)(Home);

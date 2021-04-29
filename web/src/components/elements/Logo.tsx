@@ -1,10 +1,15 @@
 import Image from "next/image";
 
-interface LogoProps {}
+interface LogoProps {
+  onClick: () => void;
+}
 
-const Logo: React.FC<LogoProps> = ({}) => {
+const Logo: React.FC<LogoProps> = ({ onClick }) => {
   return (
-    <div className="flex items-center space-x-1 cursor-pointer">
+    <div
+      onClick={onClick}
+      className="flex items-center space-x-1 cursor-pointer"
+    >
       <Image
         src="/favicon.ico"
         height="50px"
