@@ -1,8 +1,13 @@
-interface IconButtonProps {}
+interface IconButtonProps {
+  onClick?: () => void;
+}
 
-const IconButton: React.FC<IconButtonProps> = ({ children }) => {
+const IconButton: React.FC<IconButtonProps> = ({ onClick, children }) => {
   return (
-    <div className="rounded-full hover:bg-gray-100 p-2 cursor-pointer">
+    <div
+      onClick={onClick}
+      className="rounded-full hover:bg-gray-100 p-2 cursor-pointer"
+    >
       {children}
     </div>
   );

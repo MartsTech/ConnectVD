@@ -17,13 +17,13 @@ export default [
     color: "blue",
   },
   {
-    title: "Add Friend",
-    Icon: UserAddIcon,
+    title: "Send Mail",
+    Icon: MailIcon,
     color: "blue",
   },
   {
-    title: "Send Mail",
-    Icon: MailIcon,
+    title: "Add Friend",
+    Icon: UserAddIcon,
     color: "blue",
   },
 ];

@@ -2,6 +2,7 @@ import Avatar from "@element/Avatar";
 import ButtonLink from "@element/ButtonLink";
 import IconButton from "@element/IconButton";
 import { BellIcon, MailIcon } from "@heroicons/react/solid";
+import { auth } from "firebaseConfig";
 
 interface HeaderOptionsProps {
   home: string;
@@ -17,7 +18,7 @@ const HeaderOptions: React.FC<HeaderOptionsProps> = ({ home }) => {
         <IconButton>
           <BellIcon className="h-7 w-7 text-gray-500" />
         </IconButton>
-        <IconButton>
+        <IconButton onClick={() => auth.signOut()}>
           <Avatar />
         </IconButton>
       </div>

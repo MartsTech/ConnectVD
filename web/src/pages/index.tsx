@@ -9,13 +9,13 @@ const Home = () => {
   useIsNotAuth();
 
   return (
-    <div>
+    <>
       <Head>
         <title>{appInfo.title}</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <HomeTemplate />
-    </div>
+    </>
   );
 };
 

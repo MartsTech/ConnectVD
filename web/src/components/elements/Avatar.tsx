@@ -3,27 +3,29 @@ import Badge from "./Badge";
 
 interface AvatarProps {
   src?: string;
-  height?: number;
-  width?: number;
+  size?: number;
   className?: string;
   status?: string;
 }
 
 const Avatar: React.FC<AvatarProps> = ({
   src,
-  height = 40,
-  width = 40,
   className = "h-[40px] w-[40px]",
   children = "U",
   status = "available",
+  size = 1,
 }) => {
+  const width = 40 * size;
+  const height = 40 * size;
+
   if (typeof src === "undefined") {
     return (
       <div
         className={`bg-gray-300 rounded-full flex items-center justify-center 
-       text-2xl text-white ${className}`}
+       text-2xl text-white relative ${className}`}
       >
         {children}
+        <Badge className="bottom-0 right-0" status={status as any} />
       </div>
     );
   }
@@ -37,7 +39,7 @@ const Avatar: React.FC<AvatarProps> = ({
         height={height as number}
         width={width as number}
       />
-      <Badge status={status as any} />
+      <Badge status={status as any} size={size} />
     </div>
   );
 };
