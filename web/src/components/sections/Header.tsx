@@ -6,14 +6,16 @@ import HeaderOptions from "@module/HeaderOptions";
 import { MeQuery } from "generated/graphql";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import Dropdown from "./Dropdown";
 
 interface HeaderProps {
   home: string;
   data?: MeQuery;
-  onClick?: () => void;
+  onMenu?: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ home, data, onClick }) => {
+const Header: React.FC<HeaderProps> = ({ home, data, onMenu }) => {
+  const [dropdown, setDropdown] = useState(false);
   const [search, setSearch] = useState("");
 
   const router = useRouter();
@@ -24,13 +26,14 @@ const Header: React.FC<HeaderProps> = ({ home, data, onClick }) => {
     bg-white sticky top-0 z-50 h-16"
     >
       <div className="inline-block xl:hidden">
-        <IconButton onClick={onClick}>
+        <IconButton onClick={onMenu}>
           <MenuIcon className="h-7 w-7 text-gray-500" />
         </IconButton>
       </div>
       <Logo onClick={() => router.push(home)} />
       <SearchBar value={search} setValue={setSearch} />
-      <HeaderOptions data={data} />
+      <HeaderOptions data={data} onAvatar={() => setDropdown(!dropdown)} />
+      {dropdown && <Dropdown data={data} />}
     </div>
   );
 };

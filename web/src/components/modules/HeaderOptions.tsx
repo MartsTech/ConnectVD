@@ -2,14 +2,14 @@ import Avatar from "@element/Avatar";
 import ButtonLink from "@element/ButtonLink";
 import IconButton from "@element/IconButton";
 import { BellIcon, MailIcon } from "@heroicons/react/solid";
-import { auth } from "firebaseConfig";
 import { MeQuery } from "generated/graphql";
 
 interface HeaderOptionsProps {
   data?: MeQuery;
+  onAvatar?: () => void;
 }
 
-const HeaderOptions: React.FC<HeaderOptionsProps> = ({ data }) => {
+const HeaderOptions: React.FC<HeaderOptionsProps> = ({ data, onAvatar }) => {
   if (typeof data !== "undefined") {
     return (
       <div className="flex items-center">
@@ -19,7 +19,7 @@ const HeaderOptions: React.FC<HeaderOptionsProps> = ({ data }) => {
         <IconButton>
           <BellIcon className="h-7 w-7 text-gray-500" />
         </IconButton>
-        <IconButton onClick={() => auth.signOut()}>
+        <IconButton onClick={onAvatar}>
           <Avatar src={data.me?.photoUrl} status={data.me?.status} />
         </IconButton>
       </div>

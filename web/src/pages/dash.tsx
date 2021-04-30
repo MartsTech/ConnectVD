@@ -37,7 +37,7 @@ const Dash = () => {
       Header={
         <Header
           data={meData.data}
-          onClick={() => setSidebar(!sidebar)}
+          onMenu={() => setSidebar(!sidebar)}
           home="/dash"
         />
       }

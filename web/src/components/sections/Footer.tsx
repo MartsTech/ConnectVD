@@ -18,8 +18,8 @@ const Footer: React.FC<FooterProps> = ({}) => {
           ))}
         </div>
         <p className="tracking-wide">
-          Copyright &copy;2021 ConnectVD. Made by{" "}
-          <span className="text-gray-400">Martin Velkov</span>
+          Copyright &copy;{appInfo.year} {appInfo.title}. Made by{" "}
+          <span className="text-gray-400">{appInfo.author}</span>
         </p>
       </div>
     </footer>

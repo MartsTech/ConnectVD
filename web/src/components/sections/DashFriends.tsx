@@ -1,6 +1,6 @@
 import Button from "@element/Button";
 import SectionLabel from "@element/SectionLabel";
-import { UserIcon, UsersIcon } from "@heroicons/react/solid";
+import { UsersIcon } from "@heroicons/react/solid";
 import DashFriend from "@module/DashFriend";
 import { MeQuery } from "generated/graphql";
 

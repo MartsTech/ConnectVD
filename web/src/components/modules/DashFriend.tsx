@@ -1,7 +1,7 @@
 import Avatar from "@element/Avatar";
 import PreviewCard from "@element/PreviewCard";
 import Profile from "@element/Profile";
-import { MailIcon, UserRemoveIcon } from "@heroicons/react/solid";
+import friendExtendOptions from "@service/friendExtendOptions";
 import { MeQuery } from "generated/graphql";
 import { useState } from "react";
 
@@ -22,18 +22,14 @@ const DashFriend: React.FC<DashFriendProps> = ({ info }) => {
       {extend && (
         <div className="shadow-lg">
           <Profile data={info} />
-          <div className="">
+
+          {friendExtendOptions.map(({ Icon, title, onClick }) => (
             <PreviewCard
-              Icon={<MailIcon className="h-7 w-7 text-gray-500" />}
-              title="Contact"
-              onClick={() => alert("TODO")}
+              Icon={<Icon className="h-7 w-7 text-gray-500" />}
+              title={title}
+              onClick={onClick}
             />
-            <PreviewCard
-              Icon={<UserRemoveIcon className="h-7 w-7 text-gray-500" />}
-              title="Unfriend"
-              onClick={() => alert("TODO")}
-            />
-          </div>
+          ))}
         </div>
       )}
     </div>

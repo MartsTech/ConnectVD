@@ -3,15 +3,15 @@ import { UserIcon } from "@heroicons/react/solid";
 import DashBoard from "@section/DashBoard";
 
 interface DashTemplateProps {
-  useSidebar: boolean;
   Friends: JSX.Element;
   Profile: JSX.Element;
+  useSidebar: boolean;
 }
 
 const DashTemplate: React.FC<DashTemplateProps> = ({
-  useSidebar,
   Friends,
   Profile,
+  useSidebar,
 }) => {
   return (
     <div className="h-full w-full flex items-center justify-evenly bg-[#0b0e11]">
@@ -20,7 +20,7 @@ const DashTemplate: React.FC<DashTemplateProps> = ({
       </div>
       <div
         className="flex flex-col xl:hidden absolute left-0 top-16 w-full sm:w-80 
-      h-full overflow-y-scroll scrollbar-hide"
+      h-header overflow-y-scroll scrollbar-hide"
       >
         {useSidebar && Friends}
       </div>
