@@ -6,11 +6,9 @@ interface DashBoardProps {}
 
 const DashBoard: React.FC<DashBoardProps> = ({}) => {
   return (
-    <div className="">
-      <div className="w-full">
-        <DashMessage />
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 justify-around">
+    <div className="text-center flex flex-col sm:space-y-7">
+      <DashMessage />
+      <div className="grid grid-cols-1 md:grid-cols-2">
         {dashFunctions.map((info) => (
           <DashFunc key={info.title} info={info} />
         ))}

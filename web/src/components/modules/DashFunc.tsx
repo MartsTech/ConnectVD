@@ -12,10 +12,10 @@ const DashFunc: React.FC<DashFuncProps> = ({
   return (
     <div className="py-5 mx-auto cursor-pointer">
       <div
-        className={`rounded-full h-20 w-44 md:h-24 md:w-60 flex items-center justify-center 
+        className={`rounded-full h-16 sm:h-24 w-60 flex items-center justify-center 
         text-white ${cssColor}`}
       >
-        <Icon className={"h-10 w-10"} />
+        <Icon className="h-12 w-12" />
         <h3 className="text-2xl font-medium ml-4">{title}</h3>
       </div>
     </div>

@@ -18,7 +18,7 @@ const Header: React.FC<HeaderProps> = ({ home, data }) => {
   return (
     <div
       className="flex items-center justify-between py-4 md:px-4 
-    bg-white sticky top-0 z-50 h-24"
+    bg-white sticky top-0 z-50 h-16"
     >
       <Logo onClick={() => router.push(home)} />
       <SearchBar value={search} setValue={setSearch} />

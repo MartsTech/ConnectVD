@@ -14,7 +14,7 @@ const DashTemplate: React.FC<DashTemplateProps> = ({ Friends, Profile }) => {
         {Friends}
       </div>
       <div
-        className="h-min w-2/3 max-w-3xl flex flex-col
+        className="h-full sm:h-auto w-full md:w-[580px] lg:w-1/2 max-w-3xl flex flex-col
         border border-gray-300 shadow-xl space-y-10 pb-10 bg-white"
       >
         <DashBoard />
