@@ -1,10 +1,13 @@
-import DashProfile from "@section/DashProfile";
+import DashProfile from "@element/Profile";
+import DefaultLayout from "@layout/HeaderLayout";
+import DashFriends from "@section/DashFriends";
+import Header from "@section/Header";
 import appInfo from "@service/appInfo";
 import DashTemplate from "@template/DashTemplate";
 import { createUrqlClient } from "@util/createUrqlClient";
 import { useIsAuth } from "@util/useIsAuth";
 import { auth } from "firebaseConfig";
-import { useMeQuery } from "generated/graphql";
+import { MeQuery, useMeQuery } from "generated/graphql";
 import { withUrqlClient } from "next-urql";
 import Head from "next/head";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -18,14 +21,25 @@ const Dash = () => {
     variables: { uid: user?.uid as string },
   });
 
+  const friendsData: MeQuery[] = [];
+
+  for (let i = 0; i < 20; ++i) {
+    if (typeof meData.data !== "undefined") {
+      friendsData.push(meData.data);
+    }
+  }
+
   return (
-    <>
+    <DefaultLayout Header={<Header data={meData.data} home="/dash" />}>
       <Head>
         <title>Dashboard | {appInfo.title}</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <DashTemplate Profile={<DashProfile data={meData.data} />} />
-    </>
+      <DashTemplate
+        Friends={<DashFriends data={friendsData} />}
+        Profile={<DashProfile data={meData.data} />}
+      />
+    </DefaultLayout>
   );
 };
 

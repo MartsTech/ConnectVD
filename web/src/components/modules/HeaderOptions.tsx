@@ -3,13 +3,14 @@ import ButtonLink from "@element/ButtonLink";
 import IconButton from "@element/IconButton";
 import { BellIcon, MailIcon } from "@heroicons/react/solid";
 import { auth } from "firebaseConfig";
+import { MeQuery } from "generated/graphql";
 
 interface HeaderOptionsProps {
-  home: string;
+  data?: MeQuery;
 }
 
-const HeaderOptions: React.FC<HeaderOptionsProps> = ({ home }) => {
-  if (home == "/dash") {
+const HeaderOptions: React.FC<HeaderOptionsProps> = ({ data }) => {
+  if (typeof data !== "undefined") {
     return (
       <div className="flex items-center">
         <IconButton>
@@ -19,7 +20,7 @@ const HeaderOptions: React.FC<HeaderOptionsProps> = ({ home }) => {
           <BellIcon className="h-7 w-7 text-gray-500" />
         </IconButton>
         <IconButton onClick={() => auth.signOut()}>
-          <Avatar />
+          <Avatar src={data.me?.photoUrl} status={data.me?.status} />
         </IconButton>
       </div>
     );

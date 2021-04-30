@@ -1,3 +1,5 @@
+import DefaultLayout from "@layout/HeaderLayout";
+import Header from "@section/Header";
 import appInfo from "@service/appInfo";
 import HomeTemplate from "@template/HomeTemplate";
 import { createUrqlClient } from "@util/createUrqlClient";
@@ -9,13 +11,13 @@ const Home = () => {
   useIsNotAuth();
 
   return (
-    <>
+    <DefaultLayout Header={<Header home="/" />}>
       <Head>
         <title>{appInfo.title}</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <HomeTemplate />
-    </>
+    </DefaultLayout>
   );
 };
 

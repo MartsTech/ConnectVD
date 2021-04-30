@@ -7,7 +7,6 @@ import { withUrqlClient } from "next-urql";
 import Head from "next/head";
 import { useState } from "react";
 import { login } from "@util/login";
-import DefaultWrapper from "layouts/DefaultWrapper";
 import { useIsNotAuth } from "@util/useIsNotAuth";
 import { useSignInMutation } from "generated/graphql";
 
@@ -22,7 +21,7 @@ const Login: React.FC<LoginProps> = ({}) => {
   const [password, setPassword] = useState("");
 
   return (
-    <DefaultWrapper>
+    <>
       <Head>
         <title>Login</title>
         <link rel="icon" href="/favicon.ico" />
@@ -47,7 +46,7 @@ const Login: React.FC<LoginProps> = ({}) => {
           />
         }
       />
-    </DefaultWrapper>
+    </>
   );
 };
 

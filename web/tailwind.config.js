@@ -9,8 +9,8 @@ module.exports = {
   darkMode: false,
   theme: {
     extend: {
-      maxHeight: {
-        header: "calc(100vh - 88px)",
+      height: {
+        header: "calc(100vh - 6rem)",
       },
     },
     screens: {

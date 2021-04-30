@@ -1,24 +1,29 @@
-import DashFriends from "@section/DashFriends";
-import DashFuncs from "@section/DashFuncs";
-import DashMessage from "@section/DashMessage";
-import DefaultLayout from "layouts/DefaultLayout";
+import SectionLabel from "@element/SectionLabel";
+import { UserIcon } from "@heroicons/react/solid";
+import DashBoard from "@section/DashBoard";
 
 interface DashTemplateProps {
+  Friends: JSX.Element;
   Profile: JSX.Element;
 }
 
-const DashTemplate: React.FC<DashTemplateProps> = ({ Profile }) => {
+const DashTemplate: React.FC<DashTemplateProps> = ({ Friends, Profile }) => {
   return (
-    <DefaultLayout path="/dash">
-      <div className="h-full max-h-header flex items-center px-20">
-        <DashFriends />
-        <div className="h-full w-2/3 max-w-3xl mx-auto text-center space-y-10">
-          <DashMessage />
-          <DashFuncs />
-        </div>
-        <div className="h-full">{Profile}</div>
+    <div className="h-full w-full flex items-center justify-evenly bg-[#0b0e11]">
+      <div className="hidden xl:flex flex-col w-80 h-full overflow-y-scroll scrollbar-hide">
+        {Friends}
       </div>
-    </DefaultLayout>
+      <div
+        className="h-min w-2/3 max-w-3xl flex flex-col
+        border border-gray-300 shadow-xl space-y-10 pb-10 bg-white"
+      >
+        <DashBoard />
+      </div>
+      <div className="h-full hidden lg:flex flex-col">
+        <SectionLabel Icon={UserIcon} title="Profile" />
+        {Profile}
+      </div>
+    </div>
   );
 };
 

@@ -3,13 +3,12 @@ import HomeShortcut from "@module/HomeShortcut";
 import Canvas from "@section/Canvas";
 import Footer from "@section/Footer";
 import homeSections from "@service/homeSections";
-import DefaultLayout from "layouts/DefaultLayout";
 
 interface HomeTemplateProps {}
 
 const HomeTemplate: React.FC<HomeTemplateProps> = ({}) => {
   return (
-    <DefaultLayout path="/">
+    <div>
       <div
         id="top"
         className="w-full p-2 bg-[#3f51b5] text-white text-center font-medium"
@@ -33,7 +32,7 @@ const HomeTemplate: React.FC<HomeTemplateProps> = ({}) => {
         ))}
       </div>
       <Footer />
-    </DefaultLayout>
+    </div>
   );
 };
 

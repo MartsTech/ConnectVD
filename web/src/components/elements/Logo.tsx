@@ -14,7 +14,7 @@ const Logo: React.FC<LogoProps> = ({ onClick }) => {
         src="/favicon.ico"
         height="50px"
         width="50px"
-        className="object-contain"
+        objectFit="contain"
         alt="Logo"
       />
       <h1 className="inline-block md:inline-block xs:hidden text-xl xs:text-2xl font-mono">
