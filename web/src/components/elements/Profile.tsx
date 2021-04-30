@@ -10,7 +10,7 @@ const Profile: React.FC<ProfileProps> = ({ data }) => {
     <div
       className="flex flex-col space-y-1 border border-gray-100 
         py-7 px-14 items-center sticky z-10 top-0 bg-white
-        text-center"
+        text-center w-80"
     >
       <Avatar src={data?.me?.photoUrl} size={2} status={data?.me?.status} />
       <h2 className="text-lg font-medium text-gray-700">

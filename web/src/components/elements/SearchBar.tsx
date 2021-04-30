@@ -1,10 +1,10 @@
-import { Dispatch, SetStateAction } from "react";
 import { XIcon } from "@heroicons/react/solid";
 import { SearchIcon } from "@heroicons/react/outline";
+import { setHookType } from "@type/setHookType";
 
 interface SearchBarProps {
   value: string;
-  setValue: Dispatch<SetStateAction<string>>;
+  setValue: setHookType;
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({ value, setValue }) => {

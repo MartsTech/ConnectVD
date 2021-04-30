@@ -1,5 +1,5 @@
 import { signInServerType } from "@type/signInServerType";
-import { auth, provider } from "firebaseConfig";
+import { auth, provider } from "@config/firebase";
 
 export const signIn = (signInServer: signInServerType) => {
   auth

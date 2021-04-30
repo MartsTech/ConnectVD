@@ -10,10 +10,12 @@ const PreviewCard: React.FC<PreviewCardProps> = ({ title, Icon, onClick }) => {
       onClick={onClick}
       className="flex items-center p-3 hover:shadow-md transition duration-100 
         transform hover:bg-gray-200 cursor-pointer border border-gray-200
-        bg-white"
+        bg-white h-16"
     >
       {Icon}
-      <h3 className="text-lg ml-2 font-medium text-gray-500">{title}</h3>
+      <h3 className="text-lg ml-2 font-medium text-gray-500 capitalize">
+        {title}
+      </h3>
     </div>
   );
 };

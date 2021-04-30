@@ -460,38 +460,37 @@ export type NewInviteSubscription = { __typename?: "Subscription" } & {
 };
 
 export const RegularEmailResponseFragmentDoc = gql`
-  fragment RegularEmailResponse on Email {
-    id
-    from
-    to
-    subject
-    message
-    createdAt
-  }
-`;
+    fragment RegularEmailResponse on Email {
+  id
+  from
+  to
+  subject
+  message
+  createdAt
+}
+    `;
 export const RegularUserResponseFragmentDoc = gql`
-  fragment RegularUserResponse on User {
-    email
-    displayName
-    photoUrl
-    status
-  }
-`;
+    fragment RegularUserResponse on User {
+  email
+  displayName
+  photoUrl
+  status
+}
+    `;
 export const RegularFriendResponseFragmentDoc = gql`
-  fragment RegularFriendResponse on Friend {
-    id
-    user {
-      ...RegularUserResponse
-    }
-    createdAt
+    fragment RegularFriendResponse on Friend {
+  id
+  user {
+    ...RegularUserResponse
   }
-  ${RegularUserResponseFragmentDoc}
-`;
+  createdAt
+}
+    ${RegularUserResponseFragmentDoc}`;
 export const AcceptFriendRequestDocument = gql`
-  mutation AcceptFriendRequest($uid: String!, $email: String!) {
-    acceptFriendRequest(uid: $uid, email: $email)
-  }
-`;
+    mutation AcceptFriendRequest($uid: String!, $email: String!) {
+  acceptFriendRequest(uid: $uid, email: $email)
+}
+    `;
 
 export function useAcceptFriendRequestMutation() {
   return Urql.useMutation<
@@ -500,16 +499,16 @@ export function useAcceptFriendRequestMutation() {
   >(AcceptFriendRequestDocument);
 }
 export const AcceptInviteDocument = gql`
-  mutation AcceptInvite($uid: String!, $email: String!) {
-    acceptInvite(uid: $uid, email: $email) {
-      roomId
-      error {
-        message
-        status
-      }
+    mutation AcceptInvite($uid: String!, $email: String!) {
+  acceptInvite(uid: $uid, email: $email) {
+    roomId
+    error {
+      message
+      status
     }
   }
-`;
+}
+    `;
 
 export function useAcceptInviteMutation() {
   return Urql.useMutation<AcceptInviteMutation, AcceptInviteMutationVariables>(
@@ -517,13 +516,12 @@ export function useAcceptInviteMutation() {
   );
 }
 export const ChangeStatusDocument = gql`
-  mutation ChangeStatus($uid: String!, $status: String!) {
-    changeStatus(uid: $uid, status: $status) {
-      ...RegularUserResponse
-    }
+    mutation ChangeStatus($uid: String!, $status: String!) {
+  changeStatus(uid: $uid, status: $status) {
+    ...RegularUserResponse
   }
-  ${RegularUserResponseFragmentDoc}
-`;
+}
+    ${RegularUserResponseFragmentDoc}`;
 
 export function useChangeStatusMutation() {
   return Urql.useMutation<ChangeStatusMutation, ChangeStatusMutationVariables>(
@@ -531,13 +529,13 @@ export function useChangeStatusMutation() {
   );
 }
 export const CreateFriendRequestDocument = gql`
-  mutation CreateFriendRequest($uid: String!, $email: String!) {
-    createFriendRequest(uid: $uid, email: $email) {
-      message
-      status
-    }
+    mutation CreateFriendRequest($uid: String!, $email: String!) {
+  createFriendRequest(uid: $uid, email: $email) {
+    message
+    status
   }
-`;
+}
+    `;
 
 export function useCreateFriendRequestMutation() {
   return Urql.useMutation<
@@ -546,10 +544,10 @@ export function useCreateFriendRequestMutation() {
   >(CreateFriendRequestDocument);
 }
 export const CreateRoomDocument = gql`
-  mutation CreateRoom($uid: String!) {
-    createRoom(uid: $uid)
-  }
-`;
+    mutation CreateRoom($uid: String!) {
+  createRoom(uid: $uid)
+}
+    `;
 
 export function useCreateRoomMutation() {
   return Urql.useMutation<CreateRoomMutation, CreateRoomMutationVariables>(
@@ -557,10 +555,10 @@ export function useCreateRoomMutation() {
   );
 }
 export const DeclineFriendRequestDocument = gql`
-  mutation DeclineFriendRequest($uid: String!, $email: String!) {
-    declineFriendRequest(uid: $uid, email: $email)
-  }
-`;
+    mutation DeclineFriendRequest($uid: String!, $email: String!) {
+  declineFriendRequest(uid: $uid, email: $email)
+}
+    `;
 
 export function useDeclineFriendRequestMutation() {
   return Urql.useMutation<
@@ -569,10 +567,10 @@ export function useDeclineFriendRequestMutation() {
   >(DeclineFriendRequestDocument);
 }
 export const DeclineInviteDocument = gql`
-  mutation DeclineInvite($uid: String!, $email: String!) {
-    declineInvite(uid: $uid, email: $email)
-  }
-`;
+    mutation DeclineInvite($uid: String!, $email: String!) {
+  declineInvite(uid: $uid, email: $email)
+}
+    `;
 
 export function useDeclineInviteMutation() {
   return Urql.useMutation<
@@ -581,13 +579,13 @@ export function useDeclineInviteMutation() {
   >(DeclineInviteDocument);
 }
 export const InviteFriendDocument = gql`
-  mutation InviteFriend($uid: String!, $email: String!) {
-    inviteFriend(uid: $uid, email: $email) {
-      message
-      status
-    }
+    mutation InviteFriend($uid: String!, $email: String!) {
+  inviteFriend(uid: $uid, email: $email) {
+    message
+    status
   }
-`;
+}
+    `;
 
 export function useInviteFriendMutation() {
   return Urql.useMutation<InviteFriendMutation, InviteFriendMutationVariables>(
@@ -595,16 +593,16 @@ export function useInviteFriendMutation() {
   );
 }
 export const JoinRoomDocument = gql`
-  mutation JoinRoom($uid: String!, $input: JoinRoomInput!) {
-    joinRoom(uid: $uid, input: $input) {
-      error
-      users {
-        socketId
-        email
-      }
+    mutation JoinRoom($uid: String!, $input: JoinRoomInput!) {
+  joinRoom(uid: $uid, input: $input) {
+    error
+    users {
+      socketId
+      email
     }
   }
-`;
+}
+    `;
 
 export function useJoinRoomMutation() {
   return Urql.useMutation<JoinRoomMutation, JoinRoomMutationVariables>(
@@ -612,19 +610,18 @@ export function useJoinRoomMutation() {
   );
 }
 export const SendEmailDocument = gql`
-  mutation SendEmail($uid: String!, $options: EmailContent!) {
-    sendEmail(uid: $uid, options: $options) {
-      email {
-        ...RegularEmailResponse
-      }
-      error {
-        message
-        status
-      }
+    mutation SendEmail($uid: String!, $options: EmailContent!) {
+  sendEmail(uid: $uid, options: $options) {
+    email {
+      ...RegularEmailResponse
+    }
+    error {
+      message
+      status
     }
   }
-  ${RegularEmailResponseFragmentDoc}
-`;
+}
+    ${RegularEmailResponseFragmentDoc}`;
 
 export function useSendEmailMutation() {
   return Urql.useMutation<SendEmailMutation, SendEmailMutationVariables>(
@@ -632,13 +629,12 @@ export function useSendEmailMutation() {
   );
 }
 export const SignInDocument = gql`
-  mutation SignIn($options: SignInOptionsInput!) {
-    signIn(options: $options) {
-      ...RegularUserResponse
-    }
+    mutation SignIn($options: SignInOptionsInput!) {
+  signIn(options: $options) {
+    ...RegularUserResponse
   }
-  ${RegularUserResponseFragmentDoc}
-`;
+}
+    ${RegularUserResponseFragmentDoc}`;
 
 export function useSignInMutation() {
   return Urql.useMutation<SignInMutation, SignInMutationVariables>(
@@ -646,16 +642,15 @@ export function useSignInMutation() {
   );
 }
 export const EmailsDocument = gql`
-  query Emails($uid: String!, $limit: Int!, $cursor: String) {
-    emails(uid: $uid, limit: $limit, cursor: $cursor) {
-      hasMore
-      emails {
-        ...RegularEmailResponse
-      }
+    query Emails($uid: String!, $limit: Int!, $cursor: String) {
+  emails(uid: $uid, limit: $limit, cursor: $cursor) {
+    hasMore
+    emails {
+      ...RegularEmailResponse
     }
   }
-  ${RegularEmailResponseFragmentDoc}
-`;
+}
+    ${RegularEmailResponseFragmentDoc}`;
 
 export function useEmailsQuery(
   options: Omit<Urql.UseQueryArgs<EmailsQueryVariables>, "query"> = {}
@@ -663,13 +658,12 @@ export function useEmailsQuery(
   return Urql.useQuery<EmailsQuery>({ query: EmailsDocument, ...options });
 }
 export const FriendRequestsDocument = gql`
-  query FriendRequests($uid: String!) {
-    friendRequests(uid: $uid) {
-      ...RegularFriendResponse
-    }
+    query FriendRequests($uid: String!) {
+  friendRequests(uid: $uid) {
+    ...RegularFriendResponse
   }
-  ${RegularFriendResponseFragmentDoc}
-`;
+}
+    ${RegularFriendResponseFragmentDoc}`;
 
 export function useFriendRequestsQuery(
   options: Omit<Urql.UseQueryArgs<FriendRequestsQueryVariables>, "query"> = {}
@@ -680,13 +674,12 @@ export function useFriendRequestsQuery(
   });
 }
 export const FriendsDocument = gql`
-  query Friends($uid: String!) {
-    friends(uid: $uid) {
-      ...RegularFriendResponse
-    }
+    query Friends($uid: String!) {
+  friends(uid: $uid) {
+    ...RegularFriendResponse
   }
-  ${RegularFriendResponseFragmentDoc}
-`;
+}
+    ${RegularFriendResponseFragmentDoc}`;
 
 export function useFriendsQuery(
   options: Omit<Urql.UseQueryArgs<FriendsQueryVariables>, "query"> = {}
@@ -694,13 +687,12 @@ export function useFriendsQuery(
   return Urql.useQuery<FriendsQuery>({ query: FriendsDocument, ...options });
 }
 export const InvitesDocument = gql`
-  query Invites($uid: String!) {
-    invites(uid: $uid) {
-      ...RegularFriendResponse
-    }
+    query Invites($uid: String!) {
+  invites(uid: $uid) {
+    ...RegularFriendResponse
   }
-  ${RegularFriendResponseFragmentDoc}
-`;
+}
+    ${RegularFriendResponseFragmentDoc}`;
 
 export function useInvitesQuery(
   options: Omit<Urql.UseQueryArgs<InvitesQueryVariables>, "query"> = {}
@@ -708,13 +700,12 @@ export function useInvitesQuery(
   return Urql.useQuery<InvitesQuery>({ query: InvitesDocument, ...options });
 }
 export const MeDocument = gql`
-  query Me($uid: String!) {
-    me(uid: $uid) {
-      ...RegularUserResponse
-    }
+    query Me($uid: String!) {
+  me(uid: $uid) {
+    ...RegularUserResponse
   }
-  ${RegularUserResponseFragmentDoc}
-`;
+}
+    ${RegularUserResponseFragmentDoc}`;
 
 export function useMeQuery(
   options: Omit<Urql.UseQueryArgs<MeQueryVariables>, "query"> = {}
@@ -722,13 +713,12 @@ export function useMeQuery(
   return Urql.useQuery<MeQuery>({ query: MeDocument, ...options });
 }
 export const NewEmailDocument = gql`
-  subscription NewEmail($uid: String!) {
-    newEmail(uid: $uid) {
-      ...RegularEmailResponse
-    }
+    subscription NewEmail($uid: String!) {
+  newEmail(uid: $uid) {
+    ...RegularEmailResponse
   }
-  ${RegularEmailResponseFragmentDoc}
-`;
+}
+    ${RegularEmailResponseFragmentDoc}`;
 
 export function useNewEmailSubscription<TData = NewEmailSubscription>(
   options: Omit<
@@ -744,13 +734,12 @@ export function useNewEmailSubscription<TData = NewEmailSubscription>(
   >({ query: NewEmailDocument, ...options }, handler);
 }
 export const NewFriendDocument = gql`
-  subscription NewFriend($uid: String!) {
-    newFriend(uid: $uid) {
-      ...RegularFriendResponse
-    }
+    subscription NewFriend($uid: String!) {
+  newFriend(uid: $uid) {
+    ...RegularFriendResponse
   }
-  ${RegularFriendResponseFragmentDoc}
-`;
+}
+    ${RegularFriendResponseFragmentDoc}`;
 
 export function useNewFriendSubscription<TData = NewFriendSubscription>(
   options: Omit<
@@ -766,13 +755,12 @@ export function useNewFriendSubscription<TData = NewFriendSubscription>(
   >({ query: NewFriendDocument, ...options }, handler);
 }
 export const NewFriendRequstDocument = gql`
-  subscription NewFriendRequst($uid: String!) {
-    newFriendRequst(uid: $uid) {
-      ...RegularFriendResponse
-    }
+    subscription NewFriendRequst($uid: String!) {
+  newFriendRequst(uid: $uid) {
+    ...RegularFriendResponse
   }
-  ${RegularFriendResponseFragmentDoc}
-`;
+}
+    ${RegularFriendResponseFragmentDoc}`;
 
 export function useNewFriendRequstSubscription<
   TData = NewFriendRequstSubscription
@@ -790,13 +778,12 @@ export function useNewFriendRequstSubscription<
   >({ query: NewFriendRequstDocument, ...options }, handler);
 }
 export const NewInviteDocument = gql`
-  subscription NewInvite($uid: String!) {
-    newInvite(uid: $uid) {
-      ...RegularFriendResponse
-    }
+    subscription NewInvite($uid: String!) {
+  newInvite(uid: $uid) {
+    ...RegularFriendResponse
   }
-  ${RegularFriendResponseFragmentDoc}
-`;
+}
+    ${RegularFriendResponseFragmentDoc}`;
 
 export function useNewInviteSubscription<TData = NewInviteSubscription>(
   options: Omit<

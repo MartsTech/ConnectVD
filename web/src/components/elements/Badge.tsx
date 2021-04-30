@@ -16,7 +16,7 @@ const Badge: React.FC<BadgeProps> = ({ status, size = 1, className }) => {
 
   return (
     <div
-      className={`rounded-full absolute bottom-1 right-1
+      className={`rounded-full bottom-1 right-1
      animate-bounce ${color} ${sizeCss} ${className}`}
     />
   );

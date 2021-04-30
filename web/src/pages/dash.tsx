@@ -1,3 +1,4 @@
+import { auth } from "@config/firebase";
 import DashProfile from "@element/Profile";
 import DefaultLayout from "@layout/HeaderLayout";
 import DashFriends from "@section/DashFriends";
@@ -6,7 +7,6 @@ import appInfo from "@service/appInfo";
 import DashTemplate from "@template/DashTemplate";
 import { createUrqlClient } from "@util/createUrqlClient";
 import { useIsAuth } from "@util/useIsAuth";
-import { auth } from "firebaseConfig";
 import { MeQuery, useMeQuery } from "generated/graphql";
 import { withUrqlClient } from "next-urql";
 import Head from "next/head";

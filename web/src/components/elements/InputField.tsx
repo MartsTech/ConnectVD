@@ -1,9 +1,9 @@
-import { Dispatch, SetStateAction } from "react";
+import { setHookType } from "@type/setHookType";
 
 interface InputFieldProps {
   type: "email" | "password";
   value: string;
-  setValue: Dispatch<SetStateAction<string>>;
+  setValue: setHookType;
 }
 
 const InputField: React.FC<InputFieldProps> = ({ value, setValue, type }) => {

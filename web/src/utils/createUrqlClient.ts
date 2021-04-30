@@ -6,7 +6,7 @@ import {
   stringifyVariables,
   subscriptionExchange,
 } from "urql";
-import { server_url, __prod__ } from "../constants";
+import { server_url, __prod__ } from "../configs/constants";
 import {
   AcceptFriendRequestMutationVariables,
   ChangeStatusMutation,

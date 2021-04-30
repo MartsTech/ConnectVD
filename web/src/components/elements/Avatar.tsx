@@ -39,7 +39,7 @@ const Avatar: React.FC<AvatarProps> = ({
         height={height as number}
         width={width as number}
       />
-      <Badge status={status as any} size={size} />
+      <Badge status={status as any} size={size} className="absolute" />
     </div>
   );
 };

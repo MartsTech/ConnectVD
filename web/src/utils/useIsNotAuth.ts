@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { useMeQuery } from "../generated/graphql";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "firebaseConfig";
+import { auth } from "@config/firebase";
 
 export const useIsNotAuth = () => {
   const [user, loading] = useAuthState(auth);
