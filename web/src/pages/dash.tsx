@@ -10,6 +10,7 @@ import { auth } from "firebaseConfig";
 import { MeQuery, useMeQuery } from "generated/graphql";
 import { withUrqlClient } from "next-urql";
 import Head from "next/head";
+import { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 
 const Dash = () => {
@@ -21,6 +22,8 @@ const Dash = () => {
     variables: { uid: user?.uid as string },
   });
 
+  const [sidebar, setSidebar] = useState(false);
+
   const friendsData: MeQuery[] = [];
 
   for (let i = 0; i < 20; ++i) {
@@ -30,12 +33,21 @@ const Dash = () => {
   }
 
   return (
-    <DefaultLayout Header={<Header data={meData.data} home="/dash" />}>
+    <DefaultLayout
+      Header={
+        <Header
+          data={meData.data}
+          onClick={() => setSidebar(!sidebar)}
+          home="/dash"
+        />
+      }
+    >
       <Head>
         <title>Dashboard | {appInfo.title}</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <DashTemplate
+        useSidebar={sidebar}
         Friends={<DashFriends data={friendsData} />}
         Profile={<DashProfile data={meData.data} />}
       />
