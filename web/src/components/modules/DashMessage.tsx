@@ -1,19 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface DashMessageProps {}
 
 const DashMessage: React.FC<DashMessageProps> = ({}) => {
-  const [time, setTime] = useState(new Date().toLocaleTimeString());
+  const [time, setTime] = useState("00:00:00 PM");
 
-  const updateTime = () => {
-    setTime(new Date().toLocaleTimeString());
-  };
-
-  setInterval(updateTime, 1000);
+  useEffect(() => {
+    const updateTime = setInterval(() => {
+      setTime(new Date().toLocaleTimeString());
+    }, 1000);
+    return () => clearInterval(updateTime);
+  }, []);
 
   return (
     <div
-      className="flex flex-col items-center  sm:p-5 
+      className="flex flex-col items-center sm:p-5 
     border border-gray-200 shadow-lg bg-gray-800 text-white"
     >
       <h1 className="text-5xl font-mono mx-auto hidden sm:inline-block pb-10">

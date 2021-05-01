@@ -1,27 +1,24 @@
 import Button from "@element/Button";
 import InputField from "@element/InputField";
+import IsNotAuth from "@layout/IsNotAuth";
 import LoginTemplate from "@template/LoginTemplate";
 import { createUrqlClient } from "@util/createUrqlClient";
-import { signIn } from "@util/signIn";
+import { login, signIn } from "@util/signInMethods";
+import { useSignInMutation } from "generated/graphql";
 import { withUrqlClient } from "next-urql";
 import Head from "next/head";
 import { useState } from "react";
-import { login } from "@util/login";
-import { useIsNotAuth } from "@util/useIsNotAuth";
-import { useSignInMutation } from "generated/graphql";
 
 interface LoginProps {}
 
 const Login: React.FC<LoginProps> = ({}) => {
-  useIsNotAuth();
-
   const [, signWithServer] = useSignInMutation();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   return (
-    <>
+    <IsNotAuth>
       <Head>
         <title>Login</title>
         <link rel="icon" href="/favicon.ico" />
@@ -46,7 +43,7 @@ const Login: React.FC<LoginProps> = ({}) => {
           />
         }
       />
-    </>
+    </IsNotAuth>
   );
 };
 

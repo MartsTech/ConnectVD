@@ -1,16 +1,17 @@
 import SectionLabel from "@element/SectionLabel";
 import { UserIcon } from "@heroicons/react/solid";
-import DashBoard from "@section/DashBoard";
 
 interface DashTemplateProps {
   Friends: JSX.Element;
   Profile: JSX.Element;
+  Board: JSX.Element;
   useSidebar: boolean;
 }
 
 const DashTemplate: React.FC<DashTemplateProps> = ({
   Friends,
   Profile,
+  Board,
   useSidebar,
 }) => {
   return (
@@ -19,8 +20,8 @@ const DashTemplate: React.FC<DashTemplateProps> = ({
         {Friends}
       </div>
       <div
-        className="flex flex-col xl:hidden absolute left-0 top-16 w-full sm:w-80 
-      h-header overflow-y-scroll scrollbar-hide"
+        className="flex flex-col xl:hidden absolute left-0 top-16 
+      h-header overflow-y-scroll scrollbar-hide border"
       >
         {useSidebar && Friends}
       </div>
@@ -28,7 +29,7 @@ const DashTemplate: React.FC<DashTemplateProps> = ({
         className="h-full sm:h-auto w-full md:w-[580px] lg:w-1/2 max-w-3xl flex flex-col
         border border-gray-300 shadow-xl space-y-10 pb-10 bg-white"
       >
-        <DashBoard />
+        {Board}
       </div>
       <div className="h-full hidden lg:flex flex-col">
         <SectionLabel Icon={UserIcon} title="Profile" />

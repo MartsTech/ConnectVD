@@ -13,7 +13,7 @@ const Dropdown: React.FC<DropdownProps> = ({ data }) => {
 
   return (
     <div
-      className="absolute top-16 right-6 w-80 bg-white overflow-hidden
+      className="absolute top-16 right-0 xs:right-6 w-80 bg-white overflow-hidden
     transition-all ease-in-out duration-500"
       style={{ height: height }}
     >

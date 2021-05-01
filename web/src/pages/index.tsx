@@ -1,23 +1,23 @@
 import DefaultLayout from "@layout/HeaderLayout";
+import IsNotAuth from "@layout/IsNotAuth";
 import Header from "@section/Header";
 import appInfo from "@service/appInfo";
 import HomeTemplate from "@template/HomeTemplate";
 import { createUrqlClient } from "@util/createUrqlClient";
-import { useIsNotAuth } from "@util/useIsNotAuth";
 import { withUrqlClient } from "next-urql";
 import Head from "next/head";
 
 const Home = () => {
-  useIsNotAuth();
-
   return (
-    <DefaultLayout Header={<Header home="/" />}>
-      <Head>
-        <title>{appInfo.title}</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <HomeTemplate />
-    </DefaultLayout>
+    <IsNotAuth>
+      <DefaultLayout Header={<Header home="/" />}>
+        <Head>
+          <title>{appInfo.title}</title>
+          <link rel="icon" href="/favicon.ico" />
+        </Head>
+        <HomeTemplate />
+      </DefaultLayout>
+    </IsNotAuth>
   );
 };
 

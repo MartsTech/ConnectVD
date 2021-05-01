@@ -10,7 +10,7 @@ interface DashFriendsProps {
 
 const DashFriends: React.FC<DashFriendsProps> = ({ data }) => {
   return (
-    <div className="bg-white">
+    <div className="bg-white w-full sm:w-80">
       <SectionLabel Icon={UsersIcon} title="Friends" />
       <div>
         {data.map((friend, id) => (

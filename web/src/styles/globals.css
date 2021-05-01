@@ -3,6 +3,7 @@
 @import "tailwindcss/utilities";
 @import "tailwindcss/screens";
 
+/*Dropdown*/
 .menu-primary-enter {
   position: absolute;
   transform: translateX(-110%);
@@ -34,4 +35,29 @@
 .menu-secondary-exit-active {
   transform: translateX(110%);
   transition: all 500ms ease;
+}
+
+/*Loader*/
+.loader {
+  border-top-color: #3f51b5;
+  -webkit-animation: spinner 1.5s linear infinite;
+  animation: spinner 1.5s linear infinite;
+}
+
+@-webkit-keyframes spinner {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@keyframes spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
