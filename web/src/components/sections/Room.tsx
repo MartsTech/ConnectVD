@@ -1,17 +1,20 @@
 import { useEffect, useRef, useState } from "react";
-import io, { Socket } from "socket.io-client";
+import { io, Socket } from "socket.io-client";
 import Video from "@module/Video";
 import { useRouter } from "next/router";
+import { peerContext } from "@type/peerContext";
+import iceConfiguration from "@config/iceConfigs";
+import { socketPayload } from "@type/socketPayload";
 
 interface RoomProps {}
 
 const Room: React.FC<RoomProps> = () => {
-  const [peers, setPeers] = useState([]);
+  const [peers, setPeers] = useState<peerContext[]>([]);
+  const peersRef = useRef<peerContext[]>([]);
 
   const socketRef = useRef<Socket>();
-  const userVideoRef = useRef<HTMLVideoElement>();
   const userStream = useRef<MediaStream>();
-  const peersRef = useRef([]);
+  const userVideoRef = useRef<HTMLVideoElement>(null);
 
   const router = useRouter();
 
@@ -29,13 +32,13 @@ const Room: React.FC<RoomProps> = () => {
         userVideoRef.current.srcObject = stream;
       }
 
-      socketRef.current.emit("join room", roomId);
+      socketRef.current!.emit("join room", roomId);
 
-      socketRef.current.on("other users", (users) => {
+      socketRef.current!.on("other users", (users) => {
         callUsers(users);
       });
 
-      socketRef.current.on("user left", (id) => {
+      socketRef.current!.on("user left", (id) => {
         removeUser(id);
       });
 
@@ -58,10 +61,10 @@ const Room: React.FC<RoomProps> = () => {
     return stream;
   };
 
-  const callUsers = (users) => {
-    const peers = [];
+  const callUsers = (users: any) => {
+    const peers: peerContext[] = [];
 
-    users.forEach((id) => {
+    users.forEach((id: string) => {
       const peer = createPeer(id);
 
       peersRef.current.push({ peerID: id, peer });
@@ -73,115 +76,148 @@ const Room: React.FC<RoomProps> = () => {
     setPeers(peers);
   };
 
-  const removeUser = (id) => {
+  const removeUser = (id: string) => {
     const peers = peersRef.current.filter((peer) => peer.peerID !== id);
 
     peersRef.current = peers;
     setPeers(peers);
   };
 
-  const createPeer = (userID) => {
+  const createPeer = (id?: string) => {
     const peer = new RTCPeerConnection(iceConfiguration);
 
-    peer.onnegotiationneeded = () => handleNegotiationNeededEvent(userID);
-    peer.onicecandidate = (e) => handleICECandidateEvent(e, userID);
+    if (typeof id === "undefined") {
+      return peer;
+    }
+
+    peer.onnegotiationneeded = async () =>
+      await handleNegotiationNeededEvent(id);
+    peer.onicecandidate = (e) => handleICECandidateEvent(e, id);
 
     return peer;
   };
 
-  const setTracks = (userID) => {
-    const peerObj = peersRef.current.find((peer) => peer.peerID === userID);
-
-    if (peerObj) {
-      userStream.current
-        .getTracks()
-        .forEach((track) => peerObj.peer.addTrack(track, userStream.current));
+  const setTracks = (id: string) => {
+    const peerObj = peersRef.current.find((peer) => peer.peerID === id);
+    if (typeof peerObj === "undefined") {
+      return;
     }
+
+    userStream.current
+      ?.getTracks()
+      .forEach((track) =>
+        peerObj.peer.addTrack(track, userStream.current as MediaStream)
+      );
   };
 
-  const handleNegotiationNeededEvent = (userID) => {
-    const peerObj = peersRef.current.find((peer) => peer.peerID === userID);
+  const handleNegotiationNeededEvent = async (id: string) => {
+    const peerObj = peersRef.current.find((peer) => peer.peerID === id);
+    if (typeof peerObj === "undefined") {
+      return;
+    }
 
-    const offer = peerObj.peer
-      .createOffer()
-      .then((offer) => {
-        return peerObj.peer.setLocalDescription(offer);
-      })
-      .then(() => {
-        const payload = {
-          target: userID,
-          caller: socketRef.current.id,
-          sdp: peerObj.peer.localDescription,
-        };
-        socketRef.current.emit("offer", payload);
-      })
-      .catch((err) => console.log(err));
+    const offer = await peerObj.peer.createOffer();
+    await peerObj.peer.setLocalDescription(offer);
+
+    if (typeof socketRef.current === "undefined") {
+      return;
+    }
+
+    const payload = {
+      target: id,
+      caller: socketRef.current.id,
+      sdp: peerObj.peer.localDescription,
+    };
+
+    socketRef.current.emit("offer", payload);
   };
 
-  const handleOffer = (incoming) => {
+  const handleOffer = async (incoming: socketPayload) => {
     const peer = createPeer();
+
     peersRef.current.push({ peerID: incoming.caller, peer });
+
     const peerObj = peersRef.current.find(
       (peer) => peer.peerID === incoming.caller
     );
-    setPeers((peers) => [...peers, peerObj]);
-    const desc = new RTCSessionDescription(incoming.sdp);
-    peerObj.peer
-      .setRemoteDescription(desc)
-      .then(() => {
-        userStream.current
-          .getTracks()
-          .forEach((track) => peerObj.peer.addTrack(track, userStream.current));
-      })
-      .then(() => {
-        return peerObj.peer.createAnswer();
-      })
-      .then((answer) => {
-        return peerObj.peer.setLocalDescription(answer);
-      })
-      .then(() => {
-        const payload = {
-          target: incoming.caller,
-          caller: socketRef.current.id,
-          sdp: peerObj.peer.localDescription,
-        };
+    if (typeof peerObj === "undefined") {
+      return;
+    }
 
-        socketRef.current.emit("answer", payload);
-      });
+    setPeers((peers) => [...peers, peerObj]);
+
+    const desc = new RTCSessionDescription(incoming.sdp);
+    await peerObj.peer.setRemoteDescription(desc);
+
+    userStream.current
+      ?.getTracks()
+      .forEach((track) =>
+        peerObj.peer.addTrack(track, userStream.current as MediaStream)
+      );
+
+    const answer = await peerObj.peer.createAnswer();
+    await peerObj.peer.setLocalDescription(answer);
+
+    if (typeof socketRef.current === "undefined") {
+      return;
+    }
+
+    const payload = {
+      target: incoming.caller,
+      caller: socketRef.current.id,
+      sdp: peerObj.peer.localDescription,
+    };
+
+    socketRef.current.emit("answer", payload);
   };
 
-  const handleAnswer = (message) => {
+  const handleAnswer = async (message: socketPayload) => {
     const peerObj = peersRef.current.find(
       (peer) => peer.peerID === message.caller
     );
-    const desc = new RTCSessionDescription(message.sdp);
-    peerObj.peer.setRemoteDescription(desc).catch((err) => console.log(err));
-  };
-
-  const handleICECandidateEvent = (e, userID) => {
-    if (e.candidate) {
-      const payload = {
-        target: userID,
-        caller: socketRef.current.id,
-        candidate: e.candidate,
-      };
-      socketRef.current.emit("ice-candidate", payload);
+    if (typeof peerObj === "undefined") {
+      return;
     }
+
+    const desc = new RTCSessionDescription(message.sdp);
+    await peerObj.peer.setRemoteDescription(desc);
   };
 
-  const handleNewICECandidateMsg = (payload) => {
+  const handleICECandidateEvent = (
+    e: RTCPeerConnectionIceEvent,
+    id: string
+  ) => {
+    if (!e.candidate || typeof socketRef.current === "undefined") {
+      return;
+    }
+
+    const payload = {
+      target: id,
+      caller: socketRef.current.id,
+      candidate: e.candidate,
+    };
+
+    socketRef.current.emit("ice-candidate", payload);
+  };
+
+  const handleNewICECandidateMsg = (payload: socketPayload) => {
     const candidate = new RTCIceCandidate(payload.candidate);
+
     const peerObj = peersRef.current.find(
       (peer) => peer.peerID === payload.caller
     );
+    if (typeof peerObj === "undefined") {
+      return;
+    }
+
     peerObj.peer.addIceCandidate(candidate).catch((err) => console.log(err));
   };
 
   return (
-    <div className="room">
+    <div className="">
       <div className="">
         <h1>{0}</h1>
-        <video id="video" ref={userVideo} autoPlay playsInline muted />
+        <video id="video" ref={userVideoRef} autoPlay playsInline muted />
       </div>
 
       {peers.map((peerObj, id) => {

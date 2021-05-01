@@ -1,15 +1,20 @@
 import { useEffect, useRef } from "react";
 
-interface VideoProps {}
+interface VideoProps {
+  peer: RTCPeerConnection;
+}
 
 const Video: React.FC<VideoProps> = ({ peer }) => {
-  const videoRef = useRef();
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     peer.ontrack = handleTrackEvent;
   }, []);
 
-  const handleTrackEvent = (e) => {
+  const handleTrackEvent = (e: RTCTrackEvent) => {
+    if (!videoRef.current) {
+      return;
+    }
     videoRef.current.srcObject = e.streams[0];
   };
 
