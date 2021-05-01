@@ -9,7 +9,11 @@ module.exports = {
   darkMode: false,
   theme: {
     extend: {
+      screens: {
+        "2xl": "1640px",
+      },
       height: {
+        controls: "calc(100vh - 5rem)",
         header: "calc(100vh - 4rem)",
       },
     },

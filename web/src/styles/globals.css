@@ -3,6 +3,13 @@
 @import "tailwindcss/utilities";
 @import "tailwindcss/screens";
 
+@layer components {
+  .control {
+    @apply bg-[#151a21] h-14 w-14 rounded-md transition duration-200 
+    ease-in-out hover:bg-[#323d4d] cursor-pointer flex items-center justify-center;
+  }
+}
+
 /*Dropdown*/
 .menu-primary-enter {
   position: absolute;
