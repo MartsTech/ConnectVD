@@ -10,7 +10,7 @@ module.exports = {
   theme: {
     extend: {
       screens: {
-        "2xl": "1640px",
+        "2xl": "1500px",
       },
       height: {
         controls: "calc(100vh - 5rem)",
