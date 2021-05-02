@@ -16,7 +16,7 @@ const RoomControls: React.FC<RoomControlsProps> = ({ onChat }) => {
   const router = useRouter();
 
   return (
-    <div className="h-20 flex items-center justify-evenly bg-[#242c37]">
+    <div className="h-20 flex items-center justify-evenly bg-primary-700">
       <div className="control">
         <UserAddIcon className="h-7 w-7" />
       </div>
@@ -26,7 +26,7 @@ const RoomControls: React.FC<RoomControlsProps> = ({ onChat }) => {
         </div>
         <div
           onClick={() => router.replace("/dash")}
-          className="control bg-[#fd4d4d] hover:bg-[#fd6868]"
+          className="control control-important"
         >
           <PhoneMissedCallIcon className="h-7 w-7" />
         </div>

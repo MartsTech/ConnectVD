@@ -15,7 +15,7 @@ const DashTemplate: React.FC<DashTemplateProps> = ({
   useSidebar,
 }) => {
   return (
-    <div className="h-full w-full flex items-center justify-evenly bg-[#0b0e11]">
+    <div className="h-full w-full flex items-center justify-evenly bg-primary-900">
       <div className="hidden xl:flex flex-col w-80 h-full overflow-y-scroll scrollbar-hide">
         {Friends}
       </div>
@@ -26,8 +26,8 @@ const DashTemplate: React.FC<DashTemplateProps> = ({
         {useSidebar && Friends}
       </div>
       <div
-        className="h-full sm:h-auto w-full md:w-[580px] lg:w-1/2 max-w-3xl flex flex-col
-        border border-gray-300 shadow-xl space-y-10 pb-10 bg-white"
+        className="h-full sm:h-auto w-full md:w-[580px] lg:w-1/2 max-w-3xl flex
+        border border-gray-300 flex-col space-y-10 pb-10 bg-white"
       >
         {Board}
       </div>

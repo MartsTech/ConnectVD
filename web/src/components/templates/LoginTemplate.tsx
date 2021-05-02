@@ -14,7 +14,7 @@ const LoginTemplate: React.FC<LoginTemplateProps> = ({
   LoginButton,
 }) => {
   return (
-    <div className="h-screen flex items-center justify-center bg-[#0b0e11]">
+    <div className="h-screen flex items-center justify-center bg-primary-900">
       <div className="max-h-full flex flex-col bg-[#f2f2f2] py-28 px-12 space-y-2 text-center">
         <Image
           src="/images/logo.png"

@@ -21,11 +21,11 @@ const Avatar: React.FC<AvatarProps> = ({
   if (typeof src === "undefined") {
     return (
       <div
-        className={`bg-gray-300 rounded-full flex items-center justify-center 
-       text-2xl text-white relative ${className}`}
+        className={`bg-primary-300 rounded-full flex items-center justify-center 
+       text-2xl text-primary-100 relative ${className}`}
       >
         {children}
-        <Badge className="bottom-0 right-0" status={status as any} />
+        <Badge className=" absolute" status={status as any} />
       </div>
     );
   }

@@ -5,15 +5,24 @@ import { setHookType } from "@type/setHookType";
 interface SearchBarProps {
   value: string;
   setValue: setHookType;
+  inHome?: boolean;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ value, setValue }) => {
+const SearchBar: React.FC<SearchBarProps> = ({
+  value,
+  setValue,
+  inHome = false,
+}) => {
   return (
     <form
-      className="hidden xs:flex items-center flex-grow max-w-5xl px-6 py-3 mx-5 border
-      border-gray-200 bg-[#f5f5f5] rounded-lg shadow-lg"
+      className={`hidden xs:flex items-center flex-grow max-w-5xl px-6 py-3 mx-5
+      ${
+        inHome
+          ? "border border-gray-200 bg-[#f5f5f5] shadow-lg text-gray-500"
+          : "bg-primary-700 text-primary-100"
+      } rounded-lg`}
     >
-      <SearchIcon className="h-6 text-[#3f51b5] hidden sm:inline-block" />
+      <SearchIcon className="h-6 hidden sm:inline-block" />
       <input
         value={value}
         onChange={(e) => setValue(e.target.value)}
@@ -22,7 +31,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ value, setValue }) => {
         className="flex-grow w-full focus:outline-none bg-transparent ml-2 text-lg"
       />
       <XIcon
-        className="h-7 text-gray-500 cursor-pointer transition duration-100 transform 
+        className="h-7 cursor-pointer transition duration-100 transform 
     hover:scale-125 sm:mr-3"
         onClick={() => setValue("")}
       />

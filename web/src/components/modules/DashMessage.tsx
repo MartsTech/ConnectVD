@@ -15,7 +15,7 @@ const DashMessage: React.FC<DashMessageProps> = ({}) => {
   return (
     <div
       className="flex flex-col items-center sm:p-5 
-    border border-gray-200 shadow-lg bg-gray-800 text-white"
+    border border-gray-200 bg-gray-800 text-white"
     >
       <h1 className="text-5xl font-mono mx-auto hidden sm:inline-block pb-10">
         Welcome to Connect<span className="text-[#3f51b5]">VD</span>

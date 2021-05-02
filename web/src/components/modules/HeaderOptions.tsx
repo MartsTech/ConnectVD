@@ -14,10 +14,10 @@ const HeaderOptions: React.FC<HeaderOptionsProps> = ({ data, onAvatar }) => {
     return (
       <div className="flex items-center">
         <IconButton>
-          <MailIcon className="h-7 w-7 text-gray-500" />
+          <MailIcon className="h-7 w-7 text-primary-200" />
         </IconButton>
         <IconButton>
-          <BellIcon className="h-7 w-7 text-gray-500" />
+          <BellIcon className="h-7 w-7 text-primary-200" />
         </IconButton>
         <IconButton onClick={onAvatar}>
           <Avatar src={data.me?.photoUrl} status={data.me?.status} />

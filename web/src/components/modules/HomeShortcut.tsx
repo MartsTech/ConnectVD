@@ -17,7 +17,7 @@ const HomeShortcut: React.FC<HomeShortcutProps> = ({ title, Icon }) => {
         duration={1000}
       >
         <div
-          className="bg-[#3f51b5] rounded-full h-24 w-24 opacity-90 hover:opacity-100
+          className="bg-secondary rounded-full h-24 w-24 opacity-90 hover:opacity-100
         flex items-center justify-center"
         >
           <Icon className="h-12 w-12" />

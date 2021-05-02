@@ -3,15 +3,15 @@ import { ForwardedRef, forwardRef } from "react";
 import Avatar from "./Avatar";
 
 interface MessageProps {
-  data: MeQuery;
+  data?: MeQuery;
 }
 
 const Message: React.FC<MessageProps> = forwardRef(
   ({ data }, ref: ForwardedRef<HTMLDivElement>) => {
     return (
-      <div className="flex space-x-2 w-full px-2">
+      <div ref={ref} className="flex space-x-2 w-full px-2">
         <div className="">
-          <Avatar src={data.me?.photoUrl} status={data.me?.status} />
+          <Avatar src={data?.me?.photoUrl} status={data?.me?.status} />
         </div>
 
         <p className="flex-grow max-w-[240px] break-words">

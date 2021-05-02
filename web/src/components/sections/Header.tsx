@@ -4,6 +4,7 @@ import SearchBar from "@element/SearchBar";
 import { MenuIcon } from "@heroicons/react/solid";
 import HeaderOptions from "@module/HeaderOptions";
 import { MeQuery } from "generated/graphql";
+import { route } from "next/dist/next-server/server/router";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import Dropdown from "./Dropdown";
@@ -20,18 +21,20 @@ const Header: React.FC<HeaderProps> = ({ home, data, onMenu }) => {
 
   const router = useRouter();
 
+  const inHome = router.pathname === "/";
+
   return (
     <div
-      className="flex items-center justify-between py-4 md:px-4 
-    bg-white sticky top-0 z-50 h-16"
+      className={`flex items-center justify-between py-4 md:px-4 
+    ${inHome ? "bg-white" : "bg-primary-800"} sticky top-0 z-50 h-16`}
     >
       <div className="inline-block xl:hidden">
         <IconButton onClick={onMenu}>
-          <MenuIcon className="h-7 w-7 text-gray-500" />
+          <MenuIcon className="h-7 w-7 text-primary-200" />
         </IconButton>
       </div>
-      <Logo onClick={() => router.push(home)} />
-      <SearchBar value={search} setValue={setSearch} />
+      <Logo onClick={() => router.push(home)} inHome={inHome} />
+      <SearchBar value={search} setValue={setSearch} inHome={inHome} />
       <HeaderOptions data={data} onAvatar={() => setDropdown(!dropdown)} />
       {dropdown && <Dropdown data={data} />}
     </div>

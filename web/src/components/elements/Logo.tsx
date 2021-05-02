@@ -2,9 +2,10 @@ import Image from "next/image";
 
 interface LogoProps {
   onClick?: () => void;
+  inHome?: boolean;
 }
 
-const Logo: React.FC<LogoProps> = ({ onClick }) => {
+const Logo: React.FC<LogoProps> = ({ onClick, inHome = false }) => {
   return (
     <div
       onClick={onClick}
@@ -16,9 +17,16 @@ const Logo: React.FC<LogoProps> = ({ onClick }) => {
         width="50px"
         objectFit="contain"
         alt="Logo"
+        className="z-10"
       />
-      <h1 className="inline-block md:inline-block xs:hidden text-xl xs:text-2xl font-mono">
-        Connect<span className="text-[#3f51b5]">VD</span>
+      {!inHome && (
+        <div className="bg-primary-100 w-9 h-5 rounded-full absolute"></div>
+      )}
+      <h1
+        className={`inline-block md:inline-block xs:hidden text-xl 
+      xs:text-2xl font-mono ${!inHome && "text-primary-100"}`}
+      >
+        Connect<span className="text-secondary">VD</span>
       </h1>
     </div>
   );

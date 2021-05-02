@@ -36,7 +36,7 @@ const MainDrop: React.FC<MainDropProps> = ({
           onClick={toNext}
         />
         <PreviewCard
-          Icon={<LogoutIcon className="h-7 w-7 text-gray-500" />}
+          Icon={<LogoutIcon className="h-7 w-7 text-primary-300" />}
           title="Log Out"
           onClick={() => auth.signOut()}
         />

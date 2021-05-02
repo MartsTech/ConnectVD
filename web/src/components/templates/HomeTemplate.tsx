@@ -11,12 +11,12 @@ const HomeTemplate: React.FC<HomeTemplateProps> = ({}) => {
     <div>
       <div
         id="top"
-        className="w-full p-2 bg-[#3f51b5] text-white text-center font-medium"
+        className="w-full p-2 bg-secondary text-white text-center font-medium"
       >
         We have developed resources to help you stay connect.
       </div>
       <Canvas />
-      <div className="grid grid-cols-2 sm:grid-cols-4 w-full bg-[#2b2b2b] py-2">
+      <div className="grid grid-cols-2 sm:grid-cols-4 w-full bg-primary-900 py-2">
         {homeSections.map(({ title, Icon }) => (
           <HomeShortcut key={`shortcut_${title}`} title={title} Icon={Icon} />
         ))}
