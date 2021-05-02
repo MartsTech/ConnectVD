@@ -6,7 +6,7 @@ interface SignInButtonProps {
 const SignInButton: React.FC<SignInButtonProps> = ({ title, onClick }) => {
   return (
     <button
-      className="bg-secondary text-white focus:outline-none py-2 rounded-lg"
+      className="bg-secondary text-primary-100 focus:outline-none p-2 rounded-lg"
       onClick={onClick}
     >
       <h3 className="text-lg">{title}</h3>

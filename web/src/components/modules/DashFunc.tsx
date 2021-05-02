@@ -15,7 +15,7 @@ const DashFunc: React.FC<DashFuncProps> = ({
     <div className="py-5 mx-auto cursor-pointer" onClick={onClick}>
       <div
         className={`rounded-full h-16 sm:h-24 w-60 flex items-center justify-center 
-        text-white ${cssColor}`}
+        text-primary-100 ${cssColor}`}
       >
         <Icon className="h-12 w-12" />
         <h3 className="text-2xl font-medium ml-4">{title}</h3>

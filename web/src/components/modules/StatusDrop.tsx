@@ -28,21 +28,25 @@ const StatusDrop: React.FC<StatusDropProps> = ({
           Icon={<ArrowLeftIcon className="h-7 w-7 text-gray-500" />}
           title=""
           onClick={toPrev}
+          important
         />
         <PreviewCard
           Icon={<Badge status="available" size={2} />}
           title="Available"
           onClick={() => alert("TODO")}
+          important
         />
         <PreviewCard
           Icon={<Badge status="away" size={2} />}
           title="Away"
           onClick={() => alert("TODO")}
+          important
         />
         <PreviewCard
           Icon={<Badge status="busy" size={2} />}
           title="Busy"
           onClick={() => alert("TODO")}
+          important
         />
       </div>
     </CSSTransition>

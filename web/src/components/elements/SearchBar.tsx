@@ -15,11 +15,11 @@ const SearchBar: React.FC<SearchBarProps> = ({
 }) => {
   return (
     <form
-      className={`hidden xs:flex items-center flex-grow max-w-5xl px-6 py-3 mx-5
+      className={`hidden xs:flex items-center flex-grow max-w-5xl px-2 py-3 mx-2
       ${
         inHome
           ? "border border-gray-200 bg-[#f5f5f5] shadow-lg text-gray-500"
-          : "bg-primary-700 text-primary-100"
+          : "bg-primary-600 text-primary-100"
       } rounded-lg`}
     >
       <SearchIcon className="h-6 hidden sm:inline-block" />

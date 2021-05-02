@@ -28,17 +28,19 @@ const MainDrop: React.FC<MainDropProps> = ({
       classNames="menu-primary"
       onEnter={(el: any) => setHeight(el.offsetHeight)}
     >
-      <div className="">
-        <Profile data={data} />
+      <div>
+        <Profile data={data} important />
         <PreviewCard
           Icon={<Badge status={data?.me?.status as any} size={2} />}
           title={data?.me?.status || ""}
           onClick={toNext}
+          important
         />
         <PreviewCard
           Icon={<LogoutIcon className="h-7 w-7 text-primary-300" />}
           title="Log Out"
           onClick={() => auth.signOut()}
+          important
         />
       </div>
     </CSSTransition>

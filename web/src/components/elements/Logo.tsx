@@ -23,7 +23,7 @@ const Logo: React.FC<LogoProps> = ({ onClick, inHome = false }) => {
         <div className="bg-primary-100 w-9 h-5 rounded-full absolute"></div>
       )}
       <h1
-        className={`inline-block md:inline-block xs:hidden text-xl 
+        className={`hidden md:inline-block text-xl 
       xs:text-2xl font-mono ${!inHome && "text-primary-100"}`}
       >
         Connect<span className="text-secondary">VD</span>

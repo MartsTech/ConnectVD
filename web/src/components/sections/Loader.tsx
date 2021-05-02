@@ -4,10 +4,10 @@ interface LoaderProps {}
 
 const Loader: React.FC<LoaderProps> = ({}) => {
   return (
-    <div className="h-screen flex items-center justify-center bg-[#0b0e11]">
+    <div className="h-screen flex items-center justify-center bg-primary-900">
       <div
         className="h-full xs:h-auto w-full xs:w-auto flex flex-col items-center
-        bg-[#f2f2f2] py-28 px-12
+        bg-primary-100 py-28 px-12
       space-y-7"
       >
         <Image

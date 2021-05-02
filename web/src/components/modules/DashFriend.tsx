@@ -21,13 +21,13 @@ const DashFriend: React.FC<DashFriendProps> = ({ info }) => {
       />
       {extend && (
         <div className="shadow-lg">
-          <Profile data={info} />
-
+          <Profile data={info} important />
           {friendExtendOptions.map(({ Icon, title, onClick }) => (
             <PreviewCard
               Icon={<Icon className="h-7 w-7 text-gray-500" />}
               title={title}
               onClick={onClick}
+              important
             />
           ))}
         </div>

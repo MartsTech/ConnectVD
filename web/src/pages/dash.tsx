@@ -15,7 +15,7 @@ import DashBoard from "@section/DashBoard";
 import DashTemplate from "@template/DashTemplate";
 import IsAuth from "@layout/IsAuth";
 
-const Dash = () => {
+const DashPage = () => {
   const [user, loading] = useAuthState(auth);
 
   const [meData] = useMeQuery({
@@ -67,4 +67,4 @@ const Dash = () => {
   );
 };
 
-export default withUrqlClient(createUrqlClient)(Dash);
+export default withUrqlClient(createUrqlClient)(DashPage);

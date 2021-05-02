@@ -2,18 +2,27 @@ interface PreviewCardProps {
   title: string;
   Icon: JSX.Element;
   onClick: () => void;
+  important?: boolean;
 }
 
-const PreviewCard: React.FC<PreviewCardProps> = ({ title, Icon, onClick }) => {
+const PreviewCard: React.FC<PreviewCardProps> = ({
+  title,
+  Icon,
+  onClick,
+  important = false,
+}) => {
   return (
     <div
       onClick={onClick}
-      className="flex items-center p-3 hover:shadow-md transition duration-100 
-        transform hover:bg-gray-200 cursor-pointer border border-gray-200
-        bg-white h-16"
+      className={`flex items-center p-3 transition duration-100 
+        transform cursor-pointer 0 h-16 ${
+          important
+            ? "bg-primary-800 hover:bg-primary-700"
+            : "bg-primary-700 hover:bg-primary-600"
+        }`}
     >
       {Icon}
-      <h3 className="text-lg ml-2 font-medium text-gray-500 capitalize">
+      <h3 className="ml-4 font-semibold text-primary-100 capitalize">
         {title}
       </h3>
     </div>

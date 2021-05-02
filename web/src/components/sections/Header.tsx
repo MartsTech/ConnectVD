@@ -26,14 +26,16 @@ const Header: React.FC<HeaderProps> = ({ home, data, onMenu }) => {
   return (
     <div
       className={`flex items-center justify-between py-4 md:px-4 
-    ${inHome ? "bg-white" : "bg-primary-800"} sticky top-0 z-50 h-16`}
+    ${inHome ? "bg-white" : "bg-primary-700"} sticky top-0 z-50 h-16`}
     >
-      <div className="inline-block xl:hidden">
-        <IconButton onClick={onMenu}>
-          <MenuIcon className="h-7 w-7 text-primary-200" />
-        </IconButton>
+      <div className="flex">
+        <div className="inline-block xl:hidden">
+          <IconButton onClick={onMenu}>
+            <MenuIcon className="h-7 w-7 text-primary-200" />
+          </IconButton>
+        </div>
+        <Logo onClick={() => router.push(home)} inHome={inHome} />
       </div>
-      <Logo onClick={() => router.push(home)} inHome={inHome} />
       <SearchBar value={search} setValue={setSearch} inHome={inHome} />
       <HeaderOptions data={data} onAvatar={() => setDropdown(!dropdown)} />
       {dropdown && <Dropdown data={data} />}
