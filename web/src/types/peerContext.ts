@@ -1,4 +1,4 @@
 export type peerContext = {
-  peerID: string;
+  peerId: string;
   peer: RTCPeerConnection;
 };
