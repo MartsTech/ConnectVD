@@ -35,23 +35,32 @@ const Room: React.FC<RoomProps> = ({
   const roomId = router.query.id as string;
 
   useEffect(() => {
-    socketRef.current = io("http://localhost:8000");
+    const main = async () => {
+      socketRef.current = io("http://localhost:8000");
 
-    getUserStream();
+      const stream = await getUserStream();
+      userStream.current = stream;
 
-    socketRef.current.emit("join room", roomId);
+      if (userVideoRef.current) {
+        userVideoRef.current.srcObject = stream;
+      }
 
-    socketRef.current.on("other users", (users: string[]) => {
-      callUsers(users);
-    });
+      socketRef.current.emit("join room", roomId);
 
-    socketRef.current.on("user left", (id: string) => {
-      removeUser(id);
-    });
+      socketRef.current.on("other users", (users: string[]) => {
+        callUsers(users);
+      });
 
-    socketRef.current.on("offer", handleOffer);
-    socketRef.current.on("answer", handleAnswer);
-    socketRef.current.on("ice-candidate", handleNewICECandidateMsg);
+      socketRef.current.on("user left", (id: string) => {
+        removeUser(id);
+      });
+
+      socketRef.current.on("offer", handleOffer);
+      socketRef.current.on("answer", handleAnswer);
+      socketRef.current.on("ice-candidate", handleNewICECandidateMsg);
+    };
+
+    main();
   }, []);
 
   useEffect(() => {
@@ -71,22 +80,15 @@ const Room: React.FC<RoomProps> = ({
     toggleAudio(audio);
   }, [audio]);
 
-  const getUserStream = () => {
-    navigator.mediaDevices
-      .enumerateDevices()
-      .then((devices) =>
-        navigator.mediaDevices.getUserMedia({
-          video: devices.some((device) => device.kind == "videoinput"),
-          audio: devices.some((device) => device.kind == "audioinput"),
-        })
-      )
-      .then((stream) => {
-        if (userVideoRef.current) {
-          userVideoRef.current.srcObject = stream;
-        }
+  const getUserStream = async () => {
+    const devices = await navigator.mediaDevices.enumerateDevices();
 
-        userStream.current = stream;
-      });
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: devices.some((device) => device.kind === "videoinput"),
+      audio: devices.some((device) => device.kind === "audioinput"),
+    });
+
+    return stream;
   };
 
   const leaveRoom = () => {
