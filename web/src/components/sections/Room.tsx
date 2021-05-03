@@ -1,6 +1,7 @@
 import { iceConfiguration } from "@config/iceConfigs";
 import Video from "@element/Video";
 import VideoCover from "@element/VideoCover";
+import { messageType } from "@type/messageType";
 import { peerContext } from "@type/peerContext";
 import { socketPayload } from "@type/socketPayload";
 import { MeQuery } from "generated/graphql";
@@ -16,6 +17,7 @@ interface RoomProps {
   setScreen: Dispatch<SetStateAction<boolean>>;
   video: boolean;
   audio: boolean;
+  setMessages: Dispatch<SetStateAction<messageType[]>>;
 }
 
 const Room: React.FC<RoomProps> = ({
@@ -24,6 +26,7 @@ const Room: React.FC<RoomProps> = ({
   setScreen,
   video,
   audio,
+  setMessages,
 }) => {
   const [peers, setPeers] = useState<peerContext[]>([]);
   const peersRef = useRef<peerContext[]>([]);

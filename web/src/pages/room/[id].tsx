@@ -1,4 +1,3 @@
-import { auth } from "@config/firebase";
 import IsAuth from "@layout/IsAuth";
 import Room from "@section/Room";
 import RoomChat from "@section/RoomChat";
@@ -6,11 +5,13 @@ import RoomControls from "@section/RoomControls";
 import appInfo from "@service/appInfo";
 import RoomTemplate from "@template/RoomTemplate";
 import { createUrqlClient } from "@util/createUrqlClient";
-import { MeQuery, useMeQuery } from "generated/graphql";
 import { withUrqlClient } from "next-urql";
 import Head from "next/head";
 import { useState } from "react";
+import { messageType } from "@type/messageType";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "@config/firebase";
+import { useMeQuery } from "generated/graphql";
 
 interface RoomPageProps {}
 
@@ -27,10 +28,7 @@ const RoomPage: React.FC<RoomPageProps> = ({}) => {
   const [video, setVideo] = useState(false);
   const [audio, setAudio] = useState(true);
 
-  const messages: MeQuery[] = [];
-  for (let i = 0; i < 10; ++i) {
-    messages.push(meData.data as MeQuery);
-  }
+  const [messages, setMessages] = useState<messageType[]>([]);
 
   return (
     <IsAuth>
@@ -46,6 +44,7 @@ const RoomPage: React.FC<RoomPageProps> = ({}) => {
             setScreen={setScreen}
             video={video}
             audio={audio}
+            setMessages={setMessages}
           />
         }
         Controls={

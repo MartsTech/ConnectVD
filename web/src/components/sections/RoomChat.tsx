@@ -1,15 +1,15 @@
 import Message from "@element/Message";
 import SendMessage from "@element/SendMessage";
-import { MeQuery } from "generated/graphql";
+import { messageType } from "@type/messageType";
 
 interface RoomChatProps {
-  messages: MeQuery[];
+  messages: messageType[];
 }
 
 const RoomChat: React.FC<RoomChatProps> = ({ messages }) => {
   return (
-    <div className="w-80 bg-primary-800 flex flex-col items-center">
-      <div className="space-y-4 w-full">
+    <div className="w-80 h-full bg-primary-800 flex flex-col items-center">
+      <div className="space-y-4 w-full h-full">
         {messages.map((message, id) => (
           <Message key={`message_${id}`} data={message} />
         ))}

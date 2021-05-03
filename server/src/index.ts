@@ -76,23 +76,23 @@ const main = async () => {
   apolloServer.installSubscriptionHandlers(server);
 
   // Socket Endpoints
-  const rooms: any = {};
-  const users: any = {};
+  const rooms: { [roomId: string]: string[] } = {};
+  const users: { [userId: string]: string } = {};
 
   io.on("connection", (socket) => {
-    socket.on("join room", (roomID) => {
-      if (rooms[roomID]) {
-        const lenght = rooms[roomID].lenght;
+    socket.on("join room", (roomId: string) => {
+      if (rooms[roomId]) {
+        const lenght = rooms[roomId].length;
         if (lenght === 4) {
           socket.emit("room full");
           return;
         }
-        rooms[roomID].push(socket.id);
+        rooms[roomId].push(socket.id);
       } else {
-        rooms[roomID] = [socket.id];
+        rooms[roomId] = [socket.id];
       }
-      users[socket.id] = roomID;
-      const usersInRoom = rooms[roomID].filter(
+      users[socket.id] = roomId;
+      const usersInRoom = rooms[roomId].filter(
         (id: string) => id !== socket.id
       );
       if (usersInRoom) {
@@ -101,15 +101,15 @@ const main = async () => {
       console.log("Connect: ", rooms, users);
     });
 
-    socket.on("offer", (payload) => {
+    socket.on("offer", (payload: socketPayload) => {
       io.to(payload.target).emit("offer", payload);
     });
 
-    socket.on("answer", (payload) => {
+    socket.on("answer", (payload: socketPayload) => {
       io.to(payload.target).emit("answer", payload);
     });
 
-    socket.on("ice-candidate", (payload) => {
+    socket.on("ice-candidate", (payload: socketPayload) => {
       socket.to(payload.target).emit("ice-candidate", payload);
     });
 
@@ -118,56 +118,21 @@ const main = async () => {
     });
 
     socket.on("disconnect", () => {
-      const roomID = users[socket.id];
-      let room = rooms[roomID];
+      const roomId = users[socket.id];
+      let room = rooms[roomId];
       if (room) {
         room = room.filter((id: string) => id !== socket.id);
-        rooms[roomID] = room;
+        rooms[roomId] = room;
         delete users[socket.id];
         socket.broadcast.emit("user left", socket.id);
       }
 
-      if (rooms[roomID] && Object.keys(rooms[roomID]).length === 0) {
-        delete rooms[roomID];
+      if (rooms[roomId] && Object.keys(rooms[roomId]).length === 0) {
+        delete rooms[roomId];
       }
       console.log("Disconnect: ", rooms, users);
     });
   });
-
-  // io.on("connection", (socket: Socket) => {
-  //   socket.on("get socketId", () => {
-  //     socket.emit("send socketId", socket.id);
-  //   });
-
-  //   socket.on("offer", (payload: socketPayload) => {
-  //     io.to(payload.target).emit("offer", payload);
-  //   });
-
-  //   socket.on("answer", (payload: socketPayload) => {
-  //     io.to(payload.target).emit("answer", payload);
-  //   });
-
-  //   socket.on("ice-candidate", (payload: socketPayload) => {
-  //     socket.to(payload.target).emit("ice-candidate", payload);
-  //   });
-
-  //   socket.on("toggle video", (state: boolean) => {
-  //     socket.broadcast.emit("change video", { id: socket.id, state });
-  //   });
-
-  //   socket.on("disconnect", async () => {
-  //     const user = await User.findOne({ where: { socketId: socket.id } });
-  //     const roomId = user?.roomId;
-
-  //     await User.update({ socketId: socket.id }, { socketId: "", roomId: "" });
-  //     socket.broadcast.emit("user left", socket.id);
-
-  //     const users = await User.find({ where: { roomId } });
-  //     if (users.length === 0) {
-  //       await Room.delete({ id: roomId });
-  //     }
-  //   });
-  // });
 
   // Server Listenr
   server.listen(port, () => console.log(`listening on localhost: ${port}`));
