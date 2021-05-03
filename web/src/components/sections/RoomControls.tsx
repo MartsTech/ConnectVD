@@ -10,27 +10,46 @@ import {
 interface RoomControlsProps {
   onChat: () => void;
   onLeave: () => void;
+  onScreen: () => void;
+  onVideo: () => void;
+  video: boolean;
+  onAudio: () => void;
+  audio: boolean;
 }
 
-const RoomControls: React.FC<RoomControlsProps> = ({ onChat, onLeave }) => {
+const RoomControls: React.FC<RoomControlsProps> = ({
+  onChat,
+  onLeave,
+  onScreen,
+  onVideo,
+  video,
+  onAudio,
+  audio,
+}) => {
   return (
     <div className="h-20 flex items-center justify-evenly bg-primary-700">
       <div className="control">
         <UserAddIcon className="h-7 w-7" />
       </div>
       <div className="flex space-x-4">
-        <div className="control">
+        <div
+          onClick={onAudio}
+          className={`control ${!audio && "control-important"}`}
+        >
           <VolumeUpIcon className="h-7 w-7" />
         </div>
         <div onClick={onLeave} className="control control-important">
           <PhoneMissedCallIcon className="h-7 w-7" />
         </div>
-        <div className="control">
+        <div
+          onClick={onVideo}
+          className={`control ${!video && "control-important"}`}
+        >
           <VideoCameraIcon className="h-7 w-7" />
         </div>
       </div>
       <div className="flex space-x-4">
-        <div className="control">
+        <div onClick={onScreen} className="control">
           <ExternalLinkIcon className="h-7 w-7" />
         </div>
         <div onClick={onChat} className="control 2xl:hidden">

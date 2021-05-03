@@ -3,17 +3,28 @@ import Video from "@element/Video";
 import { peerContext } from "@type/peerContext";
 import { socketPayload } from "@type/socketPayload";
 import { useRouter } from "next/router";
-import { useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import FlipMove from "react-flip-move";
 import { io, Socket } from "socket.io-client";
 
 interface RoomProps {
   leave: boolean;
+  screen: boolean;
+  setScreen: Dispatch<SetStateAction<boolean>>;
+  video: boolean;
+  audio: boolean;
 }
 
-const Room: React.FC<RoomProps> = ({ leave }) => {
+const Room: React.FC<RoomProps> = ({
+  leave,
+  screen,
+  setScreen,
+  video,
+  audio,
+}) => {
   const [peers, setPeers] = useState<peerContext[]>([]);
   const peersRef = useRef<peerContext[]>([]);
+  const senders = useRef<{ id: string; track: RTCRtpSender }[]>([]);
 
   const socketRef = useRef<Socket>();
   const userStream = useRef<MediaStream>();
@@ -24,49 +35,58 @@ const Room: React.FC<RoomProps> = ({ leave }) => {
   const roomId = router.query.id as string;
 
   useEffect(() => {
-    const main = async () => {
-      socketRef.current = io("http://localhost:8000");
+    socketRef.current = io("http://localhost:8000");
 
-      const stream = await getUserStream();
-      userStream.current = stream;
+    getUserStream();
 
-      if (userVideoRef.current) {
-        userVideoRef.current.srcObject = stream;
-      }
+    socketRef.current.emit("join room", roomId);
 
-      socketRef.current.emit("join room", roomId);
+    socketRef.current.on("other users", (users: string[]) => {
+      callUsers(users);
+    });
 
-      socketRef.current.on("other users", (users: string[]) => {
-        callUsers(users);
-      });
+    socketRef.current.on("user left", (id: string) => {
+      removeUser(id);
+    });
 
-      socketRef.current.on("user left", (id: string) => {
-        removeUser(id);
-      });
-
-      socketRef.current.on("offer", handleOffer);
-      socketRef.current.on("answer", handleAnswer);
-      socketRef.current.on("ice-candidate", handleNewICECandidateMsg);
-    };
-
-    main();
+    socketRef.current.on("offer", handleOffer);
+    socketRef.current.on("answer", handleAnswer);
+    socketRef.current.on("ice-candidate", handleNewICECandidateMsg);
   }, []);
 
   useEffect(() => {
     if (leave) {
       leaveRoom();
     }
-  }, [leave]);
+    if (screen) {
+      shareScreen();
+    }
+  }, [leave, screen]);
 
-  const getUserStream = async () => {
-    const devices = await navigator.mediaDevices.enumerateDevices();
+  useEffect(() => {
+    toggleVideo(video);
+  }, [video]);
 
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video: devices.some((device) => device.kind === "videoinput"),
-      audio: devices.some((device) => device.kind === "audioinput"),
-    });
+  useEffect(() => {
+    toggleAudio(audio);
+  }, [audio]);
 
-    return stream;
+  const getUserStream = () => {
+    navigator.mediaDevices
+      .enumerateDevices()
+      .then((devices) =>
+        navigator.mediaDevices.getUserMedia({
+          video: devices.some((device) => device.kind == "videoinput"),
+          audio: devices.some((device) => device.kind == "audioinput"),
+        })
+      )
+      .then((stream) => {
+        if (userVideoRef.current) {
+          userVideoRef.current.srcObject = stream;
+        }
+
+        userStream.current = stream;
+      });
   };
 
   const leaveRoom = () => {
@@ -77,11 +97,55 @@ const Room: React.FC<RoomProps> = ({ leave }) => {
     router.replace("/dash");
   };
 
+  const shareScreen = () => {
+    navigator.mediaDevices
+      // @ts-ignore
+      .getDisplayMedia({
+        cursor: true,
+      })
+      .then((stream: MediaStream) => {
+        if (!userStream.current) {
+          return;
+        }
+
+        const screenTrack = stream.getTracks()[0];
+        const videoTrack = userStream.current.getTracks()[1];
+
+        senders.current
+          .find((sender) => sender.track.track?.kind === "video")
+          ?.track.replaceTrack(screenTrack);
+
+        screenTrack.onended = () => {
+          senders.current
+            .find((sender) => sender.track.track?.kind === "video")
+            ?.track.replaceTrack(videoTrack);
+
+          setScreen(false);
+        };
+      })
+      .catch(() => setScreen(false));
+  };
+
+  const toggleVideo = (state: boolean) => {
+    if (userStream.current) {
+      userStream.current.getVideoTracks()[0].enabled = state;
+    }
+  };
+
+  const toggleAudio = (state: boolean) => {
+    if (userStream.current) {
+      userStream.current.getAudioTracks()[0].enabled = state;
+    }
+  };
+
   const removeUser = (id: string) => {
     const peers = peersRef.current.filter((peer) => peer.peerId !== id);
 
     peersRef.current = peers;
     setPeers(peers);
+
+    const tempSenders = senders.current.filter((sender) => sender.id !== id);
+    senders.current = tempSenders;
   };
 
   const callUsers = (users: string[]) => {
@@ -127,11 +191,12 @@ const Room: React.FC<RoomProps> = ({ leave }) => {
       return;
     }
 
-    userStream.current
-      ?.getTracks()
-      .forEach((track) =>
-        peerObj.peer.addTrack(track, userStream.current as MediaStream)
-      );
+    userStream.current?.getTracks().forEach((track) =>
+      senders.current.push({
+        id,
+        track: peerObj.peer.addTrack(track, userStream.current as MediaStream),
+      })
+    );
   };
 
   const handleNegotiationNeededEvent = (id: string) => {
@@ -169,7 +234,7 @@ const Room: React.FC<RoomProps> = ({ leave }) => {
       .then(() => {
         return peerObj.peer.createAnswer();
       })
-      .then((answer: any) => {
+      .then((answer) => {
         return peerObj.peer.setLocalDescription(answer);
       })
       .then(() => {
@@ -241,8 +306,8 @@ const Room: React.FC<RoomProps> = ({ leave }) => {
 
   return (
     <FlipMove
-      className="h-full w-full grid sm:grid-cols-1 md:grid-cols-2 items-center
-    overflow-y-scroll scrollbar-hide"
+      className={`h-full w-full grid grid-cols-1 items-center
+    overflow-y-scroll scrollbar-hide ${peers.length !== 0 && "md:grid-cols-2"}`}
     >
       <Video userVideoRef={userVideoRef} />
       {peers.map((peerObj) => {

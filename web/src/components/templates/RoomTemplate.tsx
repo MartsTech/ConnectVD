@@ -1,24 +1,22 @@
-import Room from "@section/Room";
-import RoomControls from "@section/RoomControls";
-import { useState } from "react";
-
 interface RoomTemplateProps {
+  Room: JSX.Element;
+  Controls: JSX.Element;
   Chat: JSX.Element;
+  showChat: boolean;
 }
 
-const RoomTemplate: React.FC<RoomTemplateProps> = ({ Chat }) => {
-  const [chat, setChat] = useState(false);
-  const [leave, setLeave] = useState(false);
-
+const RoomTemplate: React.FC<RoomTemplateProps> = ({
+  Room,
+  Controls,
+  Chat,
+  showChat,
+}) => {
   return (
     <div className="h-screen w-screen flex flex-col bg-primary-900 text-white">
       <div className="h-full flex justify-evenly">
         <div className="h-controls flex-shrink">
-          <Room leave={leave} />
-          <RoomControls
-            onChat={() => setChat(!chat)}
-            onLeave={() => setLeave(true)}
-          />
+          {Room}
+          {Controls}
         </div>
         <div
           className="hidden 2xl:inline-block h-full 
@@ -28,7 +26,7 @@ const RoomTemplate: React.FC<RoomTemplateProps> = ({ Chat }) => {
         </div>
         <div
           className={`${
-            !chat && "hidden"
+            !showChat && "hidden"
           } 2xl:hidden flex flex-col absolute bottom-20 right-0
           overflow-y-scroll scrollbar-hide h-full`}
         >
