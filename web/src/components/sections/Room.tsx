@@ -1,13 +1,16 @@
 import { iceConfiguration } from "@config/iceConfigs";
 import Video from "@element/Video";
+import VideoCover from "@element/VideoCover";
 import { peerContext } from "@type/peerContext";
 import { socketPayload } from "@type/socketPayload";
+import { MeQuery } from "generated/graphql";
 import { useRouter } from "next/router";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import FlipMove from "react-flip-move";
 import { io, Socket } from "socket.io-client";
 
 interface RoomProps {
+  meData?: MeQuery;
   leave: boolean;
   screen: boolean;
   setScreen: Dispatch<SetStateAction<boolean>>;
@@ -83,10 +86,18 @@ const Room: React.FC<RoomProps> = ({
   const getUserStream = async () => {
     const devices = await navigator.mediaDevices.enumerateDevices();
 
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video: devices.some((device) => device.kind === "videoinput"),
-      audio: devices.some((device) => device.kind === "audioinput"),
-    });
+    let stream;
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({
+        video: devices.some((device) => device.kind === "videoinput"),
+        audio: devices.some((device) => device.kind === "audioinput"),
+      });
+    } catch {
+      stream = await navigator.mediaDevices.getUserMedia({
+        video: false,
+        audio: devices.some((device) => device.kind === "audioinput"),
+      });
+    }
 
     return stream;
   };
@@ -130,13 +141,17 @@ const Room: React.FC<RoomProps> = ({
 
   const toggleVideo = (state: boolean) => {
     if (userStream.current) {
-      userStream.current.getVideoTracks()[0].enabled = state;
+      try {
+        userStream.current.getVideoTracks()[0].enabled = state;
+      } catch {}
     }
   };
 
   const toggleAudio = (state: boolean) => {
     if (userStream.current) {
-      userStream.current.getAudioTracks()[0].enabled = state;
+      try {
+        userStream.current.getAudioTracks()[0].enabled = state;
+      } catch {}
     }
   };
 
@@ -208,7 +223,7 @@ const Room: React.FC<RoomProps> = ({
     }
 
     peerObj.peer
-      .createOffer()
+      .createOffer({ offerToReceiveAudio: true, offerToReceiveVideo: true })
       .then((offer) => {
         return peerObj.peer.setLocalDescription(offer);
       })
@@ -298,22 +313,20 @@ const Room: React.FC<RoomProps> = ({
     peerObj.peer.addIceCandidate(candidate).catch((err) => console.log(err));
   };
 
-  // const peers: peerContext[] = [];
-  // for (let i = 0; i < 20; ++i) {
-  //   peers.push({
-  //     peerId: `${i}`,
-  //     peer: new RTCPeerConnection(),
-  //   });
-  // }
-
   return (
     <FlipMove
-      className={`h-full w-full grid grid-cols-1 items-center
-    overflow-y-scroll scrollbar-hide ${peers.length !== 0 && "md:grid-cols-2"}`}
+      className={`h-full w-full grid grid-cols-1 md:grid-cols-2 items-center
+    overflow-y-scroll scrollbar-hide ${peers.length !== 0 && ""}`}
     >
-      <Video userVideoRef={userVideoRef} />
+      <VideoCover>
+        <Video userVideoRef={userVideoRef} />
+      </VideoCover>
       {peers.map((peerObj) => {
-        return <Video key={peerObj.peerId} peer={peerObj.peer} />;
+        return (
+          <VideoCover>
+            <Video key={peerObj.peerId} peer={peerObj.peer} />
+          </VideoCover>
+        );
       })}
     </FlipMove>
   );
