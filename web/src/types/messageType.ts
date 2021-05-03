@@ -1,1 +1,1 @@
-export type messageType = { photoURL: string; value: string };
+export type messageType = { photoURL: string; status: string; value: string };

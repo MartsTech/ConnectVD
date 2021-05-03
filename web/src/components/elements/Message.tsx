@@ -9,9 +9,9 @@ interface MessageProps {
 const Message: React.FC<MessageProps> = forwardRef(
   ({ data }, ref: ForwardedRef<HTMLDivElement>) => {
     return (
-      <div ref={ref} className="flex space-x-2 w-full px-2">
+      <div ref={ref} className="flex space-x-2 w-full px-5">
         <div className="">
-          <Avatar src={data.photoURL} />
+          <Avatar src={data.photoURL} status={data.status} />
         </div>
 
         <p className="flex-grow max-w-[240px] break-words">{data.value}</p>

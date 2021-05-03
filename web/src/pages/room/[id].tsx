@@ -7,11 +7,12 @@ import RoomTemplate from "@template/RoomTemplate";
 import { createUrqlClient } from "@util/createUrqlClient";
 import { withUrqlClient } from "next-urql";
 import Head from "next/head";
-import { useState } from "react";
-import { messageType } from "@type/messageType";
+import { useEffect, useRef, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "@config/firebase";
 import { useMeQuery } from "generated/graphql";
+import { io, Socket } from "socket.io-client";
+import { messageType } from "@type/messageType";
 
 interface RoomPageProps {}
 
@@ -22,6 +23,8 @@ const RoomPage: React.FC<RoomPageProps> = ({}) => {
     variables: { uid: user?.uid as string },
   });
 
+  const socketRef = useRef<Socket>();
+
   const [chat, setChat] = useState(false);
   const [leave, setLeave] = useState(false);
   const [screen, setScreen] = useState(false);
@@ -29,6 +32,14 @@ const RoomPage: React.FC<RoomPageProps> = ({}) => {
   const [audio, setAudio] = useState(true);
 
   const [messages, setMessages] = useState<messageType[]>([]);
+
+  useEffect(() => {
+    socketRef.current = io("http://localhost:8000");
+
+    socketRef.current?.on("chat message", (message: messageType) => {
+      setMessages((messages) => [...messages, message]);
+    });
+  }, []);
 
   return (
     <IsAuth>
@@ -39,12 +50,12 @@ const RoomPage: React.FC<RoomPageProps> = ({}) => {
       <RoomTemplate
         Room={
           <Room
+            socketRef={socketRef}
             leave={leave}
             screen={screen}
             setScreen={setScreen}
             video={video}
             audio={audio}
-            setMessages={setMessages}
           />
         }
         Controls={
@@ -58,7 +69,16 @@ const RoomPage: React.FC<RoomPageProps> = ({}) => {
             audio={audio}
           />
         }
-        Chat={<RoomChat messages={messages} />}
+        Chat={
+          <RoomChat
+            socketRef={socketRef}
+            messages={messages}
+            messageData={{
+              photoURL: meData.data?.me?.photoUrl as string,
+              status: meData.data?.me?.status as string,
+            }}
+          />
+        }
         showChat={chat}
       />
     </IsAuth>

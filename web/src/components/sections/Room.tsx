@@ -1,41 +1,50 @@
 import { iceConfiguration } from "@config/iceConfigs";
 import Video from "@element/Video";
 import VideoCover from "@element/VideoCover";
-import { messageType } from "@type/messageType";
 import { peerContext } from "@type/peerContext";
 import { socketPayload } from "@type/socketPayload";
 import { MeQuery } from "generated/graphql";
 import { useRouter } from "next/router";
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import {
+  Dispatch,
+  MutableRefObject,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import FlipMove from "react-flip-move";
-import { io, Socket } from "socket.io-client";
+import { Socket } from "socket.io-client";
+import { DefaultEventsMap } from "socket.io-client/build/typed-events";
 
 interface RoomProps {
+  socketRef: MutableRefObject<
+    Socket<DefaultEventsMap, DefaultEventsMap> | undefined
+  >;
   meData?: MeQuery;
   leave: boolean;
   screen: boolean;
   setScreen: Dispatch<SetStateAction<boolean>>;
   video: boolean;
   audio: boolean;
-  setMessages: Dispatch<SetStateAction<messageType[]>>;
 }
 
 const Room: React.FC<RoomProps> = ({
+  socketRef,
   leave,
   screen,
   setScreen,
   video,
   audio,
-  setMessages,
 }) => {
   const [peers, setPeers] = useState<peerContext[]>([]);
   const peersRef = useRef<peerContext[]>([]);
+
   const senders = useRef<{ id: string; track: RTCRtpSender }[]>([]);
   const [videoStates, setVideoStates] = useState<
     { id: string; state: boolean }[]
   >([]);
 
-  const socketRef = useRef<Socket>();
   const userStream = useRef<MediaStream>();
   const userVideoRef = useRef<HTMLVideoElement>(null);
 
@@ -45,8 +54,6 @@ const Room: React.FC<RoomProps> = ({
 
   useEffect(() => {
     const main = async () => {
-      socketRef.current = io("http://localhost:8000");
-
       const stream = await getUserStream();
       userStream.current = stream;
 
@@ -54,17 +61,17 @@ const Room: React.FC<RoomProps> = ({
         userVideoRef.current.srcObject = stream;
       }
 
-      socketRef.current.emit("join room", roomId);
+      socketRef.current?.emit("join room", roomId, video);
 
-      socketRef.current.on("other users", (users: string[]) => {
+      socketRef.current?.on("other users", (users: string[]) => {
         callUsers(users);
       });
 
-      socketRef.current.on("user left", (id: string) => {
+      socketRef.current?.on("user left", (id: string) => {
         removeUser(id);
       });
 
-      socketRef.current.on(
+      socketRef.current?.on(
         "video change",
         (payload: { id: string; state: boolean }) => {
           const videos = videoStates.filter((video) => video.id !== payload.id);
@@ -72,9 +79,9 @@ const Room: React.FC<RoomProps> = ({
         }
       );
 
-      socketRef.current.on("offer", handleOffer);
-      socketRef.current.on("answer", handleAnswer);
-      socketRef.current.on("ice-candidate", handleNewICECandidateMsg);
+      socketRef.current?.on("offer", handleOffer);
+      socketRef.current?.on("answer", handleAnswer);
+      socketRef.current?.on("ice-candidate", handleNewICECandidateMsg);
     };
 
     main();
@@ -96,25 +103,6 @@ const Room: React.FC<RoomProps> = ({
   useEffect(() => {
     toggleAudio(audio);
   }, [audio]);
-
-  const getUserStream = async () => {
-    const devices = await navigator.mediaDevices.enumerateDevices();
-
-    let stream;
-    try {
-      stream = await navigator.mediaDevices.getUserMedia({
-        video: devices.some((device) => device.kind === "videoinput"),
-        audio: devices.some((device) => device.kind === "audioinput"),
-      });
-    } catch {
-      stream = await navigator.mediaDevices.getUserMedia({
-        video: false,
-        audio: devices.some((device) => device.kind === "audioinput"),
-      });
-    }
-
-    return stream;
-  };
 
   const leaveRoom = () => {
     socketRef.current?.disconnect();
@@ -159,9 +147,7 @@ const Room: React.FC<RoomProps> = ({
         userStream.current.getVideoTracks()[0].enabled = state;
       } catch {}
     }
-    if (socketRef.current) {
-      socketRef.current.emit("toggle video", state);
-    }
+    socketRef.current?.emit("toggle video", state);
   };
 
   const toggleAudio = (state: boolean) => {
@@ -170,6 +156,25 @@ const Room: React.FC<RoomProps> = ({
         userStream.current.getAudioTracks()[0].enabled = state;
       } catch {}
     }
+  };
+
+  const getUserStream = async () => {
+    const devices = await navigator.mediaDevices.enumerateDevices();
+
+    let stream;
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({
+        video: devices.some((device) => device.kind === "videoinput"),
+        audio: devices.some((device) => device.kind === "audioinput"),
+      });
+    } catch {
+      stream = await navigator.mediaDevices.getUserMedia({
+        video: false,
+        audio: devices.some((device) => device.kind === "audioinput"),
+      });
+    }
+
+    return stream;
   };
 
   const removeUser = (id: string) => {
@@ -307,7 +312,7 @@ const Room: React.FC<RoomProps> = ({
     e: RTCPeerConnectionIceEvent,
     id: string
   ) => {
-    if (!e.candidate || !socketRef.current) {
+    if (!e.candidate || !socketRef?.current) {
       return;
     }
 
@@ -343,7 +348,7 @@ const Room: React.FC<RoomProps> = ({
       {peers.map((peerObj) => {
         const user = videoStates.find((user) => user.id === peerObj.peerId);
         return (
-          <VideoCover video={user?.state === true}>
+          <VideoCover video={user?.state ? user.state : true}>
             <Video key={peerObj.peerId} peer={peerObj.peer} />
           </VideoCover>
         );

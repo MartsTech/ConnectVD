@@ -5,7 +5,7 @@ import express from "express";
 import http from "http";
 import path from "path";
 import "reflect-metadata";
-import socket, { Server, ServerOptions, Socket } from "socket.io";
+import socket, { Server, ServerOptions } from "socket.io";
 import { buildSchema } from "type-graphql";
 import { createConnection } from "typeorm";
 import { Email } from "./entities/Email";
@@ -80,7 +80,7 @@ const main = async () => {
   const users: { [userId: string]: string } = {};
 
   io.on("connection", (socket) => {
-    socket.on("join room", (roomId: string) => {
+    socket.on("join room", (roomId: string, video: string) => {
       if (rooms[roomId]) {
         const lenght = rooms[roomId].length;
         if (lenght === 4) {
@@ -98,7 +98,8 @@ const main = async () => {
       if (usersInRoom) {
         socket.emit("other users", usersInRoom);
       }
-      console.log("Connect: ", rooms, users);
+
+      socket.emit("toggle video", video);
     });
 
     socket.on("offer", (payload: socketPayload) => {
@@ -117,6 +118,13 @@ const main = async () => {
       socket.broadcast.emit("video change", { id: socket.id, state });
     });
 
+    socket.on(
+      "chat message",
+      (message: { photoURL: string; status: string; value: string }) => {
+        io.emit("chat message", message);
+      }
+    );
+
     socket.on("disconnect", () => {
       const roomId = users[socket.id];
       let room = rooms[roomId];
@@ -130,7 +138,6 @@ const main = async () => {
       if (rooms[roomId] && Object.keys(rooms[roomId]).length === 0) {
         delete rooms[roomId];
       }
-      console.log("Disconnect: ", rooms, users);
     });
   });
 

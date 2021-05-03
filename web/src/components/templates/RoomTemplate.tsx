@@ -19,8 +19,8 @@ const RoomTemplate: React.FC<RoomTemplateProps> = ({
           {Controls}
         </div>
         <div
-          className="hidden 2xl:inline-block h-full 
-        overflow-y-scroll scrollbar-hide"
+          className="hidden 2xl:flex flex-col
+          overflow-y-scroll scrollbar-hide h-full"
         >
           {Chat}
         </div>
