@@ -1,4 +1,4 @@
-export default {
+export const iceConfiguration = {
   iceServers: [
     {
       urls: "stun:stun.stunprotocol.org",

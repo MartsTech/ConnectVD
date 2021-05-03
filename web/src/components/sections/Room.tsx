@@ -1,11 +1,11 @@
+import { iceConfiguration } from "@config/iceConfigs";
+import Video from "@element/Video";
 import { peerContext } from "@type/peerContext";
 import { socketPayload } from "@type/socketPayload";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
-import { io, Socket } from "socket.io-client";
-import Video from "@element/Video";
 import FlipMove from "react-flip-move";
-import iceConfiguration from "@config/iceConfigs";
+import { io, Socket } from "socket.io-client";
 
 interface RoomProps {
   leave: boolean;
@@ -14,7 +14,6 @@ interface RoomProps {
 const Room: React.FC<RoomProps> = ({ leave }) => {
   const [peers, setPeers] = useState<peerContext[]>([]);
   const peersRef = useRef<peerContext[]>([]);
-  const senders = useRef<{ id: string; track: RTCRtpSender }[]>([]);
 
   const socketRef = useRef<Socket>();
   const userStream = useRef<MediaStream>();
@@ -37,11 +36,11 @@ const Room: React.FC<RoomProps> = ({ leave }) => {
 
       socketRef.current.emit("join room", roomId);
 
-      socketRef.current.on("other users", (users) => {
+      socketRef.current.on("other users", (users: string[]) => {
         callUsers(users);
       });
 
-      socketRef.current.on("user left", (id) => {
+      socketRef.current.on("user left", (id: string) => {
         removeUser(id);
       });
 
@@ -70,10 +69,25 @@ const Room: React.FC<RoomProps> = ({ leave }) => {
     return stream;
   };
 
-  const callUsers = (users: any) => {
+  const leaveRoom = () => {
+    socketRef.current?.disconnect();
+    userStream.current?.getTracks().forEach((track) => {
+      track.stop();
+    });
+    router.replace("/dash");
+  };
+
+  const removeUser = (id: string) => {
+    const peers = peersRef.current.filter((peer) => peer.peerId !== id);
+
+    peersRef.current = peers;
+    setPeers(peers);
+  };
+
+  const callUsers = (users: string[]) => {
     const peers: peerContext[] = [];
 
-    users.forEach((id: string) => {
+    users.forEach((id) => {
       const peer = createPeer(id);
 
       peersRef.current.push({ peerId: id, peer });
@@ -85,10 +99,21 @@ const Room: React.FC<RoomProps> = ({ leave }) => {
     setPeers(peers);
   };
 
+  const acceptCall = (id: string) => {
+    const peer = createPeer();
+    const peerObj: peerContext = { peerId: id, peer };
+
+    peersRef.current.push({ peerId: id, peer });
+    setPeers((peers) => [...peers, peerObj]);
+    setTracks(id);
+
+    return peerObj;
+  };
+
   const createPeer = (id?: string) => {
     const peer = new RTCPeerConnection(iceConfiguration);
 
-    if (typeof id !== "undefined") {
+    if (id) {
       peer.onnegotiationneeded = () => handleNegotiationNeededEvent(id);
       peer.onicecandidate = (e) => handleICECandidateEvent(e, id);
     }
@@ -96,41 +121,22 @@ const Room: React.FC<RoomProps> = ({ leave }) => {
     return peer;
   };
 
-  const removeUser = (id: string) => {
-    const peers = peersRef.current.filter((peer) => peer.peerId !== id);
-
-    peersRef.current = peers;
-    setPeers(peers);
-
-    const tempSenders = senders.current.filter((sender) => sender.id !== id);
-    senders.current = tempSenders;
-  };
-
   const setTracks = (id: string) => {
     const peerObj = peersRef.current.find((peer) => peer.peerId === id);
-    if (typeof peerObj === "undefined") {
+    if (!peerObj) {
       return;
     }
 
-    userStream.current?.getTracks().forEach((track) =>
-      senders.current.push({
-        id,
-        track: peerObj.peer.addTrack(track, userStream.current as MediaStream),
-      })
-    );
-  };
-
-  const leaveRoom = () => {
-    socketRef.current?.disconnect();
-    userStream.current?.getTracks().forEach((track) => {
-      track.stop();
-    });
-    router.replace("/dash");
+    userStream.current
+      ?.getTracks()
+      .forEach((track) =>
+        peerObj.peer.addTrack(track, userStream.current as MediaStream)
+      );
   };
 
   const handleNegotiationNeededEvent = (id: string) => {
     const peerObj = peersRef.current.find((peer) => peer.peerId === id);
-    if (typeof peerObj === "undefined") {
+    if (!peerObj) {
       return;
     }
 
@@ -140,14 +146,14 @@ const Room: React.FC<RoomProps> = ({ leave }) => {
         return peerObj.peer.setLocalDescription(offer);
       })
       .then(() => {
-        if (typeof socketRef.current === "undefined") {
+        if (!socketRef.current) {
           return;
         }
 
-        const payload = {
+        const payload: socketPayload = {
           target: id,
           caller: socketRef.current.id,
-          sdp: peerObj.peer.localDescription,
+          sdp: peerObj.peer.localDescription as RTCSessionDescription,
         };
         socketRef.current.emit("offer", payload);
       })
@@ -155,18 +161,7 @@ const Room: React.FC<RoomProps> = ({ leave }) => {
   };
 
   const handleOffer = (incoming: socketPayload) => {
-    const peerObj = peersRef.current.find(
-      (peer) => peer.peerId === incoming.caller
-    );
-    if (typeof peerObj === "undefined") {
-      return;
-    }
-
-    const peer = createPeer();
-
-    peersRef.current.push({ peerId: incoming.caller, peer });
-    setPeers((peers) => [...peers, peerObj]);
-    setTracks(incoming.caller);
+    const peerObj = acceptCall(incoming.caller);
 
     const desc = new RTCSessionDescription(incoming.sdp);
     peerObj.peer
@@ -174,18 +169,18 @@ const Room: React.FC<RoomProps> = ({ leave }) => {
       .then(() => {
         return peerObj.peer.createAnswer();
       })
-      .then((answer) => {
+      .then((answer: any) => {
         return peerObj.peer.setLocalDescription(answer);
       })
       .then(() => {
-        if (typeof socketRef.current === "undefined") {
+        if (!socketRef.current) {
           return;
         }
 
-        const payload = {
+        const payload: socketPayload = {
           target: incoming.caller,
           caller: socketRef.current.id,
-          sdp: peerObj.peer.localDescription,
+          sdp: peerObj.peer.localDescription as RTCSessionDescription,
         };
 
         socketRef.current.emit("answer", payload);
@@ -197,48 +192,49 @@ const Room: React.FC<RoomProps> = ({ leave }) => {
     const peerObj = peersRef.current.find(
       (peer) => peer.peerId === message.caller
     );
-    if (typeof peerObj === "undefined") {
+    if (!peerObj) {
       return;
     }
 
     const desc = new RTCSessionDescription(message.sdp);
-    peerObj.peer.setRemoteDescription(desc).catch((err) => console.error(err));
+    peerObj.peer
+      .setRemoteDescription(desc)
+      .catch((err: any) => console.log(err));
   };
 
   const handleICECandidateEvent = (
     e: RTCPeerConnectionIceEvent,
     id: string
   ) => {
-    if (!e.candidate || typeof socketRef.current === "undefined") {
+    if (!e.candidate || !socketRef.current) {
       return;
     }
 
-    const payload = {
+    const payload: socketPayload = {
       target: id,
       caller: socketRef.current.id,
       candidate: e.candidate,
     };
-
     socketRef.current.emit("ice-candidate", payload);
   };
 
   const handleNewICECandidateMsg = (payload: socketPayload) => {
-    const candidate = new RTCIceCandidate(payload.candidate);
-
     const peerObj = peersRef.current.find(
       (peer) => peer.peerId === payload.caller
     );
-    if (typeof peerObj === "undefined") {
+    if (!peerObj) {
       return;
     }
 
-    peerObj.peer.addIceCandidate(candidate).catch((err) => console.error(err));
+    const candidate = new RTCIceCandidate(payload.candidate);
+
+    peerObj.peer.addIceCandidate(candidate).catch((err) => console.log(err));
   };
 
   // const peers: peerContext[] = [];
   // for (let i = 0; i < 20; ++i) {
   //   peers.push({
-  //     peerID: `${i}`,
+  //     peerId: `${i}`,
   //     peer: new RTCPeerConnection(),
   //   });
   // }

@@ -13,13 +13,12 @@ const Video: React.FC<VideoProps> = forwardRef(
       if (peer) {
         peer.ontrack = handleTrackEvent;
       }
-    }, []);
+    }, [peer]);
 
     const handleTrackEvent = (e: RTCTrackEvent) => {
-      if (!videoRef.current) {
-        return;
+      if (videoRef.current) {
+        videoRef.current.srcObject = e.streams[0];
       }
-      videoRef.current.srcObject = e.streams[0];
     };
 
     return (
