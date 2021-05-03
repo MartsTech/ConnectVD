@@ -8,13 +8,17 @@ interface RoomTemplateProps {
 
 const RoomTemplate: React.FC<RoomTemplateProps> = ({ Chat }) => {
   const [chat, setChat] = useState(false);
+  const [leave, setLeave] = useState(false);
 
   return (
     <div className="h-screen w-screen flex flex-col bg-primary-900 text-white">
       <div className="h-full flex justify-evenly">
         <div className="h-controls flex-shrink">
-          <Room />
-          <RoomControls onChat={() => setChat(!chat)} />
+          <Room leave={leave} />
+          <RoomControls
+            onChat={() => setChat(!chat)}
+            onLeave={() => setLeave(true)}
+          />
         </div>
         <div
           className="hidden 2xl:inline-block h-full 

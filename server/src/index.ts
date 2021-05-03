@@ -83,7 +83,7 @@ const main = async () => {
     socket.on("join room", (roomID) => {
       if (rooms[roomID]) {
         const lenght = rooms[roomID].lenght;
-        if (lenght >= 4) {
+        if (lenght === 4) {
           socket.emit("room full");
           return;
         }

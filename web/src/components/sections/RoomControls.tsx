@@ -6,15 +6,13 @@ import {
   VideoCameraIcon,
   VolumeUpIcon,
 } from "@heroicons/react/solid";
-import { useRouter } from "next/router";
 
 interface RoomControlsProps {
   onChat: () => void;
+  onLeave: () => void;
 }
 
-const RoomControls: React.FC<RoomControlsProps> = ({ onChat }) => {
-  const router = useRouter();
-
+const RoomControls: React.FC<RoomControlsProps> = ({ onChat, onLeave }) => {
   return (
     <div className="h-20 flex items-center justify-evenly bg-primary-700">
       <div className="control">
@@ -24,10 +22,7 @@ const RoomControls: React.FC<RoomControlsProps> = ({ onChat }) => {
         <div className="control">
           <VolumeUpIcon className="h-7 w-7" />
         </div>
-        <div
-          onClick={() => router.replace("/dash")}
-          className="control control-important"
-        >
+        <div onClick={onLeave} className="control control-important">
           <PhoneMissedCallIcon className="h-7 w-7" />
         </div>
         <div className="control">

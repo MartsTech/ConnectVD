@@ -7,11 +7,14 @@ import Video from "@element/Video";
 import FlipMove from "react-flip-move";
 import iceConfiguration from "@config/iceConfigs";
 
-interface RoomProps {}
+interface RoomProps {
+  leave: boolean;
+}
 
-const Room: React.FC<RoomProps> = () => {
+const Room: React.FC<RoomProps> = ({ leave }) => {
   const [peers, setPeers] = useState<peerContext[]>([]);
   const peersRef = useRef<peerContext[]>([]);
+  const senders = useRef<{ id: string; track: RTCRtpSender }[]>([]);
 
   const socketRef = useRef<Socket>();
   const userStream = useRef<MediaStream>();
@@ -50,6 +53,12 @@ const Room: React.FC<RoomProps> = () => {
     main();
   }, []);
 
+  useEffect(() => {
+    if (leave) {
+      leaveRoom();
+    }
+  }, [leave]);
+
   const getUserStream = async () => {
     const devices = await navigator.mediaDevices.enumerateDevices();
 
@@ -76,24 +85,25 @@ const Room: React.FC<RoomProps> = () => {
     setPeers(peers);
   };
 
+  const createPeer = (id?: string) => {
+    const peer = new RTCPeerConnection(iceConfiguration);
+
+    if (typeof id !== "undefined") {
+      peer.onnegotiationneeded = () => handleNegotiationNeededEvent(id);
+      peer.onicecandidate = (e) => handleICECandidateEvent(e, id);
+    }
+
+    return peer;
+  };
+
   const removeUser = (id: string) => {
     const peers = peersRef.current.filter((peer) => peer.peerId !== id);
 
     peersRef.current = peers;
     setPeers(peers);
-  };
 
-  const createPeer = (id?: string) => {
-    const peer = new RTCPeerConnection(iceConfiguration);
-
-    if (typeof id === "undefined") {
-      return peer;
-    }
-
-    peer.onnegotiationneeded = () => handleNegotiationNeededEvent(id);
-    peer.onicecandidate = (e) => handleICECandidateEvent(e, id);
-
-    return peer;
+    const tempSenders = senders.current.filter((sender) => sender.id !== id);
+    senders.current = tempSenders;
   };
 
   const setTracks = (id: string) => {
@@ -102,16 +112,24 @@ const Room: React.FC<RoomProps> = () => {
       return;
     }
 
-    userStream.current
-      ?.getTracks()
-      .forEach((track) =>
-        peerObj.peer.addTrack(track, userStream.current as MediaStream)
-      );
+    userStream.current?.getTracks().forEach((track) =>
+      senders.current.push({
+        id,
+        track: peerObj.peer.addTrack(track, userStream.current as MediaStream),
+      })
+    );
+  };
+
+  const leaveRoom = () => {
+    socketRef.current?.disconnect();
+    userStream.current?.getTracks().forEach((track) => {
+      track.stop();
+    });
+    router.replace("/dash");
   };
 
   const handleNegotiationNeededEvent = (id: string) => {
     const peerObj = peersRef.current.find((peer) => peer.peerId === id);
-
     if (typeof peerObj === "undefined") {
       return;
     }
@@ -133,7 +151,7 @@ const Room: React.FC<RoomProps> = () => {
         };
         socketRef.current.emit("offer", payload);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.error(err));
   };
 
   const handleOffer = (incoming: socketPayload) => {
@@ -148,17 +166,11 @@ const Room: React.FC<RoomProps> = () => {
 
     peersRef.current.push({ peerId: incoming.caller, peer });
     setPeers((peers) => [...peers, peerObj]);
+    setTracks(incoming.caller);
 
     const desc = new RTCSessionDescription(incoming.sdp);
     peerObj.peer
       .setRemoteDescription(desc)
-      .then(() => {
-        userStream.current
-          ?.getTracks()
-          .forEach((track) =>
-            peerObj.peer.addTrack(track, userStream.current as MediaStream)
-          );
-      })
       .then(() => {
         return peerObj.peer.createAnswer();
       })
@@ -178,7 +190,7 @@ const Room: React.FC<RoomProps> = () => {
 
         socketRef.current.emit("answer", payload);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.error(err));
   };
 
   const handleAnswer = (message: socketPayload) => {
@@ -190,7 +202,7 @@ const Room: React.FC<RoomProps> = () => {
     }
 
     const desc = new RTCSessionDescription(message.sdp);
-    peerObj.peer.setRemoteDescription(desc).catch((err) => console.log(err));
+    peerObj.peer.setRemoteDescription(desc).catch((err) => console.error(err));
   };
 
   const handleICECandidateEvent = (
@@ -220,7 +232,7 @@ const Room: React.FC<RoomProps> = () => {
       return;
     }
 
-    peerObj.peer.addIceCandidate(candidate).catch((err) => console.log(err));
+    peerObj.peer.addIceCandidate(candidate).catch((err) => console.error(err));
   };
 
   // const peers: peerContext[] = [];
