@@ -113,6 +113,10 @@ const main = async () => {
       socket.to(payload.target).emit("ice-candidate", payload);
     });
 
+    socket.on("toggle video", (state: boolean) => {
+      socket.broadcast.emit("video change", { id: socket.id, state });
+    });
+
     socket.on("disconnect", () => {
       const roomID = users[socket.id];
       let room = rooms[roomID];

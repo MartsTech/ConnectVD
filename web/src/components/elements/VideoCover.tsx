@@ -1,20 +1,23 @@
 import { ForwardedRef, forwardRef } from "react";
 import Avatar from "./Avatar";
 
-interface VideoCoverProps {}
+interface VideoCoverProps {
+  video: boolean;
+}
+
 const VideoCover: React.FC<VideoCoverProps> = forwardRef(
-  ({ children }, ref: ForwardedRef<HTMLDivElement>) => {
+  ({ video, children }, ref: ForwardedRef<HTMLDivElement>) => {
     return (
-      <div ref={ref} className="">
-        <div
-          className="flex flex-col items-center justify-center bg-primary-700 
-        rounded-md"
-        >
-          <div className="absolute">
+      <div ref={ref} className="rounded-md relative">
+        {!video && (
+          <div
+            className="absolute h-full w-full flex flex-col 
+    bg-primary-700 items-center justify-center "
+          >
             <Avatar size={3} />
           </div>
-          <div className="z-10">{children}</div>
-        </div>
+        )}
+        <div className="bg-opacity-0">{children}</div>
       </div>
     );
   }

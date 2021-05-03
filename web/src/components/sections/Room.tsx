@@ -28,6 +28,9 @@ const Room: React.FC<RoomProps> = ({
   const [peers, setPeers] = useState<peerContext[]>([]);
   const peersRef = useRef<peerContext[]>([]);
   const senders = useRef<{ id: string; track: RTCRtpSender }[]>([]);
+  const [videoStates, setVideoStates] = useState<
+    { id: string; state: boolean }[]
+  >([]);
 
   const socketRef = useRef<Socket>();
   const userStream = useRef<MediaStream>();
@@ -57,6 +60,14 @@ const Room: React.FC<RoomProps> = ({
       socketRef.current.on("user left", (id: string) => {
         removeUser(id);
       });
+
+      socketRef.current.on(
+        "video change",
+        (payload: { id: string; state: boolean }) => {
+          const videos = videoStates.filter((video) => video.id !== payload.id);
+          setVideoStates([...videos, payload]);
+        }
+      );
 
       socketRef.current.on("offer", handleOffer);
       socketRef.current.on("answer", handleAnswer);
@@ -145,6 +156,9 @@ const Room: React.FC<RoomProps> = ({
         userStream.current.getVideoTracks()[0].enabled = state;
       } catch {}
     }
+    if (socketRef.current) {
+      socketRef.current.emit("toggle video", state);
+    }
   };
 
   const toggleAudio = (state: boolean) => {
@@ -161,8 +175,10 @@ const Room: React.FC<RoomProps> = ({
     peersRef.current = peers;
     setPeers(peers);
 
-    const tempSenders = senders.current.filter((sender) => sender.id !== id);
-    senders.current = tempSenders;
+    senders.current = senders.current.filter((sender) => sender.id !== id);
+
+    const videos = videoStates.filter((video) => video.id !== id);
+    setVideoStates(videos);
   };
 
   const callUsers = (users: string[]) => {
@@ -315,15 +331,16 @@ const Room: React.FC<RoomProps> = ({
 
   return (
     <FlipMove
-      className={`h-full w-full grid grid-cols-1 md:grid-cols-2 items-center
+      className={`h-full grid grid-cols-1 md:grid-cols-2 items-center
     overflow-y-scroll scrollbar-hide ${peers.length !== 0 && ""}`}
     >
-      <VideoCover>
+      <VideoCover video={video}>
         <Video userVideoRef={userVideoRef} />
       </VideoCover>
       {peers.map((peerObj) => {
+        const user = videoStates.find((user) => user.id === peerObj.peerId);
         return (
-          <VideoCover>
+          <VideoCover video={user?.state === true}>
             <Video key={peerObj.peerId} peer={peerObj.peer} />
           </VideoCover>
         );

@@ -12,9 +12,9 @@ const RoomTemplate: React.FC<RoomTemplateProps> = ({
   showChat,
 }) => {
   return (
-    <div className="h-screen w-screen flex flex-col bg-primary-900 text-white">
-      <div className="h-full flex justify-evenly">
-        <div className="h-controls flex-shrink">
+    <div className="h-screen w-screen bg-primary-900 text-primary-100">
+      <div className="h-full w-full flex justify-evenly">
+        <div className="h-full flex flex-col">
           {Room}
           {Controls}
         </div>
