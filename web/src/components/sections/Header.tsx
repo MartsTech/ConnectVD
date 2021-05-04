@@ -3,15 +3,14 @@ import Logo from "@element/Logo";
 import SearchBar from "@element/SearchBar";
 import { MenuIcon } from "@heroicons/react/solid";
 import HeaderOptions from "@module/HeaderOptions";
-import { MeQuery } from "generated/graphql";
-import { route } from "next/dist/next-server/server/router";
+import { User } from "generated/graphql";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import Dropdown from "./Dropdown";
 
 interface HeaderProps {
   home: string;
-  data?: MeQuery;
+  data?: User;
   onMenu?: () => void;
 }
 

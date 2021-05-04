@@ -22,7 +22,7 @@ const RoomChat: React.FC<RoomChatProps> = ({
   const chatRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div className="w-80 pt-10 flex-grow max-h-auto bg-primary-800 flex flex-col items-center">
+    <div className="w-full sm:w-80 pt-10 flex-grow max-h-auto bg-primary-800 flex flex-col items-center">
       <FlipMove className="space-y-4 w-full h-full pb-16">
         {messages.map((message, id) => (
           <Message key={`message_${id}`} data={message} />

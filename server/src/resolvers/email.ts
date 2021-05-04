@@ -113,7 +113,7 @@ export class EmailResolver {
       const error = request as RequestResponse;
       return { error };
     }
-    
+
     const { sender, receiver } = request as Users;
 
     const email = await Email.create({

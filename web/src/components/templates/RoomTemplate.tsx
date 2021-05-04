@@ -26,7 +26,7 @@ const RoomTemplate: React.FC<RoomTemplateProps> = ({
         </div>
         <div
           className={`${
-            !showChat && "hidden"
+            showChat ? "w-full sm:w-auto" : "hidden"
           } 2xl:hidden flex flex-col absolute bottom-20 right-0
           overflow-y-scroll scrollbar-hide h-full`}
         >

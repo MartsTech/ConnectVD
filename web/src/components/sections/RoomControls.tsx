@@ -27,11 +27,8 @@ const RoomControls: React.FC<RoomControlsProps> = ({
   audio,
 }) => {
   return (
-    <div className="h-20 flex items-center justify-evenly bg-primary-700">
-      <div className="control">
-        <UserAddIcon className="h-7 w-7" />
-      </div>
-      <div className="flex space-x-4">
+    <div className="xs:h-20 grid xs:flex items-center justify-evenly bg-primary-700">
+      <div className="flex space-x-4 py-2 xs:py-0">
         <div
           onClick={onAudio}
           className={`control ${!audio && "control-important"}`}
@@ -48,7 +45,10 @@ const RoomControls: React.FC<RoomControlsProps> = ({
           <VideoCameraIcon className="h-7 w-7" />
         </div>
       </div>
-      <div className="flex space-x-4">
+      <div className="flex space-x-4 py-2 xs:py-0">
+        <div className="control">
+          <UserAddIcon className="h-7 w-7" />
+        </div>
         <div onClick={onScreen} className="control">
           <ExternalLinkIcon className="h-7 w-7" />
         </div>

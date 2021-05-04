@@ -2,10 +2,10 @@ import Avatar from "@element/Avatar";
 import ButtonLink from "@element/ButtonLink";
 import IconButton from "@element/IconButton";
 import { BellIcon, MailIcon } from "@heroicons/react/solid";
-import { MeQuery } from "generated/graphql";
+import { User } from "generated/graphql";
 
 interface HeaderOptionsProps {
-  data?: MeQuery;
+  data?: User;
   onAvatar?: () => void;
   onMail?: () => void;
   onBell?: () => void;
@@ -27,7 +27,7 @@ const HeaderOptions: React.FC<HeaderOptionsProps> = ({
           <BellIcon className="h-7 w-7 text-primary-200" />
         </IconButton>
         <IconButton onClick={onAvatar}>
-          <Avatar src={data.me?.photoUrl} status={data.me?.status} />
+          <Avatar src={data.photoUrl} status={data.status} />
         </IconButton>
       </div>
     );

@@ -4,11 +4,12 @@ import PreviewCard from "@element/PreviewCard";
 import Profile from "@element/Profile";
 import { LogoutIcon } from "@heroicons/react/solid";
 import { setHookType } from "@type/setHookType";
-import { MeQuery } from "generated/graphql";
+import { statusType } from "@type/statusType";
+import { User } from "generated/graphql";
 import { CSSTransition } from "react-transition-group";
 
 interface MainDropProps {
-  data?: MeQuery;
+  data?: User;
   active: string;
   toNext: () => void;
   setHeight: setHookType;
@@ -29,10 +30,10 @@ const MainDrop: React.FC<MainDropProps> = ({
       onEnter={(el: any) => setHeight(el.offsetHeight)}
     >
       <div>
-        <Profile data={data} important />
+        <Profile data={data as User} important />
         <PreviewCard
-          Icon={<Badge status={data?.me?.status as any} size={2} />}
-          title={data?.me?.status || ""}
+          Icon={<Badge status={data?.status as any} size={2} />}
+          title={data?.status || ""}
           onClick={toNext}
           important
         />

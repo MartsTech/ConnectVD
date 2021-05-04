@@ -1,10 +1,10 @@
 import MainDrop from "@module/MainDrop";
 import StatusDrop from "@module/StatusDrop";
-import { MeQuery } from "generated/graphql";
+import { User } from "generated/graphql";
 import { useState } from "react";
 
 interface DropdownProps {
-  data?: MeQuery;
+  data?: User;
 }
 
 const Dropdown: React.FC<DropdownProps> = ({ data }) => {

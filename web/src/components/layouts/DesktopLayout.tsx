@@ -41,7 +41,7 @@ const DesktopLayout: NextPage<DesktopLayoutProps> = ({
       <DefaultLayout
         Header={
           <Header
-            data={meData.data}
+            data={meData.data?.me as User}
             onMenu={() => setSidebar(!sidebar)}
             home="/dash"
           />

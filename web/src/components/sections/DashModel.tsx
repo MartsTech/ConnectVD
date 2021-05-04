@@ -35,7 +35,7 @@ const DashModel: React.FC<DashModelProps> = ({
           <p className="text-primary-100 text-lg sm:text-xl font-bold">
             {title}
           </p>
-          <Button title={button} onClick={onButton} />
+          <Button primary title={button} onClick={onButton} />
         </div>
         <div className="flex flex-col">
           <h3 className="flex p-4 text-primary-100">{field}</h3>
