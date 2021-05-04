@@ -1,8 +1,9 @@
 import Avatar from "@element/Avatar";
 import PreviewCard from "@element/PreviewCard";
 import Profile from "@element/Profile";
-import friendExtendOptions from "@service/friendExtendOptions";
+import { MailIcon, UserRemoveIcon } from "@heroicons/react/solid";
 import { User } from "generated/graphql";
+import { useRouter } from "next/router";
 import { ForwardedRef, forwardRef, useState } from "react";
 
 interface DashFriendProps {
@@ -12,6 +13,8 @@ interface DashFriendProps {
 const DashFriend: React.FC<DashFriendProps> = forwardRef(
   ({ info }, ref: ForwardedRef<HTMLDivElement>) => {
     const [extend, setExtend] = useState(false);
+
+    const router = useRouter();
 
     return (
       <div ref={ref}>
@@ -23,14 +26,18 @@ const DashFriend: React.FC<DashFriendProps> = forwardRef(
         {extend && (
           <div>
             <Profile data={info} important />
-            {friendExtendOptions.map(({ Icon, title, onClick }) => (
-              <PreviewCard
-                Icon={<Icon className="h-7 w-7 text-primary-200" />}
-                title={title}
-                onClick={onClick}
-                important
-              />
-            ))}
+            <PreviewCard
+              Icon={<MailIcon className="h-7 w-7 text-primary-200" />}
+              title="Contact"
+              onClick={() => router.push(`/send-email?email=${info.email}`)}
+              important
+            />
+            <PreviewCard
+              Icon={<UserRemoveIcon className="h-7 w-7 text-primary-200" />}
+              title="Unfriend"
+              onClick={() => alert("TODO")}
+              important
+            />
           </div>
         )}
       </div>

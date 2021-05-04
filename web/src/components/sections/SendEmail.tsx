@@ -3,7 +3,7 @@ import { useSnackbar } from "notistack";
 import { MailData } from "@type/emailData";
 import { useFriendsQuery, useSendEmailMutation } from "generated/graphql";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { Formik, Form, Field } from "formik";
 import Button from "@element/Button";
@@ -18,11 +18,15 @@ const SendEmail: React.FC<SendEmailProps> = ({}) => {
     variables: { uid: user?.uid as string },
   });
 
+  const router = useRouter();
+
   const [receiver, setReceiver] = useState("");
 
-  const [, sendEmail] = useSendEmailMutation();
+  useEffect(() => {
+    setReceiver(router.query.email as string);
+  }, [router.query.email]);
 
-  const router = useRouter();
+  const [, sendEmail] = useSendEmailMutation();
 
   const { enqueueSnackbar } = useSnackbar();
 
