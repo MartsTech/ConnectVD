@@ -64,14 +64,16 @@ const invalidateAllFields = (
   });
 };
 
-// const subscriptionClient = new SubscriptionClient(
-//   __prod__
-//     ? process.env.REACT_APP_WEB_SOCKET_KEY!
-//     : "ws://localhost:8000/subscriptions",
-//   {
-//     reconnect: true,
-//   }
-// );
+const subscriptionClient = process.browser
+  ? new SubscriptionClient(
+      __prod__
+        ? process.env.REACT_APP_WEB_SOCKET_KEY!
+        : "ws://localhost:8000/subscriptions",
+      {
+        reconnect: true,
+      }
+    )
+  : null;
 
 export const createUrqlClient = (ssrExchange: any, ctx: any) => {
   return {
@@ -154,29 +156,29 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
               });
             },
           },
-          // Subscription: {
-          //   newFriendRequst: (_, __, cache, ___) => {
-          //     invalidateAllFields("friendRequests", cache);
-          //   },
-          //   newFriend: (_, __, cache, ___) => {
-          //     invalidateAllFields("friends", cache);
-          //   },
-          //   newEmail: (_, __, cache, ___) => {
-          //     invalidateAllFields("emails", cache);
-          //   },
-          //   newInvite: (_, __, cache, ___) => {
-          //     invalidateAllFields("invites", cache);
-          //   },
-          // },
+          Subscription: {
+            newFriendRequst: (_, __, cache, ___) => {
+              invalidateAllFields("friendRequests", cache);
+            },
+            newFriend: (_, __, cache, ___) => {
+              invalidateAllFields("friends", cache);
+            },
+            newEmail: (_, __, cache, ___) => {
+              invalidateAllFields("emails", cache);
+            },
+            newInvite: (_, __, cache, ___) => {
+              invalidateAllFields("invites", cache);
+            },
+          },
         },
       }),
       ssrExchange,
       fetchExchange,
-      // subscriptionExchange({
-      //   forwardSubscription(operation) {
-      //     return subscriptionClient.request(operation);
-      //   },
-      // }),
+      subscriptionExchange({
+        forwardSubscription(operation) {
+          return subscriptionClient?.request(operation) as any;
+        },
+      }),
     ],
   };
 };

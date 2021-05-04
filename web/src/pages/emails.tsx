@@ -17,7 +17,10 @@ const EmailsPage = () => {
 
   return (
     <IsAuth>
-      <DesktopLayout title="Emails" Main={<Emails />} />
+      <DesktopLayout
+        title="Emails"
+        Main={<Emails emails={emailsData.data} />}
+      />
     </IsAuth>
   );
 };

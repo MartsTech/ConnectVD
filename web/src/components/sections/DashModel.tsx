@@ -1,6 +1,6 @@
 import Button from "@element/ImportantButton";
 import Modal from "@element/Model";
-import { Dispatch, SetStateAction } from "react";
+import { setHookType } from "@type/setHookType";
 
 interface DashModelProps {
   open: boolean;
@@ -10,7 +10,7 @@ interface DashModelProps {
   onButton: () => void;
   field: string;
   value: string;
-  setValue: Dispatch<SetStateAction<string>>;
+  setValue: setHookType;
   fieldType?: string;
 }
 

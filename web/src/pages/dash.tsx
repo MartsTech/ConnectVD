@@ -86,7 +86,7 @@ const DashPage = () => {
         field="Room Id"
         value={roomId}
         setValue={setRoomId}
-        onButton={() => alert("TODO")}
+        onButton={() => router.push(`/room/${roomId}}`)}
       />
       <DashModel
         open={friendModel}

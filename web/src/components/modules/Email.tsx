@@ -1,12 +1,14 @@
 import Avatar from "@element/Avatar";
+import { Email as EmailType } from "generated/graphql";
 import { ForwardedRef, forwardRef } from "react";
 
 interface EmailProps {
+  data: EmailType;
   onClick: () => void;
 }
 
 const Email: React.FC<EmailProps> = forwardRef(
-  ({ onClick }, ref: ForwardedRef<HTMLDivElement>) => {
+  ({ data, onClick }, ref: ForwardedRef<HTMLDivElement>) => {
     return (
       <div
         ref={ref}
@@ -17,23 +19,24 @@ const Email: React.FC<EmailProps> = forwardRef(
         <div className="flex justify-between">
           <div
             className="flex text-primary-100 font-bold 
-        leading-5 truncate w-[90%]"
+        leading-5 truncate flex-grow"
           >
-            Taking voice conversations to the moon 🚀
+            {data.subject}
           </div>
-          <div className="text-primary-200 font-bold text-sm">Sun Mar</div>
+          <div className="text-primary-200 font-bold ml-2 text-sm whitespace-nowrap">
+            {data.createdAt}
+          </div>
         </div>
 
         <div className="flex items-center space-x-6">
           <div className="h-10 absolute">
-            <Avatar />
+            <Avatar src={data.senderPhotoURL} />
           </div>
           <p
             className="pl-7 text-left break-all truncate whitespace-pre-wrap 
         line-clamp-1 text-primary-300"
           >
-            DogeHouse is open to contributions, but I recommend creating an
-            issue.
+            {data.message}
           </p>
         </div>
       </div>

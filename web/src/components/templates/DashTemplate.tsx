@@ -14,7 +14,7 @@ const DashTemplate: React.FC<DashTemplateProps> = ({
   return (
     <div className="h-full w-full flex justify-center bg-primary-900">
       <div
-        className="hidden xl:flex flex-col w-80 pb-16 overflow-y-scroll 
+        className="hidden xl:flex flex-col w-80 pb-14 overflow-y-scroll 
       scrollbar-hide pt-10"
       >
         {Friends}
@@ -27,7 +27,7 @@ const DashTemplate: React.FC<DashTemplateProps> = ({
       </div>
       <div
         className="h-full w-full lg:w-1/2 max-w-3xl 
-      flex flex-col space-y-10 sm:pt-10 sm:pb-16"
+      flex flex-col space-y-10 sm:pt-10 xs:pb-16"
       >
         {Main}
       </div>
