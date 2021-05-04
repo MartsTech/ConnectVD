@@ -7,13 +7,18 @@ import { MeQuery } from "generated/graphql";
 interface HeaderOptionsProps {
   data?: MeQuery;
   onAvatar?: () => void;
+  onMail?: () => void;
 }
 
-const HeaderOptions: React.FC<HeaderOptionsProps> = ({ data, onAvatar }) => {
+const HeaderOptions: React.FC<HeaderOptionsProps> = ({
+  data,
+  onAvatar,
+  onMail,
+}) => {
   if (typeof data !== "undefined") {
     return (
       <div className="flex items-center">
-        <IconButton>
+        <IconButton onClick={onMail}>
           <MailIcon className="h-7 w-7 text-primary-200" />
         </IconButton>
         <IconButton>

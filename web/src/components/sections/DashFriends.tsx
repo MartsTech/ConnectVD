@@ -1,27 +1,29 @@
-import Button from "@element/Button";
+import Button from "@element/ImportantButton";
 import DashFriend from "@module/DashFriend";
-import { MeQuery } from "generated/graphql";
+import { FriendsQuery } from "generated/graphql";
 import FlipMove from "react-flip-move";
 
 interface DashFriendsProps {
-  data: MeQuery[];
+  data?: FriendsQuery;
 }
 
 const DashFriends: React.FC<DashFriendsProps> = ({ data }) => {
   return (
-    <div className="w-72">
+    <div className="w-72 h-full bg-primary-700">
       <FlipMove>
-        {data.map((friend, id) => (
-          <DashFriend key={id} info={friend} />
+        {data?.friends.map((friend) => (
+          <DashFriend key={friend.id} info={friend.user} />
         ))}
       </FlipMove>
-      {data.length === 0 && (
+      {data?.friends.length === 0 && (
         <div className="flex flex-col items:center bg-primary-700 rounded-md pb-5">
-          <h3 className="text-center p-4 text-md text-primary-100">
-            You still have no friends.
-          </h3>
-          <div className="flex justify-center">
-            <Button title="Invite now" onClick={() => alert("Todo")} />
+          <div className="">
+            <h3 className="text-center p-4 text-md text-primary-100">
+              You still have no friends.
+            </h3>
+            <div className="flex justify-center">
+              <Button title="Invite now" onClick={() => alert("Todo")} />
+            </div>
           </div>
         </div>
       )}

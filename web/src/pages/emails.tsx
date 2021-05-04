@@ -1,27 +1,24 @@
 import { auth } from "@config/firebase";
 import DashProfile from "@element/Profile";
-import DefaultLayout from "@layout/HeaderLayout";
+import HeaderLayout from "@layout/HeaderLayout";
+import IsAuth from "@layout/IsAuth";
 import DashFriends from "@section/DashFriends";
+import Emails from "@section/Emails";
 import Header from "@section/Header";
 import appInfo from "@service/appInfo";
+import DashTemplate from "@template/DashTemplate";
 import { createUrqlClient } from "@util/createUrqlClient";
 import {
-  MeQuery,
-  useCreateRoomMutation,
   useFriendsQuery,
   useMeQuery,
-  User,
+  User
 } from "generated/graphql";
 import { withUrqlClient } from "next-urql";
 import Head from "next/head";
 import { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useRouter } from "next/router";
-import DashBoard from "@section/DashBoard";
-import DashTemplate from "@template/DashTemplate";
-import IsAuth from "@layout/IsAuth";
 
-const DashPage = () => {
+const EmailsPage = () => {
   const [user, loading] = useAuthState(auth);
 
   const [meData] = useMeQuery({
@@ -33,20 +30,11 @@ const DashPage = () => {
     variables: { uid: user?.uid as string },
   });
 
-  const [, createRoom] = useCreateRoomMutation();
-
   const [sidebar, setSidebar] = useState(false);
-
-  const router = useRouter();
-
-  const startMeeting = async () => {
-    const { data } = await createRoom({ uid: user?.uid as string });
-    router.push(`/room/${data?.createRoom}`);
-  };
 
   return (
     <IsAuth>
-      <DefaultLayout
+      <HeaderLayout
         Header={
           <Header
             data={meData.data}
@@ -56,18 +44,18 @@ const DashPage = () => {
         }
       >
         <Head>
-          <title>Dashboard | {appInfo.title}</title>
+          <title>Emails | {appInfo.title}</title>
           <link rel="icon" href="/favicon.ico" />
         </Head>
         <DashTemplate
-          Main={<DashBoard startMeeting={startMeeting} />}
+          Main={<Emails />}
           Friends={<DashFriends data={friendsData.data} />}
           Profile={<DashProfile data={meData.data?.me as User} />}
           useSidebar={sidebar}
         />
-      </DefaultLayout>
+      </HeaderLayout>
     </IsAuth>
   );
 };
 
-export default withUrqlClient(createUrqlClient)(DashPage);
+export default withUrqlClient(createUrqlClient)(EmailsPage);

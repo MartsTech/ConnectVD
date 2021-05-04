@@ -1,8 +1,8 @@
 import Avatar from "@element/Avatar";
-import { MeQuery } from "generated/graphql";
+import { User } from "generated/graphql";
 
 interface ProfileProps {
-  data?: MeQuery;
+  data?: User;
   important?: boolean;
 }
 
@@ -14,11 +14,11 @@ const Profile: React.FC<ProfileProps> = ({ data, important = false }) => {
         important ? "bg-primary-800" : "bg-primary-700"
       }`}
     >
-      <Avatar src={data?.me?.photoUrl} size={2} status={data?.me?.status} />
+      <Avatar src={data?.photoUrl} size={2} status={data?.status} />
       <h2 className="text-lg font-medium text-primary-100">
-        {data?.me?.displayName}
+        {data?.displayName}
       </h2>
-      <h5 className="text-base text-primary-200">{data?.me?.email}</h5>
+      <h5 className="text-base text-primary-200">{data?.email}</h5>
     </div>
   );
 };

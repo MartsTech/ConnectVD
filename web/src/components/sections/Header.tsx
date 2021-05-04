@@ -37,7 +37,11 @@ const Header: React.FC<HeaderProps> = ({ home, data, onMenu }) => {
         <Logo onClick={() => router.push(home)} inHome={inHome} />
       </div>
       <SearchBar value={search} setValue={setSearch} inHome={inHome} />
-      <HeaderOptions data={data} onAvatar={() => setDropdown(!dropdown)} />
+      <HeaderOptions
+        data={data}
+        onAvatar={() => setDropdown(!dropdown)}
+        onMail={() => router.push("/emails")}
+      />
       {dropdown && <Dropdown data={data} />}
     </div>
   );

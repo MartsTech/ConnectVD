@@ -1,14 +1,14 @@
 interface DashTemplateProps {
   Friends: JSX.Element;
   Profile: JSX.Element;
-  Board: JSX.Element;
+  Main: JSX.Element;
   useSidebar: boolean;
 }
 
 const DashTemplate: React.FC<DashTemplateProps> = ({
   Friends,
   Profile,
-  Board,
+  Main,
   useSidebar,
 }) => {
   return (
@@ -26,7 +26,7 @@ const DashTemplate: React.FC<DashTemplateProps> = ({
         className="h-full w-full lg:w-1/2 max-w-3xl 
       flex flex-col space-y-10 sm:pt-10"
       >
-        {Board}
+        {Main}
       </div>
       <div className="h-full hidden lg:flex w-80 pt-10">
         <div className="w-8"></div>

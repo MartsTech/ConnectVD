@@ -3,7 +3,6 @@ import Video from "@element/Video";
 import VideoCover from "@element/VideoCover";
 import { peerContext } from "@type/peerContext";
 import { socketPayload } from "@type/socketPayload";
-import { MeQuery } from "generated/graphql";
 import { useRouter } from "next/router";
 import {
   Dispatch,
@@ -21,7 +20,6 @@ interface RoomProps {
   socketRef: MutableRefObject<
     Socket<DefaultEventsMap, DefaultEventsMap> | undefined
   >;
-  meData?: MeQuery;
   leave: boolean;
   screen: boolean;
   setScreen: Dispatch<SetStateAction<boolean>>;
@@ -61,7 +59,7 @@ const Room: React.FC<RoomProps> = ({
         userVideoRef.current.srcObject = stream;
       }
 
-      socketRef.current?.emit("join room", roomId, video);
+      socketRef.current?.emit("join room", roomId);
 
       socketRef.current?.on("other users", (users: string[]) => {
         callUsers(users);
@@ -199,6 +197,10 @@ const Room: React.FC<RoomProps> = ({
       peers.push({ peerId: id, peer });
 
       setTracks(id);
+      setVideoStates((videos) => [
+        ...videos,
+        { id: id, state: video },
+      ]);
     });
 
     setPeers(peers);
@@ -339,17 +341,24 @@ const Room: React.FC<RoomProps> = ({
 
   return (
     <FlipMove
-      className={`h-full grid grid-cols-1 md:grid-cols-2 items-center
-    overflow-y-scroll scrollbar-hide ${peers.length !== 0 && ""}`}
+      className="h-full grid grid-cols-1 md:grid-cols-2 items-center
+    overflow-y-scroll scrollbar-hide"
     >
       <VideoCover video={video}>
         <Video userVideoRef={userVideoRef} />
       </VideoCover>
       {peers.map((peerObj) => {
         const user = videoStates.find((user) => user.id === peerObj.peerId);
+
+        if (typeof user?.state === "undefined") {
+          socketRef.current?.emit("toggle video", peerObj.peerId);
+        }
         return (
-          <VideoCover video={user?.state ? user.state : true}>
-            <Video key={peerObj.peerId} peer={peerObj.peer} />
+          <VideoCover
+            key={peerObj.peerId}
+            video={user?.state ? user.state : false}
+          >
+            <Video peer={peerObj.peer} />
           </VideoCover>
         );
       })}

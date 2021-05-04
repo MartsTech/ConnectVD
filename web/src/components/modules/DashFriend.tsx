@@ -2,11 +2,11 @@ import Avatar from "@element/Avatar";
 import PreviewCard from "@element/PreviewCard";
 import Profile from "@element/Profile";
 import friendExtendOptions from "@service/friendExtendOptions";
-import { MeQuery } from "generated/graphql";
+import { User } from "generated/graphql";
 import { ForwardedRef, forwardRef, useState } from "react";
 
 interface DashFriendProps {
-  info: MeQuery;
+  info: User;
 }
 
 const DashFriend: React.FC<DashFriendProps> = forwardRef(
@@ -16,8 +16,8 @@ const DashFriend: React.FC<DashFriendProps> = forwardRef(
     return (
       <div ref={ref}>
         <PreviewCard
-          Icon={<Avatar src={info.me?.photoUrl} status={info.me?.status} />}
-          title={info.me?.displayName || ""}
+          Icon={<Avatar src={info.photoUrl} status={info.status} />}
+          title={info.displayName}
           onClick={() => setExtend(!extend)}
         />
         {extend && (
