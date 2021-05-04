@@ -1,5 +1,6 @@
-import Modal from "@element/Model";
 import Button from "@element/ImportantButton";
+import Modal from "@element/Model";
+import { Dispatch, SetStateAction } from "react";
 
 interface DashModelProps {
   open: boolean;
@@ -8,6 +9,8 @@ interface DashModelProps {
   button: string;
   onButton: () => void;
   field: string;
+  value: string;
+  setValue: Dispatch<SetStateAction<string>>;
   fieldType?: string;
 }
 
@@ -19,6 +22,8 @@ const DashModel: React.FC<DashModelProps> = ({
   field,
   onButton,
   fieldType = "text",
+  value,
+  setValue,
 }) => {
   return (
     <Modal isOpen={open} onRequestClose={onClose}>
@@ -32,11 +37,24 @@ const DashModel: React.FC<DashModelProps> = ({
         </div>
         <div className="flex flex-col">
           <h3 className="flex p-4 mx-6 text-primary-100">{field}</h3>
-          <input
-            className="flex-grow py-3 px-4 mx-10 rounded-8 text-primary-100 
+          <form className="flex-grow flex">
+            <input
+              value={value}
+              onChange={(e) => setValue(e.target.value)}
+              className="flex-grow py-3 px-4 mx-10 rounded-8 text-primary-100 
           focus:outline-none bg-primary-600 rounded-lg mb-5"
-            type={fieldType}
-          />
+              type={fieldType}
+            />
+            <button
+              hidden
+              onClick={(e) => {
+                e.preventDefault();
+                onButton();
+              }}
+            >
+              Send
+            </button>
+          </form>
         </div>
       </div>
     </Modal>

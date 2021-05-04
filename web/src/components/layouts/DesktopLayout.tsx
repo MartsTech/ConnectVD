@@ -13,10 +13,15 @@ import { useAuthState } from "react-firebase-hooks/auth";
 
 interface DesktopLayoutProps {
   title?: string;
+  onNoFriends?: () => void;
   Main: JSX.Element;
 }
 
-const DesktopLayout: NextPage<DesktopLayoutProps> = ({ title, Main }) => {
+const DesktopLayout: NextPage<DesktopLayoutProps> = ({
+  title,
+  Main,
+  onNoFriends,
+}) => {
   const [user, loading] = useAuthState(auth);
 
   const [meData] = useMeQuery({
@@ -46,7 +51,9 @@ const DesktopLayout: NextPage<DesktopLayoutProps> = ({ title, Main }) => {
       </Head>
       <DashTemplate
         Main={Main}
-        Friends={<DashFriends data={friendsData.data} />}
+        Friends={
+          <DashFriends onNoFriends={onNoFriends} data={friendsData.data} />
+        }
         Profile={<DashProfile data={meData.data?.me as User} />}
         useSidebar={sidebar}
       />

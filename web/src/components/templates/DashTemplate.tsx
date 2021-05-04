@@ -27,11 +27,11 @@ const DashTemplate: React.FC<DashTemplateProps> = ({
       </div>
       <div
         className="h-full w-full lg:w-1/2 max-w-3xl 
-      flex flex-col space-y-10 sm:pt-10 pb-16"
+      flex flex-col space-y-10 sm:pt-10 sm:pb-16"
       >
         {Main}
       </div>
-      <div className="pb-16 hidden lg:flex w-80 pt-10">
+      <div className="sm:pb-16 hidden lg:flex w-80 pt-10">
         <div className="w-8"></div>
         <div className="w-72">{Profile}</div>
       </div>

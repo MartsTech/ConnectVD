@@ -5,9 +5,10 @@ import FlipMove from "react-flip-move";
 
 interface DashFriendsProps {
   data?: FriendsQuery;
+  onNoFriends?: () => void;
 }
 
-const DashFriends: React.FC<DashFriendsProps> = ({ data }) => {
+const DashFriends: React.FC<DashFriendsProps> = ({ data, onNoFriends }) => {
   return (
     <div className="w-72 h-full bg-primary-700">
       <FlipMove>
@@ -22,7 +23,14 @@ const DashFriends: React.FC<DashFriendsProps> = ({ data }) => {
               You still have no friends.
             </h3>
             <div className="flex justify-center">
-              <Button title="Invite now" onClick={() => alert("Todo")} />
+              <Button
+                title="Invite now"
+                onClick={
+                  typeof onNoFriends !== "undefined"
+                    ? onNoFriends
+                    : () => console.error()
+                }
+              />
             </div>
           </div>
         </div>

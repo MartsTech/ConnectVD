@@ -64,6 +64,7 @@ const Modal: React.FC<
       shouldCloseOnEsc
       shouldFocusAfterRender
       style={customStyles[variant]}
+      ariaHideApp={false}
       {...props}
     >
       <div className={`flex flex-col w-full`}>

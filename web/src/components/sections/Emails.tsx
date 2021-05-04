@@ -14,8 +14,8 @@ const Emails: React.FC<EmailsProps> = ({}) => {
 
   return (
     <FlipMove className="h-full flex flex-col space-y-5 overflow-y-scroll scrollbar-hide">
-      {emails.map(() => (
-        <Email onClick={() => router.push("/email/123")} />
+      {emails.map((_, id) => (
+        <Email key={`email_${id}`} onClick={() => router.push("/email/123")} />
       ))}
     </FlipMove>
   );
