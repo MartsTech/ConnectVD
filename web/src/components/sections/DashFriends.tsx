@@ -1,4 +1,4 @@
-import Button from "@element/ImportantButton";
+import Button from "@element/Button";
 import DashFriend from "@module/DashFriend";
 import { FriendsQuery } from "generated/graphql";
 import FlipMove from "react-flip-move";

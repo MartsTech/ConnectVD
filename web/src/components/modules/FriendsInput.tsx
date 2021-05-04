@@ -1,10 +1,9 @@
-import { FriendsQuery } from "generated/graphql";
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import React from "react";
-import { setHookType } from "@type/setHookType";
-import PreviewCard from "@element/PreviewCard";
 import Avatar from "@element/Avatar";
+import PreviewCard from "@element/PreviewCard";
 import { makeStyles } from "@material-ui/core/styles";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import { setHookType } from "@type/setHookType";
+import { FriendsQuery } from "generated/graphql";
 
 const useStyles = makeStyles({
   paper: {
@@ -16,12 +15,14 @@ interface FriendsInputProps {
   data?: FriendsQuery;
   receiver: string;
   setReceiver: setHookType;
+  name: string;
 }
 
 const FriendsInput: React.FC<FriendsInputProps> = ({
   data,
   receiver,
   setReceiver,
+  name,
 }) => {
   const classes = useStyles();
 
@@ -52,8 +53,7 @@ const FriendsInput: React.FC<FriendsInputProps> = ({
           renderInput={(params) => (
             <div className="flex-grow flex" ref={params.InputProps.ref}>
               <input
-                name="to"
-                placeholder="To"
+                name={name}
                 type="email"
                 value={receiver}
                 {...params.inputProps}

@@ -23,8 +23,8 @@ const Email: React.FC<EmailProps> = forwardRef(
           >
             {data.subject}
           </div>
-          <div className="text-primary-200 font-bold ml-2 text-sm whitespace-nowrap">
-            {data.createdAt}
+          <div className="text-primary-200 font-bold ml-2 text-xs xs:text-sm whitespace-nowrap">
+            {new Date(parseInt(data.createdAt)).toDateString()}
           </div>
         </div>
 

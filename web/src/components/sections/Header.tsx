@@ -41,6 +41,7 @@ const Header: React.FC<HeaderProps> = ({ home, data, onMenu }) => {
         data={data}
         onAvatar={() => setDropdown(!dropdown)}
         onMail={() => router.push("/emails")}
+        onBell={() => router.push("/invites")}
       />
       {dropdown && <Dropdown data={data} />}
     </div>

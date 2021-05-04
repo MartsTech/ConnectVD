@@ -1,9 +1,8 @@
 import Email from "@module/Email";
 import { useRouter } from "next/router";
 import FlipMove from "react-flip-move";
-import Button from "@element/ImportantButton";
+import Button from "@element/Button";
 import { EmailsQuery } from "generated/graphql";
-import { Email as EmailType } from "generated/graphql";
 
 interface EmailsProps {
   emails?: EmailsQuery;
@@ -21,6 +20,7 @@ const Emails: React.FC<EmailsProps> = ({ emails }) => {
         <div className="text-primary-100 font-bold text-xl">Your Emails</div>
         <div className="mr-2">
           <Button
+            primary
             title="Compose Email"
             onClick={() => router.push("/send-email")}
           />

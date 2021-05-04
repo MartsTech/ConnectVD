@@ -8,12 +8,14 @@ interface HeaderOptionsProps {
   data?: MeQuery;
   onAvatar?: () => void;
   onMail?: () => void;
+  onBell?: () => void;
 }
 
 const HeaderOptions: React.FC<HeaderOptionsProps> = ({
   data,
   onAvatar,
   onMail,
+  onBell,
 }) => {
   if (typeof data !== "undefined") {
     return (
@@ -21,7 +23,7 @@ const HeaderOptions: React.FC<HeaderOptionsProps> = ({
         <IconButton onClick={onMail}>
           <MailIcon className="h-7 w-7 text-primary-200" />
         </IconButton>
-        <IconButton>
+        <IconButton onClick={onBell}>
           <BellIcon className="h-7 w-7 text-primary-200" />
         </IconButton>
         <IconButton onClick={onAvatar}>

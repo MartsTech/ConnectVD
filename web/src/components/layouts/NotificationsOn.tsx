@@ -4,7 +4,7 @@ import {
   useNewEmailSubscription,
   useNewFriendRequstSubscription,
   useNewFriendSubscription,
-  useNewInviteSubscription,
+  useNewInviteSubscription
 } from "generated/graphql";
 import { useSnackbar } from "notistack";
 import { useEffect } from "react";
@@ -43,6 +43,9 @@ const NotificationsOn: React.FC<NotificationsOnProps> = ({ children }) => {
         autoHideDuration: 3000,
       });
     }
+  }, [NewFriendReq]);
+
+  useEffect(() => {
     if (NewInvite?.newInvite) {
       const name = NewInvite?.newInvite.user.displayName;
 
@@ -51,6 +54,9 @@ const NotificationsOn: React.FC<NotificationsOnProps> = ({ children }) => {
         autoHideDuration: 3000,
       });
     }
+  }, [NewInvite]);
+
+  useEffect(() => {
     if (NewFriend?.newFriend) {
       const name = NewFriend?.newFriend.user.displayName;
 
@@ -59,13 +65,16 @@ const NotificationsOn: React.FC<NotificationsOnProps> = ({ children }) => {
         autoHideDuration: 3000,
       });
     }
+  }, [NewFriend]);
+
+  useEffect(() => {
     if (NewEmail?.newEmail) {
       enqueueSnackbar("You received a new Email", {
         variant: "info",
         autoHideDuration: 3000,
       });
     }
-  }, [NewFriendReq, NewInvite, NewFriend, NewEmail]);
+  }, [NewEmail]);
 
   return <>{children}</>;
 };

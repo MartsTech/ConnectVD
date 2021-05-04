@@ -1,4 +1,4 @@
-import Button from "@element/ImportantButton";
+import Button from "@element/Button";
 import Modal from "@element/Model";
 import { setHookType } from "@type/setHookType";
 

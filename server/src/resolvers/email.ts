@@ -108,10 +108,12 @@ export class EmailResolver {
     @PubSub("EMAILS") notifyAboutNewEmail: Publisher<Email>
   ): Promise<SendEmailResonse> {
     const request = await validateRequest(uid, options.to);
+
     if ((request as NotifyError).message && (request as NotifyError).status) {
       const error = request as RequestResponse;
       return { error };
     }
+    
     const { sender, receiver } = request as Users;
 
     const email = await Email.create({
