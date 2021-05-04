@@ -10,7 +10,7 @@ interface DashFriendsProps {
 
 const DashFriends: React.FC<DashFriendsProps> = ({ data, onNoFriends }) => {
   return (
-    <div className="w-72 h-full bg-primary-700">
+    <div className="flex-grow sm:w-72 h-full bg-primary-700">
       <FlipMove>
         {data?.friends.map((friend) => (
           <DashFriend key={friend.id} info={friend.user} />

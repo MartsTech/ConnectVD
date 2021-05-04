@@ -29,19 +29,21 @@ const DashModel: React.FC<DashModelProps> = ({
     <Modal isOpen={open} onRequestClose={onClose}>
       <div className="flex-grow flex flex-col pt-5 pb-10">
         <div
-          className="flex items-center justify-between p-4 rounded-t-8 w-full 
-      border-b border-primary-600 sticky top-0 z-10 bg-primary-700"
+          className="flex items-center justify-between xs:p-4 rounded-t-8 w-full 
+      border-b border-primary-600 sticky top-0 z-10 bg-primary-700 text-left"
         >
-          <p className="text-primary-100 text-xl font-bold">{title}</p>
+          <p className="text-primary-100 text-lg sm:text-xl font-bold">
+            {title}
+          </p>
           <Button title={button} onClick={onButton} />
         </div>
         <div className="flex flex-col">
-          <h3 className="flex p-4 mx-6 text-primary-100">{field}</h3>
+          <h3 className="flex p-4 text-primary-100">{field}</h3>
           <form className="flex-grow flex">
             <input
               value={value}
               onChange={(e) => setValue(e.target.value)}
-              className="flex-grow py-3 px-4 mx-10 rounded-8 text-primary-100 
+              className="flex-grow py-3 px-4 rounded-8 text-primary-100 
           focus:outline-none bg-primary-600 rounded-lg mb-5"
               type={fieldType}
             />

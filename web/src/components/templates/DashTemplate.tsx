@@ -20,8 +20,10 @@ const DashTemplate: React.FC<DashTemplateProps> = ({
         {Friends}
       </div>
       <div
-        className="flex flex-col xl:hidden absolute left-0 
-      h-header overflow-y-scroll scrollbar-hide z-50"
+        className={`flex flex-col xl:hidden absolute left-0 
+      h-header ${
+        useSidebar && "w-full sm:w-auto"
+      } overflow-y-scroll scrollbar-hide z-50`}
       >
         {useSidebar && Friends}
       </div>
