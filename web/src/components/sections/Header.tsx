@@ -12,9 +12,10 @@ interface HeaderProps {
   home: string;
   data?: User;
   onMenu?: () => void;
+  onStatus: (status: string) => Promise<void>;
 }
 
-const Header: React.FC<HeaderProps> = ({ home, data, onMenu }) => {
+const Header: React.FC<HeaderProps> = ({ home, data, onMenu, onStatus }) => {
   const [dropdown, setDropdown] = useState(false);
   const [search, setSearch] = useState("");
 
@@ -42,7 +43,7 @@ const Header: React.FC<HeaderProps> = ({ home, data, onMenu }) => {
         onMail={() => router.push("/emails")}
         onBell={() => router.push("/invites")}
       />
-      {dropdown && <Dropdown data={data} />}
+      {dropdown && <Dropdown data={data} onStatus={onStatus} />}
     </div>
   );
 };

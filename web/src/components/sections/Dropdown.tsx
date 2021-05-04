@@ -5,15 +5,16 @@ import { useState } from "react";
 
 interface DropdownProps {
   data?: User;
+  onStatus: (status: string) => Promise<void>;
 }
 
-const Dropdown: React.FC<DropdownProps> = ({ data }) => {
+const Dropdown: React.FC<DropdownProps> = ({ data, onStatus }) => {
   const [active, setActive] = useState<string>("main");
   const [height, setHeight] = useState();
 
   return (
     <div
-      className="absolute top-16 right-0 xs:right-6 w-80 bg-primary-800 overflow-hidden
+      className="fixed top-16 right-0 xs:right-6 w-72 bg-primary-800 overflow-hidden
     transition-all ease-in-out duration-500"
       style={{ height: height }}
     >
@@ -27,6 +28,7 @@ const Dropdown: React.FC<DropdownProps> = ({ data }) => {
         active={active}
         toPrev={() => setActive("main")}
         setHeight={setHeight}
+        onStatus={onStatus}
       />
     </div>
   );

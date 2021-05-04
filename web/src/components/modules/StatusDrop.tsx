@@ -8,12 +8,14 @@ interface StatusDropProps {
   active: string;
   toPrev: () => void;
   setHeight: setHookType;
+  onStatus: (status: string) => Promise<void>;
 }
 
 const StatusDrop: React.FC<StatusDropProps> = ({
   active,
   toPrev,
   setHeight,
+  onStatus,
 }) => {
   return (
     <CSSTransition
@@ -33,19 +35,28 @@ const StatusDrop: React.FC<StatusDropProps> = ({
         <PreviewCard
           Icon={<Badge status="available" size={2} />}
           title="Available"
-          onClick={() => alert("TODO")}
+          onClick={() => {
+            onStatus("available");
+            toPrev();
+          }}
           important
         />
         <PreviewCard
           Icon={<Badge status="away" size={2} />}
           title="Away"
-          onClick={() => alert("TODO")}
+          onClick={() => {
+            onStatus("away");
+            toPrev();
+          }}
           important
         />
         <PreviewCard
           Icon={<Badge status="busy" size={2} />}
           title="Busy"
-          onClick={() => alert("TODO")}
+          onClick={() => {
+            onStatus("busy");
+            toPrev();
+          }}
           important
         />
       </div>

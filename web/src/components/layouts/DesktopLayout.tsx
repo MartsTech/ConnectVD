@@ -5,7 +5,12 @@ import DashFriends from "@section/DashFriends";
 import Header from "@section/Header";
 import appInfo from "@service/appInfo";
 import DashTemplate from "@template/DashTemplate";
-import { useFriendsQuery, useMeQuery, User } from "generated/graphql";
+import {
+  useChangeStatusMutation,
+  useFriendsQuery,
+  useMeQuery,
+  User,
+} from "generated/graphql";
 import { NextPage } from "next";
 import Head from "next/head";
 import { useState } from "react";
@@ -34,6 +39,15 @@ const DesktopLayout: NextPage<DesktopLayoutProps> = ({
     variables: { uid: user?.uid as string },
   });
 
+  const [, changeStatus] = useChangeStatusMutation();
+
+  const setNewStatus = async (status: string) => {
+    await changeStatus({
+      uid: user?.uid as string,
+      status,
+    });
+  };
+
   const [sidebar, setSidebar] = useState(false);
 
   return (
@@ -44,6 +58,7 @@ const DesktopLayout: NextPage<DesktopLayoutProps> = ({
             data={meData.data?.me as User}
             onMenu={() => setSidebar(!sidebar)}
             home="/dash"
+            onStatus={setNewStatus}
           />
         }
       >
