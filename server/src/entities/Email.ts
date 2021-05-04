@@ -22,11 +22,11 @@ export class Email extends BaseEntity {
 
   @Field()
   @Column()
-  from!: string;
+  senderEmail!: string;
 
   @Field()
   @Column()
-  to!: string;
+  senderPhotoURL!: string;
 
   @Field()
   @Column()

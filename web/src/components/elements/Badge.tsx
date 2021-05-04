@@ -12,7 +12,8 @@ const Badge: React.FC<BadgeProps> = ({ status, size = 1, className }) => {
       ? "bg-yellow-300"
       : "bg-red-600";
 
-  const sizeCss = size === 1 ? "h-2.5 w-2.5" : "h-5 w-5";
+  const sizeCss =
+    size === 1 ? "h-2.5 w-2.5" : size === 1.5 ? "h-4 w-4" : "h-5 w-5";
 
   return (
     <div

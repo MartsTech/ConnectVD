@@ -26,7 +26,7 @@ const Header: React.FC<HeaderProps> = ({ home, data, onMenu }) => {
   return (
     <div
       className={`flex items-center justify-between py-4 md:px-4 
-    ${inHome ? "bg-white" : "bg-primary-700"} sticky top-0 z-50 h-16`}
+    ${inHome ? "bg-white" : "bg-primary-700"} sticky top-0 z-30 h-16`}
     >
       <div className="flex">
         <div className="inline-block xl:hidden">

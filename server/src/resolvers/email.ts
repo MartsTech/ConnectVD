@@ -117,8 +117,10 @@ export class EmailResolver {
     const email = await Email.create({
       senderId: uid,
       receiverId: receiver.id,
-      from: sender.email,
-      ...options,
+      senderEmail: sender.email,
+      subject: options.subject,
+      message: options.message,
+      senderPhotoURL: sender.photoUrl,
     }).save();
 
     await notifyAboutNewEmail(email);

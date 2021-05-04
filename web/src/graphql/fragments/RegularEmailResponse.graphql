@@ -1,7 +1,7 @@
 fragment RegularEmailResponse on Email {
   id
-  from
-  to
+  senderEmail
+  senderPhotoURL
   subject
   message
   createdAt
