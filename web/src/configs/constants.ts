@@ -1,7 +1,7 @@
 export const __prod__ = process.env.NODE_ENV === "production";
 
 export const server_url = __prod__
-  ? process.env.NEXT_PUBLIC_SUBS_URL
+  ? process.env.NEXT_PUBLIC_SERVER_URL
   : "http://localhost:8000";
 
 export const graphql_url = __prod__
