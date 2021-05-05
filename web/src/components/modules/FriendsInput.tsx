@@ -4,11 +4,11 @@ import { makeStyles } from "@material-ui/core/styles";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import { setHookType } from "@type/setHookType";
 import { FriendsQuery } from "generated/graphql";
-import { useEffect } from "react";
 
 const useStyles = makeStyles({
   paper: {
     background: "#242c37",
+    color: "#dee3ea",
   },
 });
 
@@ -36,7 +36,7 @@ const FriendsInput: React.FC<FriendsInputProps> = ({
           classes={{ paper: classes.paper }}
           getOptionLabel={(option) => option.user.email}
           renderOption={(option) => (
-            <div className="w-full">
+            <div className="w-full text-primary-100">
               <PreviewCard
                 Icon={
                   <Avatar
@@ -58,7 +58,7 @@ const FriendsInput: React.FC<FriendsInputProps> = ({
                 name={name}
                 type="email"
                 value={receiver}
-                className="flex-grow py-3 px-4 mx-10 rounded-8 text-primary-100 
+                className="flex-grow py-3 px-4 rounded-8 text-primary-100 
                       focus:outline-none bg-primary-600 rounded-lg"
               />
             </div>

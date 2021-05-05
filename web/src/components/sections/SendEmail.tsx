@@ -93,12 +93,14 @@ const SendEmail: React.FC<SendEmailProps> = ({}) => {
             <label htmlFor="to" className="flex p-4 mx-6 text-primary-100">
               Email
             </label>
-            <FriendsInput
-              data={FriendsData.data}
-              receiver={receiver}
-              setReceiver={setReceiver}
-              name="to"
-            />
+            <div className="mx-10">
+              <FriendsInput
+                data={FriendsData.data}
+                receiver={receiver}
+                setReceiver={setReceiver}
+                name="to"
+              />
+            </div>
 
             <label htmlFor="subject" className="flex p-4 mx-6 text-primary-100">
               Subject

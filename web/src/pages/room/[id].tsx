@@ -10,9 +10,15 @@ import Head from "next/head";
 import { useEffect, useRef, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "@config/firebase";
-import { useMeQuery } from "generated/graphql";
+import {
+  useFriendsQuery,
+  useInviteFriendMutation,
+  useMeQuery,
+} from "generated/graphql";
 import { io, Socket } from "socket.io-client";
 import { messageType } from "@type/messageType";
+import RoomInvite from "@section/RoomInvite";
+import { useSnackbar, VariantType } from "notistack";
 
 interface RoomPageProps {}
 
@@ -23,6 +29,15 @@ const RoomPage: React.FC<RoomPageProps> = ({}) => {
     variables: { uid: user?.uid as string },
   });
 
+  const [friendsData] = useFriendsQuery({
+    pause: loading,
+    variables: {
+      uid: user?.uid as string,
+    },
+  });
+
+  const [, createInvite] = useInviteFriendMutation();
+
   const socketRef = useRef<Socket>();
 
   const [chat, setChat] = useState(false);
@@ -30,6 +45,7 @@ const RoomPage: React.FC<RoomPageProps> = ({}) => {
   const [screen, setScreen] = useState(false);
   const [video, setVideo] = useState(false);
   const [audio, setAudio] = useState(true);
+  const [invite, setInvite] = useState(false);
 
   const [messages, setMessages] = useState<messageType[]>([]);
 
@@ -40,6 +56,29 @@ const RoomPage: React.FC<RoomPageProps> = ({}) => {
       setMessages((messages) => [...messages, message]);
     });
   }, []);
+
+  const { enqueueSnackbar } = useSnackbar();
+
+  const inviteFriend = async (email: string) => {
+    if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
+      enqueueSnackbar("The email is not in a correct format", {
+        variant: "error",
+        autoHideDuration: 3000,
+      });
+      return;
+    }
+
+    const response = await createInvite({
+      uid: user?.uid as string,
+      email,
+    });
+    if (response.data?.inviteFriend) {
+      enqueueSnackbar(response.data?.inviteFriend.message, {
+        variant: response.data.inviteFriend.status as VariantType,
+        autoHideDuration: 3000,
+      });
+    }
+  };
 
   return (
     <IsAuth>
@@ -67,6 +106,7 @@ const RoomPage: React.FC<RoomPageProps> = ({}) => {
             video={video}
             onAudio={() => setAudio(!audio)}
             audio={audio}
+            onInvite={() => setInvite(!invite)}
           />
         }
         Chat={
@@ -80,6 +120,12 @@ const RoomPage: React.FC<RoomPageProps> = ({}) => {
           />
         }
         showChat={chat}
+      />
+      <RoomInvite
+        data={friendsData.data}
+        open={invite}
+        onClose={() => setInvite(false)}
+        onInvite={inviteFriend}
       />
     </IsAuth>
   );
