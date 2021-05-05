@@ -17,8 +17,6 @@ import { User } from "../entities/User";
 class UserInfo {
   @Field()
   socketId: string;
-  @Field()
-  email: string;
 }
 
 @ObjectType()
@@ -86,7 +84,7 @@ export class RoomResolver {
     await User.update({ id: uid }, { socketId, roomId });
     const users = await User.find({ where: { roomId } });
     const usersInfo = users.map((user) => {
-      return { socketId: user.socketId, email: user.email };
+      return { socketId: user.socketId };
     });
     return { users: usersInfo };
   }

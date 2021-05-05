@@ -23,7 +23,6 @@ const main = async () => {
   const app = express();
   const port = Number(process.env.PORT) || 8000;
 
-  // Middlewares
   app.set("proxy", 1);
   app.use(
     cors({
@@ -32,7 +31,6 @@ const main = async () => {
     })
   );
 
-  // DB Config
   const connection = await createConnection({
     entities: [Room, User, Friend, Email],
     type: "postgres",
@@ -43,7 +41,6 @@ const main = async () => {
   });
   connection.runMigrations();
 
-  // Socket Endpoints
   const server = http.createServer(app);
   // @ts-ignore
   const ServerOptions: ServerOptions = {
@@ -56,7 +53,6 @@ const main = async () => {
   //@ts-ignore
   const io: Server = socket(server, ServerOptions);
 
-  // Graphql Config
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
       resolvers: [RoomResolver, UserResolver, FriendResolver, EmailResolver],
@@ -75,31 +71,9 @@ const main = async () => {
   apolloServer.applyMiddleware({ app, path: "/graphql", cors: false });
   apolloServer.installSubscriptionHandlers(server);
 
-  // Socket Endpoints
-  const rooms: { [roomId: string]: string[] } = {};
-  const users: { [userId: string]: string } = {};
-
   io.on("connection", (socket) => {
-    socket.on("join room", (roomId: string, video: string) => {
-      if (rooms[roomId]) {
-        const lenght = rooms[roomId].length;
-        if (lenght === 4) {
-          socket.emit("room full");
-          return;
-        }
-        rooms[roomId].push(socket.id);
-      } else {
-        rooms[roomId] = [socket.id];
-      }
-      users[socket.id] = roomId;
-      const usersInRoom = rooms[roomId].filter(
-        (id: string) => id !== socket.id
-      );
-      if (usersInRoom) {
-        socket.emit("other users", usersInRoom);
-      }
-
-      socket.emit("toggle video", video);
+    socket.on("get socketId", () => {
+      socket.emit("send socketId", socket.id);
     });
 
     socket.on("offer", (payload: socketPayload) => {
@@ -125,23 +99,20 @@ const main = async () => {
       }
     );
 
-    socket.on("disconnect", () => {
-      const roomId = users[socket.id];
-      let room = rooms[roomId];
-      if (room) {
-        room = room.filter((id: string) => id !== socket.id);
-        rooms[roomId] = room;
-        delete users[socket.id];
-        socket.broadcast.emit("user left", socket.id);
-      }
+    socket.on("disconnect", async () => {
+      const user = await User.findOne({ where: { socketId: socket.id } });
+      const roomId = user?.roomId;
 
-      if (rooms[roomId] && Object.keys(rooms[roomId]).length === 0) {
-        delete rooms[roomId];
+      await User.update({ socketId: socket.id }, { socketId: "", roomId: "" });
+      socket.broadcast.emit("user left", socket.id);
+
+      const users = await User.find({ where: { roomId } });
+      if (users.length === 0) {
+        await Room.delete({ id: roomId });
       }
     });
   });
 
-  // Server Listenr
   server.listen(port, () => console.log(`listening on localhost: ${port}`));
 };
 main().catch((err) => console.error(err));

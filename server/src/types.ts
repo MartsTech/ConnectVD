@@ -10,7 +10,7 @@ export type MyContext = {
 export type socketPayload = {
   target: string;
   caller: string;
-  email: string;
+  video?: boolean;
   sdp?: RTCSessionDescription;
   candidate?: RTCIceCandidate;
 };
