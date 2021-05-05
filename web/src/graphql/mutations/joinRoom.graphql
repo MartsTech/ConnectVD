@@ -1,0 +1,8 @@
+mutation JoinRoom($uid: String!, $input: JoinRoomInput!) {
+  joinRoom(uid: $uid, input: $input) {
+    error
+    users {
+      socketId
+    }
+  }
+}

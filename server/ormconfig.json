@@ -4,7 +4,7 @@
   "port": 5432,
   "username": "postgres",
   "password": "postgres",
-  "database": "connectvd",
+  "database": "connectvd_dev",
   "entities": ["dist/entities/*.js"],
   "migrations": ["dist/migrations/*.js"]
 }

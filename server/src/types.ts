@@ -10,9 +10,9 @@ export type MyContext = {
 export type socketPayload = {
   target: string;
   caller: string;
-  email: string;
-  sdp: RTCSessionDescription | undefined;
-  candidate: RTCIceCandidate | undefined;
+  video?: boolean;
+  sdp?: RTCSessionDescription;
+  candidate?: RTCIceCandidate;
 };
 
 export type NotifyError = {

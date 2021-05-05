@@ -5,7 +5,7 @@ import express from "express";
 import http from "http";
 import path from "path";
 import "reflect-metadata";
-import socket, { Server, Socket } from "socket.io";
+import socket, { Server, ServerOptions } from "socket.io";
 import { buildSchema } from "type-graphql";
 import { createConnection } from "typeorm";
 import { Email } from "./entities/Email";
@@ -20,11 +20,9 @@ import { socketPayload } from "./types";
 import { createUserLoader } from "./utils/createUserLoader";
 
 const main = async () => {
-  // App Config
   const app = express();
-  const port = process.env.PORT || 8000;
+  const port = Number(process.env.PORT) || 8000;
 
-  // Middlewares
   app.set("proxy", 1);
   app.use(
     cors({
@@ -33,7 +31,6 @@ const main = async () => {
     })
   );
 
-  // DB Config
   const connection = await createConnection({
     entities: [Room, User, Friend, Email],
     type: "postgres",
@@ -44,19 +41,18 @@ const main = async () => {
   });
   connection.runMigrations();
 
-  // Socket Endpoints
   const server = http.createServer(app);
   // @ts-ignore
   const ServerOptions: ServerOptions = {
     cors: {
-      origin: process.env.CORS_ORIGIN,
+      origin: "http://localhost:3000",
       methods: ["GET", "POST"],
+      credentials: true,
     },
   };
   //@ts-ignore
   const io: Server = socket(server, ServerOptions);
 
-  // Graphql Config
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
       resolvers: [RoomResolver, UserResolver, FriendResolver, EmailResolver],
@@ -75,7 +71,7 @@ const main = async () => {
   apolloServer.applyMiddleware({ app, path: "/graphql", cors: false });
   apolloServer.installSubscriptionHandlers(server);
 
-  io.on("connection", (socket: Socket) => {
+  io.on("connection", (socket) => {
     socket.on("get socketId", () => {
       socket.emit("send socketId", socket.id);
     });
@@ -93,8 +89,15 @@ const main = async () => {
     });
 
     socket.on("toggle video", (state: boolean) => {
-      socket.broadcast.emit("change video", { id: socket.id, state });
+      socket.broadcast.emit("video change", { id: socket.id, state });
     });
+
+    socket.on(
+      "chat message",
+      (message: { photoURL: string; status: string; value: string }) => {
+        io.emit("chat message", message);
+      }
+    );
 
     socket.on("disconnect", async () => {
       const user = await User.findOne({ where: { socketId: socket.id } });
@@ -110,7 +113,6 @@ const main = async () => {
     });
   });
 
-  // Server Listenr
   server.listen(port, () => console.log(`listening on localhost: ${port}`));
 };
 main().catch((err) => console.error(err));
