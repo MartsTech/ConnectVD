@@ -1,7 +1,7 @@
 import Message from "@element/Message";
 import SendMessage from "@element/SendMessage";
 import { messageType } from "@type/messageType";
-import { MutableRefObject, useEffect, useRef } from "react";
+import { MutableRefObject, useRef } from "react";
 import FlipMove from "react-flip-move";
 import { Socket } from "socket.io-client";
 import { DefaultEventsMap } from "socket.io-client/build/typed-events";

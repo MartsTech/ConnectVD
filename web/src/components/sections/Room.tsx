@@ -1,8 +1,10 @@
+import { auth } from "@config/firebase";
 import { iceConfiguration } from "@config/iceConfigs";
 import Video from "@element/Video";
 import VideoCover from "@element/VideoCover";
 import { peerContext } from "@type/peerContext";
 import { socketPayload } from "@type/socketPayload";
+import { useJoinRoomMutation, UserInfo } from "generated/graphql";
 import { useRouter } from "next/router";
 import {
   Dispatch,
@@ -12,6 +14,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
 import FlipMove from "react-flip-move";
 import { Socket } from "socket.io-client";
 import { DefaultEventsMap } from "socket.io-client/build/typed-events";
@@ -50,6 +53,9 @@ const Room: React.FC<RoomProps> = ({
 
   const roomId = router.query.id as string;
 
+  const [user] = useAuthState(auth);
+  const [, joinRoom] = useJoinRoomMutation();
+
   useEffect(() => {
     const main = async () => {
       const stream = await getUserStream();
@@ -59,10 +65,17 @@ const Room: React.FC<RoomProps> = ({
         userVideoRef.current.srcObject = stream;
       }
 
-      socketRef.current?.emit("join room", roomId);
+      socketRef.current?.emit("get socketId");
 
-      socketRef.current?.on("other users", (users: string[]) => {
-        callUsers(users);
+      socketRef.current?.on("send socketId", async (socketId: string) => {
+        const { data } = await joinRoom({
+          uid: user?.uid as string,
+          input: { roomId, socketId },
+        });
+
+        if (data?.joinRoom.users) {
+          callUsers(data?.joinRoom.users, socketId);
+        }
       });
 
       socketRef.current?.on("user left", (id: string) => {
@@ -187,29 +200,38 @@ const Room: React.FC<RoomProps> = ({
     setVideoStates(videos);
   };
 
-  const callUsers = (users: string[]) => {
+  const callUsers = (users: UserInfo[], id: string) => {
     const peers: peerContext[] = [];
 
-    users.forEach((id) => {
-      const peer = createPeer(id);
+    users.forEach((info) => {
+      if (info.socketId !== id) {
+        const peer = createPeer(info.socketId);
 
-      peersRef.current.push({ peerId: id, peer });
-      peers.push({ peerId: id, peer });
+        peersRef.current.push({
+          peerId: info.socketId,
+          peer,
+        });
+        peers.push({ peerId: info.socketId, peer });
 
-      setTracks(id);
-      setVideoStates((videos) => [...videos, { id: id, state: video }]);
+        setTracks(info.socketId);
+      }
     });
 
     setPeers(peers);
   };
 
-  const acceptCall = (id: string) => {
+  const acceptCall = (incoming: socketPayload) => {
     const peer = createPeer();
-    const peerObj: peerContext = { peerId: id, peer };
+    const peerObj: peerContext = { peerId: incoming.caller, peer };
 
-    peersRef.current.push({ peerId: id, peer });
+    peersRef.current.push({ peerId: incoming.caller, peer });
     setPeers((peers) => [...peers, peerObj]);
-    setTracks(id);
+    setTracks(incoming.caller);
+
+    setVideoStates((videos) => [
+      ...videos,
+      { id: incoming.caller, state: incoming.video as boolean },
+    ]);
 
     return peerObj;
   };
@@ -258,6 +280,7 @@ const Room: React.FC<RoomProps> = ({
         const payload: socketPayload = {
           target: id,
           caller: socketRef.current.id,
+          video,
           sdp: peerObj.peer.localDescription as RTCSessionDescription,
         };
         socketRef.current.emit("offer", payload);
@@ -265,8 +288,14 @@ const Room: React.FC<RoomProps> = ({
       .catch((err) => console.error(err));
   };
 
+  const checkForDups = (id: string) => {
+    const removeDups = peers.filter((peer) => peer.peerId !== id);
+    setPeers(removeDups);
+  };
+
   const handleOffer = (incoming: socketPayload) => {
-    const peerObj = acceptCall(incoming.caller);
+    checkForDups(incoming.caller);
+    const peerObj = acceptCall(incoming);
 
     const desc = new RTCSessionDescription(incoming.sdp);
     peerObj.peer
@@ -285,6 +314,7 @@ const Room: React.FC<RoomProps> = ({
         const payload: socketPayload = {
           target: incoming.caller,
           caller: socketRef.current.id,
+          video,
           sdp: peerObj.peer.localDescription as RTCSessionDescription,
         };
 
@@ -300,6 +330,11 @@ const Room: React.FC<RoomProps> = ({
     if (!peerObj) {
       return;
     }
+
+    setVideoStates((videos) => [
+      ...videos,
+      { id: message.caller, state: message.video as boolean },
+    ]);
 
     const desc = new RTCSessionDescription(message.sdp);
     peerObj.peer
@@ -347,9 +382,6 @@ const Room: React.FC<RoomProps> = ({
       {peers.map((peerObj) => {
         const user = videoStates.find((user) => user.id === peerObj.peerId);
 
-        if (typeof user?.state === "undefined") {
-          socketRef.current?.emit("toggle video", peerObj.peerId);
-        }
         return (
           <VideoCover
             key={peerObj.peerId}

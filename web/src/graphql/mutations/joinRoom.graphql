@@ -3,7 +3,6 @@ mutation JoinRoom($uid: String!, $input: JoinRoomInput!) {
     error
     users {
       socketId
-      email
     }
   }
 }

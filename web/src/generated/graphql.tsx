@@ -235,7 +235,6 @@ export type User = {
 export type UserInfo = {
   __typename?: "UserInfo";
   socketId: Scalars["String"];
-  email: Scalars["String"];
 };
 
 export type RegularEmailResponseFragment = { __typename?: "Email" } & Pick<
@@ -352,9 +351,7 @@ export type JoinRoomMutationVariables = Exact<{
 export type JoinRoomMutation = { __typename?: "Mutation" } & {
   joinRoom: { __typename?: "JoinRoomRes" } & Pick<JoinRoomRes, "error"> & {
       users?: Maybe<
-        Array<
-          { __typename?: "UserInfo" } & Pick<UserInfo, "socketId" | "email">
-        >
+        Array<{ __typename?: "UserInfo" } & Pick<UserInfo, "socketId">>
       >;
     };
 };
@@ -616,7 +613,6 @@ export const JoinRoomDocument = gql`
       error
       users {
         socketId
-        email
       }
     }
   }
