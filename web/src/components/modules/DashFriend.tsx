@@ -8,10 +8,11 @@ import { ForwardedRef, forwardRef, useState } from "react";
 
 interface DashFriendProps {
   info: User;
+  onUnfriend?: (email: string) => void;
 }
 
 const DashFriend: React.FC<DashFriendProps> = forwardRef(
-  ({ info }, ref: ForwardedRef<HTMLDivElement>) => {
+  ({ info, onUnfriend }, ref: ForwardedRef<HTMLDivElement>) => {
     const [extend, setExtend] = useState(false);
 
     const router = useRouter();
@@ -35,7 +36,7 @@ const DashFriend: React.FC<DashFriendProps> = forwardRef(
             <PreviewCard
               Icon={<UserRemoveIcon className="h-7 w-7 text-primary-200" />}
               title="Unfriend"
-              onClick={() => alert("TODO")}
+              onClick={() => (onUnfriend ? onUnfriend(info.email) : undefined)}
               important
             />
           </div>

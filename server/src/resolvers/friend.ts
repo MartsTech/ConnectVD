@@ -254,4 +254,31 @@ export class FriendResolver {
     });
     return true;
   }
+  @Mutation(() => Boolean)
+  async unfriend(
+    @Arg("uid") uid: string,
+    @Arg("email") email: string
+  ): Promise<boolean> {
+    const request = await validateRequest(uid, email);
+
+    if ((request as NotifyError).message && (request as NotifyError).status) {
+      return false;
+    }
+
+    const { receiver } = request as Users;
+
+    await Friend.delete({
+      userId: uid,
+      friendId: receiver.id,
+      status: "accepted",
+    });
+
+    await Friend.delete({
+      userId: receiver.id,
+      friendId: uid,
+      status: "accepted",
+    });
+
+    return true;
+  }
 }

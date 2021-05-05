@@ -33,8 +33,33 @@ export const login = (
             id: user.uid,
             email: user.email as string,
             displayName: user.displayName as string,
-            photoUrl: null,
+            photoUrl: "",
           },
+        });
+      }
+    })
+    .catch((err) => alert(err.message));
+};
+
+export const register = (
+  signInServer: signInServerType,
+  name: string,
+  email: string,
+  password: string
+) => {
+  auth
+    .createUserWithEmailAndPassword(email, password)
+    .then(({ user }) => {
+      if (user) {
+        user.updateProfile({ displayName: name }).then(() => {
+          signInServer({
+            options: {
+              id: user.uid,
+              email: user.email as string,
+              displayName: user.displayName as string,
+              photoUrl: "",
+            },
+          });
         });
       }
     })

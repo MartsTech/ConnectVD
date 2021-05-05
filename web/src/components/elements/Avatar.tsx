@@ -21,7 +21,7 @@ const Avatar: React.FC<AvatarProps> = ({
       <Image
         className="rounded-full"
         objectFit="contain"
-        src={src}
+        src={src === "" ? appInfo.defaultAvatar : src}
         height={height as number}
         width={width as number}
       />

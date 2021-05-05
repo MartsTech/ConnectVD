@@ -8,7 +8,7 @@ interface HomeShortcutProps {
 
 const HomeShortcut: React.FC<HomeShortcutProps> = ({ title, Icon }) => {
   return (
-    <div className="text-white flex flex-col items-center space-y-3">
+    <div className="text-white flex flex-col items-center space-y-3 cursor-pointer">
       <Link
         activeClass="active"
         to={title}

@@ -197,10 +197,7 @@ const Room: React.FC<RoomProps> = ({
       peers.push({ peerId: id, peer });
 
       setTracks(id);
-      setVideoStates((videos) => [
-        ...videos,
-        { id: id, state: video },
-      ]);
+      setVideoStates((videos) => [...videos, { id: id, state: video }]);
     });
 
     setPeers(peers);

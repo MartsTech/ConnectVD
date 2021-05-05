@@ -4,6 +4,7 @@ interface ImportantButtonProps {
   primary?: boolean;
   secondary?: boolean;
   type?: "button" | "submit" | "reset";
+  extend?: boolean;
 }
 
 const ImportantButton: React.FC<ImportantButtonProps> = ({
@@ -12,6 +13,7 @@ const ImportantButton: React.FC<ImportantButtonProps> = ({
   type,
   primary,
   secondary,
+  extend = false,
 }) => {
   return (
     <button
@@ -19,7 +21,9 @@ const ImportantButton: React.FC<ImportantButtonProps> = ({
           text-primary-100 rounded-md transition duration-200 
           ease-in-out cursor-pointer focus:outline-none ${
             primary && "bg-accent hover:bg-accent-hover"
-          } ${secondary && "bg-secondary hover:bg-secondary-washed-out"}`}
+          } ${secondary && "bg-secondary hover:bg-secondary-washed-out"} ${
+        extend && "w-full flex-grow"
+      }`}
       onClick={onClick}
       type={type}
     >

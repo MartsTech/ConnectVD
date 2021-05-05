@@ -10,6 +10,7 @@ import {
   useFriendsQuery,
   useMeQuery,
   User,
+  useUnfriendMutation,
 } from "generated/graphql";
 import { NextPage } from "next";
 import Head from "next/head";
@@ -40,6 +41,7 @@ const DesktopLayout: NextPage<DesktopLayoutProps> = ({
   });
 
   const [, changeStatus] = useChangeStatusMutation();
+  const [, unfriend] = useUnfriendMutation();
 
   const setNewStatus = async (status: string) => {
     await changeStatus({
@@ -49,6 +51,10 @@ const DesktopLayout: NextPage<DesktopLayoutProps> = ({
   };
 
   const [sidebar, setSidebar] = useState(false);
+
+  const unfriendUser = (email: string) => {
+    unfriend({ uid: user?.uid as string, email });
+  };
 
   return (
     <NotificationsOn>
@@ -69,7 +75,11 @@ const DesktopLayout: NextPage<DesktopLayoutProps> = ({
         <DashTemplate
           Main={Main}
           Friends={
-            <DashFriends onNoFriends={onNoFriends} data={friendsData.data} />
+            <DashFriends
+              onNoFriends={onNoFriends}
+              data={friendsData.data}
+              onUnfriend={unfriendUser}
+            />
           }
           Profile={<DashProfile data={meData.data?.me as User} />}
           useSidebar={sidebar}

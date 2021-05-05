@@ -12,7 +12,7 @@ interface HeaderProps {
   home: string;
   data?: User;
   onMenu?: () => void;
-  onStatus: (status: string) => Promise<void>;
+  onStatus?: (status: string) => Promise<void>;
 }
 
 const Header: React.FC<HeaderProps> = ({ home, data, onMenu, onStatus }) => {

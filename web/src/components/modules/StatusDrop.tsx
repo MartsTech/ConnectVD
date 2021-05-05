@@ -8,7 +8,7 @@ interface StatusDropProps {
   active: string;
   toPrev: () => void;
   setHeight: setHookType;
-  onStatus: (status: string) => Promise<void>;
+  onStatus?: (status: string) => Promise<void>;
 }
 
 const StatusDrop: React.FC<StatusDropProps> = ({
@@ -36,7 +36,9 @@ const StatusDrop: React.FC<StatusDropProps> = ({
           Icon={<Badge status="available" size={2} />}
           title="Available"
           onClick={() => {
-            onStatus("available");
+            if (onStatus) {
+              onStatus("available");
+            }
             toPrev();
           }}
           important
@@ -45,7 +47,9 @@ const StatusDrop: React.FC<StatusDropProps> = ({
           Icon={<Badge status="away" size={2} />}
           title="Away"
           onClick={() => {
-            onStatus("away");
+            if (onStatus) {
+              onStatus("away");
+            }
             toPrev();
           }}
           important
@@ -54,7 +58,9 @@ const StatusDrop: React.FC<StatusDropProps> = ({
           Icon={<Badge status="busy" size={2} />}
           title="Busy"
           onClick={() => {
-            onStatus("busy");
+            if (onStatus) {
+              onStatus("busy");
+            }
             toPrev();
           }}
           important

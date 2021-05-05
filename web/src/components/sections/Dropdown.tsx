@@ -5,7 +5,7 @@ import { useState } from "react";
 
 interface DropdownProps {
   data?: User;
-  onStatus: (status: string) => Promise<void>;
+  onStatus?: (status: string) => Promise<void>;
 }
 
 const Dropdown: React.FC<DropdownProps> = ({ data, onStatus }) => {
