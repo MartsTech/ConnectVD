@@ -58,6 +58,7 @@ const RoomPage: React.FC<RoomPageProps> = ({}) => {
       agent: false,
       upgrade: false,
       rejectUnauthorized: false,
+      transports: ["websocket"],
     });
 
     socketRef.current?.on("chat message", (message: messageType) => {
