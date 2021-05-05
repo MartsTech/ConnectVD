@@ -19,7 +19,7 @@ import Head from "next/head";
 import { useSnackbar, VariantType } from "notistack";
 import { useEffect, useRef, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import io, { Socket } from "socket.io-client";
+import { io, Socket } from "socket.io-client";
 
 interface RoomPageProps {}
 
@@ -51,7 +51,14 @@ const RoomPage: React.FC<RoomPageProps> = ({}) => {
   const [messages, setMessages] = useState<messageType[]>([]);
 
   useEffect(() => {
-    socketRef.current = io(server_url, { transports: ["websocket"] });
+    socketRef.current = io(server_url, {
+      reconnectionDelay: 1000,
+      reconnection: true,
+      reconnectionAttempts: 10,
+      agent: false,
+      upgrade: false,
+      rejectUnauthorized: false,
+    });
 
     socketRef.current?.on("chat message", (message: messageType) => {
       setMessages((messages) => [...messages, message]);
