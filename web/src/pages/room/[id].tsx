@@ -1,24 +1,25 @@
+import { server_url } from "@config/constants";
+import { auth } from "@config/firebase";
 import IsAuth from "@layout/IsAuth";
 import Room from "@section/Room";
 import RoomChat from "@section/RoomChat";
 import RoomControls from "@section/RoomControls";
+import RoomInvite from "@section/RoomInvite";
 import appInfo from "@service/appInfo";
 import RoomTemplate from "@template/RoomTemplate";
+import { messageType } from "@type/messageType";
 import { createUrqlClient } from "@util/createUrqlClient";
-import { withUrqlClient } from "next-urql";
-import Head from "next/head";
-import { useEffect, useRef, useState } from "react";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "@config/firebase";
 import {
   useFriendsQuery,
   useInviteFriendMutation,
-  useMeQuery,
+  useMeQuery
 } from "generated/graphql";
-import { io, Socket } from "socket.io-client";
-import { messageType } from "@type/messageType";
-import RoomInvite from "@section/RoomInvite";
+import { withUrqlClient } from "next-urql";
+import Head from "next/head";
 import { useSnackbar, VariantType } from "notistack";
+import { useEffect, useRef, useState } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { io, Socket } from "socket.io-client";
 
 interface RoomPageProps {}
 
@@ -50,7 +51,7 @@ const RoomPage: React.FC<RoomPageProps> = ({}) => {
   const [messages, setMessages] = useState<messageType[]>([]);
 
   useEffect(() => {
-    socketRef.current = io("http://localhost:8000");
+    socketRef.current = io(server_url);
 
     socketRef.current?.on("chat message", (message: messageType) => {
       setMessages((messages) => [...messages, message]);
