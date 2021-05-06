@@ -417,7 +417,7 @@ const Room: React.FC<RoomProps> = ({
         return (
           <VideoCover
             key={peerObj.peerId}
-            video={user?.video as boolean}
+            video={user?.video ? user?.video : false}
             src={cover?.src || ""}
             status={cover?.status || ""}
           >
