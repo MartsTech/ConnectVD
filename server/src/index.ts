@@ -35,7 +35,7 @@ const main = async () => {
     entities: [Room, User, Friend, Email],
     type: "postgres",
     url: process.env.DATABASE_URL,
-    logging: true,
+    // logging: true,
     // ssl: { rejectUnauthorized: false },
     migrations: [path.join(__dirname, "./migrations/*")],
   });
@@ -77,6 +77,7 @@ const main = async () => {
     });
 
     socket.on("offer", (payload: socketPayload) => {
+      console.log(payload);
       io.to(payload.target).emit("offer", payload);
     });
 
@@ -88,8 +89,8 @@ const main = async () => {
       socket.to(payload.target).emit("ice-candidate", payload);
     });
 
-    socket.on("toggle video", (state: boolean) => {
-      socket.broadcast.emit("video change", { id: socket.id, state });
+    socket.on("toggle video", (video: boolean) => {
+      socket.broadcast.emit("video change", { id: socket.id, video });
     });
 
     socket.on(

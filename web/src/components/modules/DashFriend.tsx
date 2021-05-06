@@ -26,7 +26,7 @@ const DashFriend: React.FC<DashFriendProps> = forwardRef(
         />
         {extend && (
           <div>
-            <Profile data={info} important />
+            <Profile data={info} important full />
             <PreviewCard
               Icon={<MailIcon className="h-7 w-7 text-primary-200" />}
               title="Contact"

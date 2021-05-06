@@ -24,7 +24,7 @@ const RoomInvite: React.FC<RoomInviteProps> = ({
   const [receiver, setReceiver] = useState("");
 
   const router = useRouter();
-  const url = window.location.origin + `/room/${router.query.id}`;
+  const id = router.query.id as string;
 
   let buttonText = "Copy";
 
@@ -38,7 +38,7 @@ const RoomInvite: React.FC<RoomInviteProps> = ({
 
   const copyURL = () => {
     if (navigator.share) {
-      navigator.share({ url });
+      navigator.share({ url: id });
     } else {
       inputRef.current?.select();
       document.execCommand("copy");
@@ -77,7 +77,7 @@ const RoomInvite: React.FC<RoomInviteProps> = ({
           <h3 className="flex p-4 text-primary-100">URL</h3>
           <input
             readOnly
-            value={url}
+            value={id}
             className="py-3 px-4 rounded-8 text-primary-100 
         focus:outline-none bg-primary-600 rounded-lg mb-5"
           />

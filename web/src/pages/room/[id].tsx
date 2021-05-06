@@ -44,7 +44,7 @@ const RoomPage: React.FC<RoomPageProps> = ({}) => {
   const [chat, setChat] = useState(false);
   const [leave, setLeave] = useState(false);
   const [screen, setScreen] = useState(false);
-  const [video, setVideo] = useState(false);
+  const [video, setVideo] = useState(true);
   const [audio, setAudio] = useState(true);
   const [invite, setInvite] = useState(false);
 

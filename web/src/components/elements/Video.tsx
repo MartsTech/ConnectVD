@@ -22,7 +22,7 @@ const Video: React.FC<VideoProps> = ({ peer, userVideoRef }) => {
 
   return (
     <video
-      className="bg-opacity-0"
+      className="bg-opacity-0 object-contain"
       autoPlay
       ref={userVideoRef || videoRef}
       muted={typeof userVideoRef !== "undefined"}

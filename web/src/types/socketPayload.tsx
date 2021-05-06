@@ -1,7 +1,8 @@
 export type socketPayload = {
   target: string;
   caller: string;
-  video?: boolean;
+  photoUrl?: string;
+  status?: string;
   sdp?: RTCSessionDescription;
   candidate?: RTCIceCandidate;
 };

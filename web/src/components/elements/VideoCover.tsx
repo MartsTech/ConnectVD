@@ -3,10 +3,12 @@ import Avatar from "./Avatar";
 
 interface VideoCoverProps {
   video: boolean;
+  src?: string;
+  status?: string;
 }
 
 const VideoCover: React.FC<VideoCoverProps> = forwardRef(
-  ({ video, children }, ref: ForwardedRef<HTMLDivElement>) => {
+  ({ video, src, status, children }, ref: ForwardedRef<HTMLDivElement>) => {
     return (
       <div ref={ref} className="rounded-md relative">
         {!video && (
@@ -14,7 +16,7 @@ const VideoCover: React.FC<VideoCoverProps> = forwardRef(
             className="absolute h-full w-full flex flex-col 
     bg-primary-700 items-center justify-center "
           >
-            <Avatar size={3} />
+            <Avatar src={src} status={status} size={3} />
           </div>
         )}
         <div className="bg-opacity-0">{children}</div>
