@@ -68,11 +68,7 @@ const RoomPage: React.FC<RoomPageProps> = ({}) => {
     hasCamera.current = navigator.mediaDevices
       .enumerateDevices()
       .then((devices) => {
-        return devices.some(
-          (device) =>
-            device.kind === "videoinput" &&
-            device.label !== "OBS Virtual Camera"
-        );
+        return devices.some((device) => device.kind === "videoinput");
       });
   }, []);
 

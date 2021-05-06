@@ -89,8 +89,8 @@ const main = async () => {
       socket.to(payload.target).emit("ice-candidate", payload);
     });
 
-    socket.on("toggle video", (video: boolean) => {
-      socket.broadcast.emit("video change", { id: socket.id, video });
+    socket.on("toggle video", (state: boolean) => {
+      socket.broadcast.emit("video change", { id: socket.id, state });
     });
 
     socket.on(
