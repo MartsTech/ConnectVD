@@ -211,10 +211,7 @@ const Room: React.FC<RoomProps> = ({
     peerObj.peer
       .setRemoteDescription(desc)
       .then(() => {
-        return peerObj.peer.createAnswer({
-          offerToReceiveAudio: true,
-          offerToReceiveVideo: true,
-        });
+        return peerObj.peer.createAnswer();
       })
       .then((answer) => {
         return peerObj.peer.setLocalDescription(answer);
