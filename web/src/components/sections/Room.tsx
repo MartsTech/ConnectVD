@@ -43,7 +43,7 @@ const Room: React.FC<RoomProps> = ({
   const senders = useRef<{ id: string; track: RTCRtpSender }[]>([]);
 
   const [videoStates, setVideoStates] = useState<
-    { id: string; video: boolean }[]
+    { id: string; state: boolean }[]
   >([]);
   const [videoCovers, setVideoCovers] = useState<
     { id: string; src: string; status: string }[]
@@ -110,7 +110,7 @@ const Room: React.FC<RoomProps> = ({
 
     socketRef.current?.on(
       "video change",
-      (payload: { id: string; video: boolean }) => {
+      (payload: { id: string; state: boolean }) => {
         const videos = videoStates.filter((state) => state.id !== payload.id);
         setVideoStates([...videos, payload]);
       }
@@ -411,13 +411,13 @@ const Room: React.FC<RoomProps> = ({
       </VideoCover>
 
       {peers.map((peerObj) => {
-        const user = videoStates.find((user) => user.id === peerObj.peerId);
+        const video = videoStates.find((user) => user.id === peerObj.peerId);
         const cover = videoCovers.find((cover) => cover.id === peerObj.peerId);
 
         return (
           <VideoCover
             key={peerObj.peerId}
-            video={user?.video ? user?.video : false}
+            video={video?.state ? video?.state : false}
             src={cover?.src || ""}
             status={cover?.status || ""}
           >
