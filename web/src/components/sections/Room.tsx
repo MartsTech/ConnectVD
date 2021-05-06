@@ -204,7 +204,6 @@ const Room: React.FC<RoomProps> = ({
   };
 
   const handleOffer = (incoming: socketPayload) => {
-    checkForDups(incoming.caller);
     const peerObj = acceptCall(incoming);
 
     const desc = new RTCSessionDescription(incoming.sdp);
@@ -235,11 +234,6 @@ const Room: React.FC<RoomProps> = ({
         socketRef.current.emit("answer", payload);
       })
       .catch((err) => console.error(err));
-  };
-
-  const checkForDups = (id: string) => {
-    const removeDups = peers.filter((peer) => peer.peerId !== id);
-    setPeers(removeDups);
   };
 
   const acceptCall = (incoming: socketPayload) => {
