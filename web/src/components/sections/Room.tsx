@@ -63,16 +63,16 @@ const Room: React.FC<RoomProps> = ({
   const [, joinRoom] = useJoinRoomMutation();
 
   useEffect(() => {
+    main();
+  }, []);
+
+  useEffect(() => {
     toggleVideo(video);
   }, [video, peers]);
 
   useEffect(() => {
     toggleAudio(audio);
   }, [audio]);
-
-  useEffect(() => {
-    main();
-  }, []);
 
   useEffect(() => {
     if (leave) {

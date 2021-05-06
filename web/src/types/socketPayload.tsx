@@ -3,7 +3,6 @@ export type socketPayload = {
   caller: string;
   photoUrl?: string;
   status?: string;
-  video?: boolean;
   sdp?: RTCSessionDescription;
   candidate?: RTCIceCandidate;
 };
