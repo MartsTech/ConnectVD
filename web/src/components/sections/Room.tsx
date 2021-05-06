@@ -127,7 +127,11 @@ const Room: React.FC<RoomProps> = ({
     let stream;
     try {
       stream = await navigator.mediaDevices.getUserMedia({
-        video: devices.some((device) => device.kind === "videoinput"),
+        video: devices.some(
+          (device) =>
+            device.kind === "videoinput" &&
+            device.label !== "OBS Virtual Camera"
+        ),
         audio: devices.some((device) => device.kind === "audioinput"),
       });
     } catch {
