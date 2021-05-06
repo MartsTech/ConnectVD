@@ -45,7 +45,7 @@ const main = async () => {
   // @ts-ignore
   const ServerOptions: ServerOptions = {
     cors: {
-      origin: "http://localhost:3000",
+      origin: process.env.CORS_ORIGIN,
       methods: ["GET", "POST"],
       credentials: true,
     },

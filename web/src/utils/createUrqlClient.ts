@@ -1,12 +1,5 @@
+import { graphql_url, subs_url } from "@config/constants";
 import { Cache, cacheExchange, Resolver } from "@urql/exchange-graphcache";
-import { SubscriptionClient } from "subscriptions-transport-ws";
-import {
-  dedupExchange,
-  fetchExchange,
-  stringifyVariables,
-  subscriptionExchange,
-} from "urql";
-import { server_url, __prod__ } from "../configs/constants";
 import {
   AcceptFriendRequestMutationVariables,
   ChangeStatusMutation,
@@ -15,8 +8,15 @@ import {
   MeDocument,
   MeQuery,
   SignInMutation,
-  SignInMutationVariables,
+  SignInMutationVariables
 } from "generated/graphql";
+import { SubscriptionClient } from "subscriptions-transport-ws";
+import {
+  dedupExchange,
+  fetchExchange,
+  stringifyVariables,
+  subscriptionExchange
+} from "urql";
 import { betterUpdateQuery } from "./betterUpdateQuery";
 
 const cursorPagination = (): Resolver => {
@@ -65,19 +65,14 @@ const invalidateAllFields = (
 };
 
 const subscriptionClient = process.browser
-  ? new SubscriptionClient(
-      __prod__
-        ? process.env.REACT_APP_WEB_SOCKET_KEY!
-        : "ws://localhost:8000/subscriptions",
-      {
-        reconnect: true,
-      }
-    )
+  ? new SubscriptionClient(subs_url, {
+      reconnect: true,
+    })
   : null;
 
 export const createUrqlClient = (ssrExchange: any, ctx: any) => {
   return {
-    url: server_url,
+    url: graphql_url,
     fetchOptions: {
       credentials: "include" as const,
     },

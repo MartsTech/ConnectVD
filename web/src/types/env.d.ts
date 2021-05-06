@@ -7,5 +7,8 @@ declare namespace NodeJS {
     NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: string;
     NEXT_PUBLIC_FIREBASE_APP_ID: string;
     NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID: string;
+    NEXT_PUBLIC_SERVER_URL: string;
+    NEXT_PUBLIC_GRAPHQL_URL: string;
+    NEXT_PUBLIC_SUBS_URL: string;
   }
 }

@@ -4,7 +4,6 @@ import PreviewCard from "@element/PreviewCard";
 import Profile from "@element/Profile";
 import { LogoutIcon } from "@heroicons/react/solid";
 import { setHookType } from "@type/setHookType";
-import { statusType } from "@type/statusType";
 import { User } from "generated/graphql";
 import { CSSTransition } from "react-transition-group";
 
