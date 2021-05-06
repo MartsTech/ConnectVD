@@ -40,11 +40,12 @@ const RoomPage: React.FC<RoomPageProps> = ({}) => {
   const [, createInvite] = useInviteFriendMutation();
 
   const socketRef = useRef<Socket>();
+  const hasCamera = useRef<Promise<boolean>>();
 
   const [chat, setChat] = useState(false);
   const [leave, setLeave] = useState(false);
   const [screen, setScreen] = useState(false);
-  const [video, setVideo] = useState(true);
+  const [video, setVideo] = useState(false);
   const [audio, setAudio] = useState(true);
   const [invite, setInvite] = useState(false);
 
@@ -63,6 +64,16 @@ const RoomPage: React.FC<RoomPageProps> = ({}) => {
     socketRef.current?.on("chat message", (message: messageType) => {
       setMessages((messages) => [...messages, message]);
     });
+
+    hasCamera.current = navigator.mediaDevices
+      .enumerateDevices()
+      .then((devices) => {
+        return devices.some(
+          (device) =>
+            device.kind === "videoinput" &&
+            device.label !== "OBS Virtual Camera"
+        );
+      });
   }, []);
 
   const { enqueueSnackbar } = useSnackbar();
@@ -110,7 +121,9 @@ const RoomPage: React.FC<RoomPageProps> = ({}) => {
             onChat={() => setChat(!chat)}
             onLeave={() => setLeave(true)}
             onScreen={() => setScreen(!screen)}
-            onVideo={() => setVideo(!video)}
+            onVideo={async () => {
+              if ((await hasCamera.current) === true) setVideo(!video);
+            }}
             video={video}
             onAudio={() => setAudio(!audio)}
             audio={audio}
