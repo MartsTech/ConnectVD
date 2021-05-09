@@ -5,13 +5,13 @@
 </h1>
 
 <h4 align="center">
-   Hulu Clone created with Next.JS using TailwindCSS and TMDB API</a>.
+   Video chat web application aimed to make video communications more simpler and easier to use
 </h4>
 
 <p align="center">
-   <img src="https://img.shields.io/github/v/release/MartsTech/hulu-clone" alt="Release" />
-   <img src="https://vercelbadge.vercel.app/api/MartsTech/hulu-clone" alt="Deployment" />
-   <img src="https://img.shields.io/github/license/MartsTech/hulu-clone" alt="License" />
+   <img src="https://img.shields.io/github/v/release/MartsTech/ConnectVD" alt="Release" />
+   <img src="https://vercelbadge.vercel.app/api/MartsTech/ConnectVD" alt="Deployment" />
+   <img src="https://img.shields.io/github/license/MartsTech/ConnectVD" alt="License" />
 </p>
 
 <p align="center">
