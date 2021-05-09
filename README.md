@@ -1,5 +1,5 @@
 <h1 align="center">
-  <a href="https://hulu-clone-blue.vercel.app/">
+   <a href="https://connect-vd.vercel.app">
       <img width="350px" src="https://raw.githubusercontent.com/MartsTech/ConnectVD/main/web/public/images/logo.png" alt="Logo" />
   </a>
 </h1>
@@ -18,25 +18,29 @@
   <a href="#demo">Demo</a> •
   <a href="#key-features">Key Features</a> •
   <a href="#key-technologies">Key Technologies</a> •
+  <a href="#installation">Installation</a> •
   <a href="#setup">Setup</a> •
   <a href="#support">Support</a> •
   <a href="#license">License</a>
 </p>
 
-<img src="https://raw.githubusercontent.com/MartsTech/hulu-clone/main/public/app.png" />
+<img src="https://raw.githubusercontent.com/MartsTech/ConnectVD/main/web/public/screenshots/dash.png" />
 
 ---
 
 ## Demo
-Here is a working live demo [here](https://hulu-clone-blue.vercel.app)  
+Here is a working live demo [here](https://connect-vd.vercel.app)  
 
 ---
 
 ## Key Features
 
-- Smooth animations
-- Responsive Design
-- Server Side Rendering
+- Group Video Meetings
+- Friends Requests
+- Meeting Invites
+- Real Time Notifications
+- Authentication
+- Only Friends Communication
 
 ---
 
@@ -44,14 +48,29 @@ Here is a working live demo [here](https://hulu-clone-blue.vercel.app)
 
 - Next.JS
 - TailwindCSS
-- TMDB API
+- WebRTC
+- NodeJS
+- GraphQL
+- PostgreSQL
+- Socket.IO
+
+---
+
+## Installation
+
+- Node
+- PostgreSQL
+- Yarn
 
 ---
 
 ## Setup
 
-Clone this repo to your desktop and run `yarn install` to install all the dependencies.
-Then run `yarn dev` to start the application locally
+`web` - Create a new firebase project and add auth. Then create .env.local file, following the .env.example file with the nessecery data.
+
+`server` - Create a database with postgreSQL. Then create .env file, following the .env.example file with the nessecery data.
+
+`both` - Run `yarn install` to install all the dependencies. Then run `yarn dev` to start the application locally.
 
 ---
 
@@ -67,6 +86,6 @@ Whether you use this project, have learned something from it, or just like it, p
 
 ## License
 
->You can check out the full license [here](https://github.com/MartsTech/hulu-clone/blob/main/LICENSE)
+>You can check out the full license [here](https://github.com/MartsTech/ConnectVD/blob/main/LICENSE)
 
 This project is licensed under the terms of the **MIT** license.
