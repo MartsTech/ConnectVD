@@ -1,6 +1,6 @@
 <h1 align="center">
   <a href="https://hulu-clone-blue.vercel.app/">
-      <img width="350px" src="https://raw.githubusercontent.com/MartsTech/ConnectVD/main/web/public/images/logo.png?token=ARHRI5FCBMKNUEK2PXTAMZ3ATBGDO" alt="Logo" />
+      <img width="350px" src="https://raw.githubusercontent.com/MartsTech/ConnectVD/main/web/public/images/logo.png" alt="Logo" />
   </a>
 </h1>
 
