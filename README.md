@@ -1,7 +1,7 @@
 <h1 align="center">
-   <a href="#">
+<!--    <a href="#"> -->
       <img width="350px" src="https://raw.githubusercontent.com/MartsTech/ConnectVD/main/web/public/images/logo.png" alt="Logo" />
-  </a>
+<!--   </a> -->
 </h1>
 
 <h4 align="center">
@@ -15,7 +15,7 @@
 </p>
 
 <p align="center">
-  <a href="#demo">Demo</a> •
+<!--   <a href="#demo">Demo</a> • -->
   <a href="#key-features">Key Features</a> •
   <a href="#key-technologies">Key Technologies</a> •
   <a href="#installation">Installation</a> •
@@ -26,13 +26,13 @@
 
 <img src="https://raw.githubusercontent.com/MartsTech/ConnectVD/main/web/public/screenshots/dash.png" />
 
----
+<!-- ---
 
 ## Demo
 Here is a working live demo [here](#)  
 
 
----
+--- -->
 
 ## Key Features
 
