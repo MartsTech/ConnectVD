@@ -1,5 +1,5 @@
 <h1 align="center">
-   <a href="https://connect-vd.vercel.app">
+   <a href="#">
       <img width="350px" src="https://raw.githubusercontent.com/MartsTech/ConnectVD/main/web/public/images/logo.png" alt="Logo" />
   </a>
 </h1>
@@ -29,7 +29,7 @@
 ---
 
 ## Demo
-Here is a working live demo [here](https://connect-vd.vercel.app)  
+Here is a working live demo [here](#)  
 
 
 ---
