@@ -10,7 +10,7 @@
 
 <p align="center">
    <img src="https://img.shields.io/github/v/release/MartsTech/ConnectVD" alt="Release" />
-   <img src="https://vercelbadge.vercel.app/api/MartsTech/ConnectVD" alt="Deployment" />
+<!--    <img src="https://vercelbadge.vercel.app/api/MartsTech/ConnectVD" alt="Deployment" /> -->
    <img src="https://img.shields.io/github/license/MartsTech/ConnectVD" alt="License" />
 </p>
 
