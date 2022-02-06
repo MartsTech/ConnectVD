@@ -206,7 +206,7 @@ const Room: React.FC<RoomProps> = ({
   const handleOffer = (incoming: socketPayload) => {
     const peerObj = acceptCall(incoming);
 
-    const desc = new RTCSessionDescription(incoming.sdp);
+    const desc = new RTCSessionDescription(incoming.sdp!);
     peerObj.peer
       .setRemoteDescription(desc)
       .then(() => {
