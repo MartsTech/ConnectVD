@@ -273,7 +273,7 @@ const Room: React.FC<RoomProps> = ({
       },
     ]);
 
-    const desc = new RTCSessionDescription(message.sdp);
+    const desc = new RTCSessionDescription(message.sdp!);
     peerObj.peer
       .setRemoteDescription(desc)
       .catch((err: any) => console.log(err));
