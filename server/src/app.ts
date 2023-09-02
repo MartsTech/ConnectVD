@@ -1,8 +1,10 @@
 import express, {type Express} from 'express';
-import homeRouter from "@features/home/home-router";
+import swagger from "@lib/swagger";
+import router from "@lib/router";
 
 const app: Express = express();
 
-app.use(homeRouter);
+swagger(app);
+router(app);
 
 export default app;
