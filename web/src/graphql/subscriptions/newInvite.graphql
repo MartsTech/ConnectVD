@@ -1,5 +1,0 @@
-subscription NewInvite($uid: String!) {
-  newInvite(uid: $uid) {
-    ...RegularFriendResponse
-  }
-}

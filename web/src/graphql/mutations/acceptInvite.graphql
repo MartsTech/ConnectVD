@@ -1,9 +1,0 @@
-mutation AcceptInvite($uid: String!, $email: String!) {
-  acceptInvite(uid: $uid, email: $email) {
-    roomId
-    error {
-      message
-      status
-    }
-  }
-}

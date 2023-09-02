@@ -1,8 +1,0 @@
-fragment RegularEmailResponse on Email {
-  id
-  senderEmail
-  senderPhotoURL
-  subject
-  message
-  createdAt
-}

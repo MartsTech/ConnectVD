@@ -1,6 +1,0 @@
-fragment RegularUserResponse on User {
-  email
-  displayName
-  photoUrl
-  status
-}
